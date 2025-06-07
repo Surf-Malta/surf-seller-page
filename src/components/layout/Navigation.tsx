@@ -1,18 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { NAVIGATION_ITEMS } from "@/constants/navigation";
+import { cn } from "@/lib/utils";
+import { setActiveItem } from "@/store/slices/navigationSlice";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NAVIGATION_ITEMS } from "@/constants/navigation";
-import { RootState } from "@/store";
-import { setActiveItem } from "@/store/slices/navigationSlice";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 export function Navigation() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const pathname = usePathname();
-  const { activeItem } = useSelector((state: RootState) => state.navigation);
+  // const { activeItem } = useSelector((state: RootState) => state.navigation);
   const dispatch = useDispatch();
 
   const handleItemClick = (itemId: string) => {

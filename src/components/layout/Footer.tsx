@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
-import Logo from "@/components/ui/Logo";
+import { Logo } from "../ui/Logo";
 
 export default function Footer() {
   const footerLinks = {
@@ -31,7 +31,7 @@ export default function Footer() {
       <Container>
         <div className="grid lg:grid-cols-5 gap-8">
           <div className="lg:col-span-2">
-            <Logo variant="white" />
+            <Logo />
             <p className="text-gray-400 mt-4 max-w-md">
               Start your online business today with zero investment. Join
               thousands of successful sellers on our platform.

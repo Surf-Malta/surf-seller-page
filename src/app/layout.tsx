@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ReduxProvider } from "@/store/provider";
 import { Header } from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer"; // Add this import
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -35,9 +36,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ReduxProvider>
-          <div className="min-h-screen bg-gray-50">
+          <div className="min-h-screen flex flex-col">
             <Header />
-            <main className="pt-16 lg:pt-20">{children}</main>
+            <main className="flex-1">{children}</main>
+            <Footer /> {/* Add the footer here */}
           </div>
         </ReduxProvider>
       </body>
