@@ -8,7 +8,6 @@ import { usePathname } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { ref, onValue } from "firebase/database";
 import { realtimeDb } from "@/lib/firebase";
-import { NAVIGATION_ITEMS } from "@/constants/navigation";
 
 interface NavigationItem {
   id: string;
@@ -27,15 +26,7 @@ export function Navigation() {
 
   useEffect(() => {
     if (!realtimeDb) {
-      // If Firebase is not available, use the static navigation items
-      const staticNavItems = NAVIGATION_ITEMS.map((item, index) => ({
-        id: item.id,
-        label: item.label,
-        href: item.href,
-        description: item.description,
-        order: index + 1,
-      }));
-      setNavigationItems(staticNavItems);
+      console.warn("Firebase not initialized - navigation will be empty");
       setLoading(false);
       return;
     }
@@ -53,15 +44,8 @@ export function Navigation() {
             .sort((a, b) => a.order - b.order);
           setNavigationItems(navItems);
         } else {
-          // If no Firebase data, use static navigation items as fallback
-          const staticNavItems = NAVIGATION_ITEMS.map((item, index) => ({
-            id: item.id,
-            label: item.label,
-            href: item.href,
-            description: item.description,
-            order: index + 1,
-          }));
-          setNavigationItems(staticNavItems);
+          console.warn("No navigation items found in Firebase");
+          setNavigationItems([]);
         }
         setLoading(false);
       });
@@ -69,15 +53,7 @@ export function Navigation() {
       return () => unsubscribe();
     } catch (error) {
       console.error("Error fetching navigation items:", error);
-      // Fallback to static navigation items
-      const staticNavItems = NAVIGATION_ITEMS.map((item, index) => ({
-        id: item.id,
-        label: item.label,
-        href: item.href,
-        description: item.description,
-        order: index + 1,
-      }));
-      setNavigationItems(staticNavItems);
+      setNavigationItems([]);
       setLoading(false);
     }
   }, []);
@@ -99,6 +75,17 @@ export function Navigation() {
             <div className="h-8 bg-gray-300 rounded px-3 py-2 w-20"></div>
           </div>
         ))}
+      </nav>
+    );
+  }
+
+  // If no navigation items from Firebase, show empty nav
+  if (navigationItems.length === 0) {
+    return (
+      <nav className="flex items-center space-x-1">
+        <div className="text-sm text-gray-500 px-3 py-2">
+          No navigation items configured
+        </div>
       </nav>
     );
   }

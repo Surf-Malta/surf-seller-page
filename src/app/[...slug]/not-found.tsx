@@ -23,6 +23,11 @@ export default function DynamicNotFound() {
                   Go Home
                 </Button>
               </Link>
+              <Link href="/register">
+                <Button variant="outline" size="lg" className="px-8">
+                  Start Selling
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

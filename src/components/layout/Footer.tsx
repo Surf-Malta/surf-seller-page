@@ -5,24 +5,23 @@ import { Logo } from "../ui/Logo";
 export default function Footer() {
   const footerLinks = {
     Product: [
-      { href: "/how-it-works", label: "How It Works" },
-      { href: "/pricing", label: "Pricing" },
-      { href: "/features", label: "Features" },
+      { href: "/register", label: "Start Selling" },
+      { href: "/login", label: "Login" },
     ],
     Support: [
-      { href: "/help", label: "Help Center" },
-      { href: "/contact", label: "Contact Us" },
-      { href: "/faq", label: "FAQ" },
+      { href: "#", label: "Help Center" },
+      { href: "#", label: "Contact Us" },
+      { href: "#", label: "FAQ" },
     ],
     Company: [
-      { href: "/about", label: "About Us" },
-      { href: "/careers", label: "Careers" },
-      { href: "/blog", label: "Blog" },
+      { href: "#", label: "About Us" },
+      { href: "#", label: "Careers" },
+      { href: "#", label: "Blog" },
     ],
     Legal: [
-      { href: "/privacy", label: "Privacy Policy" },
-      { href: "/terms", label: "Terms of Service" },
-      { href: "/cookies", label: "Cookie Policy" },
+      { href: "#", label: "Privacy Policy" },
+      { href: "#", label: "Terms of Service" },
+      { href: "#", label: "Cookie Policy" },
     ],
   };
 

@@ -124,114 +124,170 @@ export default function DynamicPage() {
     notFound();
   }
 
-  const renderContentSection = (content: ContentHeading) => {
-    switch (content.type) {
-      case "hero":
-        return (
-          <section
-            key={content.id}
-            className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50"
-          >
-            <Container>
-              <div className="text-center max-w-4xl mx-auto">
-                <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-                  {content.title}
-                </h1>
-                <p className="text-xl lg:text-2xl text-gray-600 mb-8">
-                  {content.content}
-                </p>
-                {content.buttonText && (
-                  <Link href={content.buttonLink || "#"}>
-                    <Button size="lg" className="px-8 py-4 text-lg">
-                      {content.buttonText}
-                    </Button>
-                  </Link>
-                )}
-              </div>
-              {content.imageUrl && (
-                <div className="mt-12 text-center">
-                  <img
-                    src={content.imageUrl}
-                    alt={content.title}
-                    className="mx-auto rounded-lg shadow-lg max-w-4xl w-full"
-                  />
-                </div>
-              )}
-            </Container>
-          </section>
-        );
+  // Organize content by sections for better rendering
+  const organizeContent = (content: ContentHeading[]) => {
+    const sections = {
+      hero: content.filter((item) => item.type === "hero"),
+      features: content.filter((item) => item.type === "feature"),
+      pricing: content.filter((item) => item.type === "pricing"),
+      testimonials: content.filter((item) => item.type === "testimonial"),
+      faqs: content.filter((item) => item.type === "faq"),
+      text: content.filter((item) => item.type === "text"),
+    };
+    return sections;
+  };
 
-      case "feature":
-        return (
-          <section key={content.id} className="py-20 bg-white">
-            <Container>
-              <div className="grid lg:grid-cols-2 gap-12 items-center">
-                <div>
-                  <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-                    {content.title}
-                  </h2>
-                  <p className="text-xl text-gray-600 mb-8">
-                    {content.content}
-                  </p>
-                  {content.features && content.features.length > 0 && (
-                    <ul className="space-y-3 mb-8">
-                      {content.features.map((feature, index) => (
-                        <li key={index} className="flex items-center">
-                          <svg
-                            className="w-5 h-5 text-green-500 mr-3"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {content.buttonText && (
-                    <Link href={content.buttonLink || "#"}>
-                      <Button size="lg">{content.buttonText}</Button>
-                    </Link>
-                  )}
-                </div>
-                {content.imageUrl && (
-                  <div>
+  const renderHeroSection = (hero: ContentHeading) => (
+    <section
+      key={hero.id}
+      className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50"
+    >
+      <Container>
+        <div className="text-center max-w-4xl mx-auto">
+          <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
+            {hero.title}
+          </h1>
+          <p className="text-xl lg:text-2xl text-gray-600 mb-8">
+            {hero.content}
+          </p>
+          {hero.buttonText && (
+            <Link href={hero.buttonLink || "#"}>
+              <Button size="lg" className="px-8 py-4 text-lg">
+                {hero.buttonText}
+              </Button>
+            </Link>
+          )}
+        </div>
+        {hero.imageUrl && (
+          <div className="mt-12 text-center">
+            <img
+              src={hero.imageUrl}
+              alt={hero.title}
+              className="mx-auto rounded-lg shadow-lg max-w-4xl w-full"
+            />
+          </div>
+        )}
+      </Container>
+    </section>
+  );
+
+  const renderFeaturesSection = (features: ContentHeading[]) => {
+    if (features.length === 0) return null;
+
+    return (
+      <section className="py-20 bg-white">
+        <Container>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              Features
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Everything you need to succeed
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <div
+                key={feature.id}
+                className="bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow"
+              >
+                <div className="text-4xl mb-4">
+                  {feature.imageUrl ? (
                     <img
-                      src={content.imageUrl}
-                      alt={content.title}
-                      className="rounded-lg shadow-lg w-full"
+                      src={feature.imageUrl}
+                      alt={feature.title}
+                      className="w-12 h-12 object-contain"
                     />
+                  ) : (
+                    // Default icons
+                    [
+                      "💰",
+                      "⚡",
+                      "🔒",
+                      "📈",
+                      "🎧",
+                      "📊",
+                      "✨",
+                      "🚀",
+                      "🎯",
+                      "🌟",
+                    ][index % 10]
+                  )}
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 mb-4">{feature.content}</p>
+                {feature.features && feature.features.length > 0 && (
+                  <ul className="space-y-2">
+                    {feature.features.map((item, idx) => (
+                      <li
+                        key={idx}
+                        className="flex items-center text-sm text-gray-600"
+                      >
+                        <svg
+                          className="w-4 h-4 text-green-500 mr-2"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {feature.buttonText && (
+                  <div className="mt-4">
+                    <Link href={feature.buttonLink || "#"}>
+                      <Button size="sm">{feature.buttonText}</Button>
+                    </Link>
                   </div>
                 )}
               </div>
-            </Container>
-          </section>
-        );
+            ))}
+          </div>
+        </Container>
+      </section>
+    );
+  };
 
-      case "pricing":
-        return (
-          <section key={content.id} className="py-20 bg-gray-50">
-            <Container>
-              <div className="text-center mb-12">
-                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-                  {content.title}
-                </h2>
-                <p className="text-xl text-gray-600">{content.content}</p>
-              </div>
-              <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8 text-center">
-                {content.price && (
+  const renderPricingSection = (pricing: ContentHeading[]) => {
+    if (pricing.length === 0) return null;
+
+    return (
+      <section className="py-20 bg-gray-50">
+        <Container>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+              Pricing
+            </h2>
+            <p className="text-xl text-gray-600">
+              Choose the plan that fits your needs
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {pricing.map((plan) => (
+              <div
+                key={plan.id}
+                className="bg-white rounded-xl shadow-lg p-8 text-center border-2 border-gray-200 hover:border-blue-500 transition-colors"
+              >
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  {plan.title}
+                </h3>
+                {plan.price && (
                   <div className="text-4xl font-bold text-blue-600 mb-4">
-                    {content.price}
+                    {plan.price}
                   </div>
                 )}
-                {content.features && content.features.length > 0 && (
+                <p className="text-gray-600 mb-6">{plan.content}</p>
+                {plan.features && plan.features.length > 0 && (
                   <ul className="space-y-3 mb-8">
-                    {content.features.map((feature, index) => (
+                    {plan.features.map((feature, index) => (
                       <li
                         key={index}
                         className="flex items-center justify-center"
@@ -252,78 +308,119 @@ export default function DynamicPage() {
                     ))}
                   </ul>
                 )}
-                {content.buttonText && (
-                  <Link href={content.buttonLink || "#"}>
+                {plan.buttonText && (
+                  <Link href={plan.buttonLink || "#"}>
                     <Button size="lg" className="w-full">
-                      {content.buttonText}
+                      {plan.buttonText}
                     </Button>
                   </Link>
                 )}
               </div>
-            </Container>
-          </section>
-        );
+            ))}
+          </div>
+        </Container>
+      </section>
+    );
+  };
 
-      case "testimonial":
-        return (
-          <section key={content.id} className="py-20 bg-blue-50">
-            <Container>
-              <div className="text-center max-w-4xl mx-auto">
-                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-                  {content.title}
-                </h2>
-                <blockquote className="text-xl lg:text-2xl text-gray-600 italic mb-8">
-                  "{content.content}"
-                </blockquote>
-                {content.imageUrl && (
-                  <img
-                    src={content.imageUrl}
-                    alt="Testimonial"
-                    className="w-16 h-16 rounded-full mx-auto"
-                  />
-                )}
-              </div>
-            </Container>
-          </section>
-        );
+  const renderTestimonialsSection = (testimonials: ContentHeading[]) => {
+    if (testimonials.length === 0) return null;
 
-      case "faq":
-        return (
-          <section key={content.id} className="py-20 bg-white">
-            <Container>
-              <div className="max-w-3xl mx-auto">
-                <div className="bg-gray-50 rounded-xl p-8">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                    {content.title}
+    return (
+      <section className="py-20 bg-blue-50">
+        <Container>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+              What Our Customers Say
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {testimonials.map((testimonial) => (
+              <div
+                key={testimonial.id}
+                className="bg-white rounded-xl p-6 shadow-lg"
+              >
+                <div className="text-center">
+                  {testimonial.imageUrl && (
+                    <img
+                      src={testimonial.imageUrl}
+                      alt={testimonial.title}
+                      className="w-16 h-16 rounded-full mx-auto mb-4"
+                    />
+                  )}
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {testimonial.title}
                   </h3>
-                  <p className="text-gray-600">{content.content}</p>
+                  <blockquote className="text-gray-600 italic mb-4">
+                    "{testimonial.content}"
+                  </blockquote>
                 </div>
               </div>
-            </Container>
-          </section>
-        );
+            ))}
+          </div>
+        </Container>
+      </section>
+    );
+  };
 
-      case "text":
-      default:
-        return (
-          <section key={content.id} className="py-20 bg-white">
-            <Container>
-              <div className="max-w-4xl mx-auto">
+  const renderFAQSection = (faqs: ContentHeading[]) => {
+    if (faqs.length === 0) return null;
+
+    return (
+      <section className="py-20 bg-white">
+        <Container>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+              Frequently Asked Questions
+            </h2>
+          </div>
+          <div className="max-w-3xl mx-auto space-y-6">
+            {faqs.map((faq) => (
+              <div key={faq.id} className="bg-gray-50 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  {faq.title}
+                </h3>
+                <p className="text-gray-600">{faq.content}</p>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+    );
+  };
+
+  const renderTextSection = (textItems: ContentHeading[]) => {
+    if (textItems.length === 0) return null;
+
+    return (
+      <section className="py-20 bg-white">
+        <Container>
+          <div className="max-w-4xl mx-auto space-y-12">
+            {textItems.map((text) => (
+              <div key={text.id}>
                 <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-                  {content.title}
+                  {text.title}
                 </h2>
                 <div className="text-xl text-gray-600 leading-relaxed">
-                  {content.content.split("\n").map((paragraph, index) => (
+                  {text.content.split("\n").map((paragraph, index) => (
                     <p key={index} className="mb-4">
                       {paragraph}
                     </p>
                   ))}
                 </div>
+                {text.buttonText && (
+                  <div className="mt-6">
+                    <Link href={text.buttonLink || "#"}>
+                      <Button size="lg">{text.buttonText}</Button>
+                    </Link>
+                  </div>
+                )}
               </div>
-            </Container>
-          </section>
-        );
-    }
+            ))}
+          </div>
+        </Container>
+      </section>
+    );
   };
 
   if (loading) {
@@ -364,7 +461,28 @@ export default function DynamicPage() {
     );
   }
 
+  // Organize content into sections
+  const sections = organizeContent(pageContent);
+
   return (
-    <div className="min-h-screen">{pageContent.map(renderContentSection)}</div>
+    <div className="min-h-screen">
+      {/* Render Hero Section (should be first) */}
+      {sections.hero.map(renderHeroSection)}
+
+      {/* Render Features Section */}
+      {renderFeaturesSection(sections.features)}
+
+      {/* Render Pricing Section */}
+      {renderPricingSection(sections.pricing)}
+
+      {/* Render Text Content */}
+      {renderTextSection(sections.text)}
+
+      {/* Render Testimonials */}
+      {renderTestimonialsSection(sections.testimonials)}
+
+      {/* Render FAQs */}
+      {renderFAQSection(sections.faqs)}
+    </div>
   );
 }

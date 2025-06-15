@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/Button";
-import { NAVIGATION_ITEMS } from "@/constants/navigation";
 import { RootState } from "@/store";
 import { closeMobileMenu, setActiveItem } from "@/store/slices/navigationSlice";
 import { cn } from "@/lib/utils";
@@ -34,15 +33,9 @@ export function MobileMenu() {
 
   useEffect(() => {
     if (!realtimeDb) {
-      // If Firebase is not available, use the static navigation items
-      const staticNavItems = NAVIGATION_ITEMS.map((item, index) => ({
-        id: item.id,
-        label: item.label,
-        href: item.href,
-        description: item.description,
-        order: index + 1,
-      }));
-      setNavigationItems(staticNavItems);
+      console.warn(
+        "Firebase not initialized - mobile navigation will be empty"
+      );
       setLoading(false);
       return;
     }
@@ -60,15 +53,8 @@ export function MobileMenu() {
             .sort((a, b) => a.order - b.order);
           setNavigationItems(navItems);
         } else {
-          // If no Firebase data, use static navigation items as fallback
-          const staticNavItems = NAVIGATION_ITEMS.map((item, index) => ({
-            id: item.id,
-            label: item.label,
-            href: item.href,
-            description: item.description,
-            order: index + 1,
-          }));
-          setNavigationItems(staticNavItems);
+          console.warn("No navigation items found in Firebase");
+          setNavigationItems([]);
         }
         setLoading(false);
       });
@@ -76,15 +62,7 @@ export function MobileMenu() {
       return () => unsubscribe();
     } catch (error) {
       console.error("Error fetching navigation items:", error);
-      // Fallback to static navigation items
-      const staticNavItems = NAVIGATION_ITEMS.map((item, index) => ({
-        id: item.id,
-        label: item.label,
-        href: item.href,
-        description: item.description,
-        order: index + 1,
-      }));
-      setNavigationItems(staticNavItems);
+      setNavigationItems([]);
       setLoading(false);
     }
   }, []);
@@ -150,8 +128,18 @@ export function MobileMenu() {
                   </div>
                 ))}
               </div>
+            ) : navigationItems.length === 0 ? (
+              // No navigation items
+              <div className="text-center py-8">
+                <div className="text-gray-500 text-sm">
+                  No navigation items configured
+                </div>
+                <div className="text-xs text-gray-400 mt-2">
+                  Please add navigation items in Firebase
+                </div>
+              </div>
             ) : (
-              // Navigation items (either from Firebase or static fallback)
+              // Navigation items from Firebase
               navigationItems.map((item) => (
                 <Link
                   key={item.id}
