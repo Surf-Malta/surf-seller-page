@@ -1,4 +1,3 @@
-// src/app/[...slug]/not-found.tsx
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
@@ -22,11 +21,6 @@ export default function DynamicNotFound() {
               <Link href="/">
                 <Button size="lg" className="px-8">
                   Go Home
-                </Button>
-              </Link>
-              <Link href="/sell-online">
-                <Button variant="outline" size="lg" className="px-8">
-                  Start Selling
                 </Button>
               </Link>
             </div>

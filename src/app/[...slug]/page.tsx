@@ -1,4 +1,3 @@
-// src/app/[...slug]/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -43,7 +42,6 @@ interface NavigationItem {
 export default function DynamicPage() {
   const params = useParams();
   const [pageContent, setPageContent] = useState<ContentHeading[]>([]);
-  const [navigationItems, setNavigationItems] = useState<NavigationItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [pageExists, setPageExists] = useState(false);
   const [pageTitle, setPageTitle] = useState("");
@@ -71,8 +69,6 @@ export default function DynamicPage() {
               ...navData[key],
             }))
             .sort((a, b) => a.order - b.order);
-
-          setNavigationItems(navItems);
 
           // Check if current path matches any navigation item
           const currentPage = navItems.find(
