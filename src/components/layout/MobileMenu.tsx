@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,9 +9,21 @@ import { NAVIGATION_ITEMS } from "@/constants/navigation";
 import { RootState } from "@/store";
 import { closeMobileMenu, setActiveItem } from "@/store/slices/navigationSlice";
 import { cn } from "@/lib/utils";
+import { ref, onValue } from "firebase/database";
+import { realtimeDb } from "@/lib/firebase";
+
+interface NavigationItem {
+  id: string;
+  label: string;
+  href: string;
+  description: string;
+  order: number;
+}
 
 export function MobileMenu() {
   const pathname = usePathname();
+  const [navigationItems, setNavigationItems] = useState<NavigationItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const { isMobileMenuOpen } = useSelector(
     (state: RootState) => state.navigation
   );
@@ -18,6 +31,63 @@ export function MobileMenu() {
     (state: RootState) => state.auth
   );
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!realtimeDb) {
+      // If Firebase is not available, use the static navigation items
+      const staticNavItems = NAVIGATION_ITEMS.map((item, index) => ({
+        id: item.id,
+        label: item.label,
+        href: item.href,
+        description: item.description,
+        order: index + 1,
+      }));
+      setNavigationItems(staticNavItems);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const navItemsRef = ref(realtimeDb, "navigation_items");
+      const unsubscribe = onValue(navItemsRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const navItems: NavigationItem[] = Object.keys(data)
+            .map((key) => ({
+              id: key,
+              ...data[key],
+            }))
+            .sort((a, b) => a.order - b.order);
+          setNavigationItems(navItems);
+        } else {
+          // If no Firebase data, use static navigation items as fallback
+          const staticNavItems = NAVIGATION_ITEMS.map((item, index) => ({
+            id: item.id,
+            label: item.label,
+            href: item.href,
+            description: item.description,
+            order: index + 1,
+          }));
+          setNavigationItems(staticNavItems);
+        }
+        setLoading(false);
+      });
+
+      return () => unsubscribe();
+    } catch (error) {
+      console.error("Error fetching navigation items:", error);
+      // Fallback to static navigation items
+      const staticNavItems = NAVIGATION_ITEMS.map((item, index) => ({
+        id: item.id,
+        label: item.label,
+        href: item.href,
+        description: item.description,
+        order: index + 1,
+      }));
+      setNavigationItems(staticNavItems);
+      setLoading(false);
+    }
+  }, []);
 
   const handleItemClick = (itemId: string) => {
     dispatch(setActiveItem(itemId));
@@ -71,31 +141,45 @@ export function MobileMenu() {
 
           {/* Navigation Items */}
           <div className="flex-1 px-4 py-6 space-y-2">
-            {NAVIGATION_ITEMS.map((item) => (
-              <Link
-                key={item.id}
-                href={item.href}
-                onClick={() => handleItemClick(item.id)}
-                className={cn(
-                  "flex flex-col p-3 rounded-lg transition-colors",
-                  isActiveItem(item.href)
-                    ? "bg-blue-50 border border-blue-200"
-                    : "hover:bg-gray-50"
-                )}
-              >
-                <span
+            {loading ? (
+              // Loading skeleton
+              <div className="space-y-2">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="h-16 bg-gray-200 rounded-lg"></div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              // Navigation items (either from Firebase or static fallback)
+              navigationItems.map((item) => (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  onClick={() => handleItemClick(item.id)}
                   className={cn(
-                    "font-medium",
-                    isActiveItem(item.href) ? "text-blue-600" : "text-gray-900"
+                    "flex flex-col p-3 rounded-lg transition-colors",
+                    isActiveItem(item.href)
+                      ? "bg-blue-50 border border-blue-200"
+                      : "hover:bg-gray-50"
                   )}
                 >
-                  {item.label}
-                </span>
-                <span className="text-sm text-gray-600 mt-1">
-                  {item.description}
-                </span>
-              </Link>
-            ))}
+                  <span
+                    className={cn(
+                      "font-medium",
+                      isActiveItem(item.href)
+                        ? "text-blue-600"
+                        : "text-gray-900"
+                    )}
+                  >
+                    {item.label}
+                  </span>
+                  <span className="text-sm text-gray-600 mt-1">
+                    {item.description}
+                  </span>
+                </Link>
+              ))
+            )}
           </div>
 
           {/* Auth Section */}

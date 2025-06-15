@@ -5,6 +5,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 import authSlice from "./slices/authSlice";
 import navigationSlice from "./slices/navigationSlice";
 import uiSlice from "./slices/uiSlice";
+import contentSlice from "./slices/contentSlice";
 
 const persistConfig = {
   key: "root",
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   auth: authSlice,
   navigation: navigationSlice,
   ui: uiSlice,
+  content: contentSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
