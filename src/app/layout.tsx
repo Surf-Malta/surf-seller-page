@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ReduxProvider } from "@/store/provider";
 import { Header } from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer"; // Add this import
+import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -33,13 +33,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className="scroll-smooth">
+      <body className={`${inter.className} bg-gray-50`}>
         <ReduxProvider>
           <div className="min-h-screen flex flex-col">
             <Header />
-            <main className="flex-1">{children}</main>
-            <Footer /> {/* Add the footer here */}
+            {/* Main content with proper top spacing */}
+            <main className="flex-1 relative">{children}</main>
+            <Footer />
           </div>
         </ReduxProvider>
       </body>
