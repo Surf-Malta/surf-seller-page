@@ -38,8 +38,7 @@ export default function RootLayout({
         <ReduxProvider>
           <div className="min-h-screen flex flex-col">
             <Header />
-            {/* Main content with proper top spacing */}
-            <main className="flex-1 relative">{children}</main>
+            <main className="flex-1">{children}</main>
             <Footer />
           </div>
         </ReduxProvider>

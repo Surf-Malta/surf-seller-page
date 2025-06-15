@@ -184,11 +184,11 @@ export default function DynamicPage() {
   const renderHeroSection = (hero: ContentHeading) => (
     <section
       key={hero.id}
-      className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden"
+      className="relative pt-20 lg:pt-24 min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden"
     >
       <FloatingShapes />
       <Container className="relative z-10">
-        <div className="text-center max-w-5xl mx-auto">
+        <div className="text-center max-w-5xl mx-auto py-12 lg:py-16">
           <div className="animate-bounce-in">
             <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
               <span className="gradient-text">{hero.title}</span>
@@ -592,7 +592,7 @@ export default function DynamicPage() {
   // If no content but page exists, show default content
   if (pageContent.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center relative overflow-hidden">
+      <div className="relative pt-20 lg:pt-24 min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center relative overflow-hidden">
         <FloatingShapes />
         <Container className="relative z-10">
           <div className="text-center animate-scale-in">

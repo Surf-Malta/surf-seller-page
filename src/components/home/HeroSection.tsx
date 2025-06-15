@@ -17,7 +17,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ hero }: HeroSectionProps) {
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 relative overflow-hidden">
+    <section className="relative pt-20 lg:pt-24 min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden">
       {/* Floating shapes */}
       <div className="floating-shapes">
         <div className="floating-shape"></div>
@@ -27,7 +27,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
       </div>
 
       <Container className="relative z-10">
-        <div className="text-center max-w-6xl mx-auto">
+        <div className="text-center max-w-6xl mx-auto py-12 lg:py-16">
           <div className="animate-bounce-in">
             <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
               <span className="gradient-text">{hero.title}</span>
@@ -76,20 +76,20 @@ export function HeroSection({ hero }: HeroSectionProps) {
               <div className="text-gray-600">Uptime</div>
             </div>
           </div>
-        </div>
 
-        {hero.imageUrl && (
-          <div className="mt-20 text-center animate-fade-in">
-            <div className="relative inline-block max-w-5xl">
-              <img
-                src={hero.imageUrl}
-                alt={hero.title}
-                className="w-full rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute -inset-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-lg opacity-20 -z-10"></div>
+          {hero.imageUrl && (
+            <div className="mt-20 text-center animate-fade-in">
+              <div className="relative inline-block max-w-5xl">
+                <img
+                  src={hero.imageUrl}
+                  alt={hero.title}
+                  className="w-full rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute -inset-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-lg opacity-20 -z-10"></div>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </Container>
 
       {/* Bottom gradient fade */}
