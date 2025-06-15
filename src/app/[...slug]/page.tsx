@@ -9,6 +9,13 @@ import { realtimeDb } from "@/lib/firebase";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { HeroSection } from "@/components/content/HeroSection";
+import { FeaturesSection } from "@/components/content/FeaturesSection";
+import { PricingSection } from "@/components/content/PricingSection";
+import { TestimonialsSection } from "@/components/content/TestimonialsSection";
+import { FAQSection } from "@/components/content/FAQSection";
+import { TextSection } from "@/components/content/TextSection";
+
 interface ContentHeading {
   id: string;
   title: string;

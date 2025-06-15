@@ -77,12 +77,7 @@ export function PricingSection({
 
               {plan.buttonText && (
                 <Link href={plan.buttonLink || "#"}>
-                  <Button
-                    size="lg"
-                    className={`w-full ${
-                      index === 1 ? "bg-blue-600 hover:bg-blue-700" : ""
-                    }`}
-                  >
+                  <Button size="lg" className="w-full">
                     {plan.buttonText}
                   </Button>
                 </Link>
