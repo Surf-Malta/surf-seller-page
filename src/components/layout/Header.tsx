@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
 import { Navigation } from "./Navigation";
 import { MobileMenu } from "./MobileMenu";
+import { useAuth } from "@/context/AuthContext";
 import { RootState } from "@/store";
 import { toggleMobileMenu } from "@/store/slices/navigationSlice";
 import { cn } from "@/lib/utils";
@@ -17,9 +18,7 @@ export function Header() {
   const { isMobileMenuOpen } = useSelector(
     (state: RootState) => state.navigation
   );
-  const { isAuthenticated, user } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { user, isAuthenticated, logout } = useAuth();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -55,16 +54,19 @@ export function Header() {
 
             {/* Desktop Auth Buttons */}
             <div className="hidden lg:flex items-center space-x-4">
-              {isAuthenticated ? (
+              {isAuthenticated && user ? (
                 <div className="flex items-center space-x-4">
                   <span className="text-sm text-gray-700">
-                    Welcome, {user?.name}
+                    Welcome, {user.name}
                   </span>
                   <Link href="/dashboard">
                     <Button variant="primary" size="sm">
                       Dashboard
                     </Button>
                   </Link>
+                  <Button variant="ghost" size="sm" onClick={logout}>
+                    Logout
+                  </Button>
                 </div>
               ) : (
                 <>
