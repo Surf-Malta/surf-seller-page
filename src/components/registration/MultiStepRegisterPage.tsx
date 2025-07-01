@@ -442,7 +442,7 @@ export default function MultiStepRegisterPage() {
 
             {/* Right Section - Form */}
             <div className="ecommerce-card p-10">
-              {/* Form content remains the same as before but with updated styling */}
+              {/* Step 1 Form */}
               {currentStep === 1 && (
                 <div className="space-y-6">
                   <div>
@@ -537,68 +537,6 @@ export default function MultiStepRegisterPage() {
                   </div>
                 </div>
               )}
-
-              {/* Steps 2, 3, 4 form content would continue with similar styling updates... */}
-              {/* For brevity, I'm including just the navigation buttons */}
-
-              {/* Navigation Buttons */}
-              <div className="flex justify-between pt-8 border-t border-gray-200">
-                {currentStep > 1 ? (
-                  <button
-                    onClick={prevStep}
-                    className="btn-ecommerce-secondary px-8 py-3"
-                  >
-                    ← Previous
-                  </button>
-                ) : (
-                  <div></div>
-                )}
-
-                <div className="flex space-x-4">
-                  {currentStep < totalSteps ? (
-                    <button
-                      onClick={nextStep}
-                      disabled={!isStepValid()}
-                      className="btn-ecommerce-primary px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      Continue →
-                    </button>
-                  ) : (
-                    <button
-                      onClick={handleSubmit}
-                      disabled={!isStepValid() || loading}
-                      className="btn-ecommerce-success px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {loading ? (
-                        <span className="flex items-center">
-                          <svg
-                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                          >
-                            <circle
-                              className="opacity-25"
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                            ></circle>
-                            <path
-                              className="opacity-75"
-                              fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>
-                          </svg>
-                          Creating Your Store...
-                        </span>
-                      ) : (
-                        "🚀 Launch My Store!"
-                      )}
-                    </button>
-                  )}
-                </div>
-              </div>
 
               {/* Step 2 Form */}
               {currentStep === 2 && (
@@ -731,11 +669,21 @@ export default function MultiStepRegisterPage() {
                 </div>
               )}
 
-              {/* Step 3 Form */}
+              {/* Step 3 Form - Fixed Radio Buttons */}
               {currentStep === 3 && (
                 <div className="space-y-6">
-                  <div className="space-y-6">
-                    <div className="ecommerce-card-featured p-6 group">
+                  <div className="space-y-4">
+                    {/* Free Shipping Option */}
+                    <div
+                      className={`border-2 rounded-xl p-6 transition-all duration-200 cursor-pointer ${
+                        formData.shippingMethod === "cover_cost"
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-gray-200 hover:border-blue-300 hover:bg-blue-25"
+                      }`}
+                      onClick={() =>
+                        updateFormData("shippingMethod", "cover_cost")
+                      }
+                    >
                       <div className="flex items-start space-x-4">
                         <input
                           type="radio"
@@ -751,7 +699,7 @@ export default function MultiStepRegisterPage() {
                         <div className="flex-1">
                           <label
                             htmlFor="cover_cost"
-                            className="font-bold text-gray-900 text-lg cursor-pointer"
+                            className="font-bold text-gray-900 text-lg cursor-pointer block"
                           >
                             🆓 Free Shipping (Recommended)
                           </label>
@@ -766,7 +714,17 @@ export default function MultiStepRegisterPage() {
                       </div>
                     </div>
 
-                    <div className="border-2 border-gray-200 rounded-xl p-6 hover:border-blue-300 transition-colors">
+                    {/* Flat Rate Option */}
+                    <div
+                      className={`border-2 rounded-xl p-6 transition-all duration-200 cursor-pointer ${
+                        formData.shippingMethod === "flat_rate"
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-gray-200 hover:border-blue-300 hover:bg-blue-25"
+                      }`}
+                      onClick={() =>
+                        updateFormData("shippingMethod", "flat_rate")
+                      }
+                    >
                       <div className="flex items-start space-x-4">
                         <input
                           type="radio"
@@ -782,7 +740,7 @@ export default function MultiStepRegisterPage() {
                         <div className="flex-1">
                           <label
                             htmlFor="flat_rate"
-                            className="font-bold text-gray-900 text-lg cursor-pointer"
+                            className="font-bold text-gray-900 text-lg cursor-pointer block"
                           >
                             📦 Flat Rate Shipping
                           </label>
@@ -794,7 +752,17 @@ export default function MultiStepRegisterPage() {
                       </div>
                     </div>
 
-                    <div className="border-2 border-gray-200 rounded-xl p-6 hover:border-blue-300 transition-colors">
+                    {/* Calculated Shipping Option */}
+                    <div
+                      className={`border-2 rounded-xl p-6 transition-all duration-200 cursor-pointer ${
+                        formData.shippingMethod === "exact_amount"
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-gray-200 hover:border-blue-300 hover:bg-blue-25"
+                      }`}
+                      onClick={() =>
+                        updateFormData("shippingMethod", "exact_amount")
+                      }
+                    >
                       <div className="flex items-start space-x-4">
                         <input
                           type="radio"
@@ -810,7 +778,7 @@ export default function MultiStepRegisterPage() {
                         <div className="flex-1">
                           <label
                             htmlFor="exact_amount"
-                            className="font-bold text-gray-900 text-lg cursor-pointer"
+                            className="font-bold text-gray-900 text-lg cursor-pointer block"
                           >
                             ⚖️ Calculated Shipping
                           </label>
@@ -825,11 +793,19 @@ export default function MultiStepRegisterPage() {
                 </div>
               )}
 
-              {/* Step 4 Form */}
+              {/* Step 4 Form - Fixed Radio Buttons */}
               {currentStep === 4 && (
                 <div className="space-y-6">
-                  <div className="space-y-6">
-                    <div className="ecommerce-card-featured p-8 group">
+                  <div className="space-y-4">
+                    {/* Advertising Yes Option */}
+                    <div
+                      className={`border-2 rounded-xl p-8 transition-all duration-200 cursor-pointer ${
+                        formData.advertiseItems
+                          ? "border-blue-500 bg-gradient-to-br from-blue-50 to-indigo-100"
+                          : "border-gray-200 hover:border-blue-300 hover:bg-blue-25"
+                      }`}
+                      onClick={() => updateFormData("advertiseItems", true)}
+                    >
                       <div className="flex items-start space-x-4">
                         <input
                           type="radio"
@@ -844,7 +820,7 @@ export default function MultiStepRegisterPage() {
                         <div className="flex-1">
                           <label
                             htmlFor="advertise_yes"
-                            className="font-bold text-blue-900 text-xl cursor-pointer"
+                            className="font-bold text-blue-900 text-xl cursor-pointer block"
                           >
                             🚀 YES! Advertise My Products (Recommended)
                           </label>
@@ -878,7 +854,15 @@ export default function MultiStepRegisterPage() {
                       </div>
                     </div>
 
-                    <div className="border-2 border-gray-200 rounded-xl p-8">
+                    {/* No Advertising Option */}
+                    <div
+                      className={`border-2 rounded-xl p-8 transition-all duration-200 cursor-pointer ${
+                        !formData.advertiseItems
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-gray-200 hover:border-blue-300 hover:bg-blue-25"
+                      }`}
+                      onClick={() => updateFormData("advertiseItems", false)}
+                    >
                       <div className="flex items-start space-x-4">
                         <input
                           type="radio"
@@ -893,7 +877,7 @@ export default function MultiStepRegisterPage() {
                         <div className="flex-1">
                           <label
                             htmlFor="advertise_no"
-                            className="font-bold text-gray-900 text-lg cursor-pointer"
+                            className="font-bold text-gray-900 text-lg cursor-pointer block"
                           >
                             📍 No Advertising - Local Sales Only
                           </label>
@@ -909,7 +893,7 @@ export default function MultiStepRegisterPage() {
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6">
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6 mt-6">
                     <h4 className="font-bold text-green-800 mb-2">
                       🎯 Pro Tip for Success
                     </h4>
@@ -921,6 +905,65 @@ export default function MultiStepRegisterPage() {
                   </div>
                 </div>
               )}
+
+              {/* Navigation Buttons - Fixed positioning */}
+              <div className="flex justify-between pt-8 mt-8 border-t border-gray-200">
+                {currentStep > 1 ? (
+                  <button
+                    onClick={prevStep}
+                    className="btn-ecommerce-secondary px-8 py-3"
+                  >
+                    ← Previous
+                  </button>
+                ) : (
+                  <div></div>
+                )}
+
+                <div className="flex space-x-4">
+                  {currentStep < totalSteps ? (
+                    <button
+                      onClick={nextStep}
+                      disabled={!isStepValid()}
+                      className="btn-ecommerce-primary px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Continue →
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleSubmit}
+                      disabled={!isStepValid() || loading}
+                      className="btn-ecommerce-success px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {loading ? (
+                        <span className="flex items-center">
+                          <svg
+                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                          Creating Your Store...
+                        </span>
+                      ) : (
+                        "🚀 Launch My Store!"
+                      )}
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
