@@ -9,12 +9,12 @@
   }
 
   body {
-    @apply text-gray-900 antialiased bg-gray-50;
+    @apply text-gray-900 antialiased bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50;
   }
 }
 
 @layer components {
-  /* Animation classes */
+  /* E-commerce focused animations */
   .animate-fade-in {
     animation: fadeIn 0.8s ease-in-out;
   }
@@ -23,76 +23,104 @@
     animation: slideUp 0.8s ease-out;
   }
 
-  .animate-slide-in-left {
-    animation: slideInLeft 0.8s ease-out;
-  }
-
-  .animate-slide-in-right {
-    animation: slideInRight 0.8s ease-out;
-  }
-
   .animate-scale-in {
     animation: scaleIn 0.6s ease-out;
   }
 
   .animate-bounce-in {
-    animation: bounceIn 0.8s ease-out;
+    animation: bounceIn 1s ease-out;
   }
 
   .animate-float {
-    animation: float 3s ease-in-out infinite;
+    animation: float 6s ease-in-out infinite;
   }
 
-  /* Gradient backgrounds */
-  .gradient-bg-1 {
+  .animate-pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+
+  /* Premium card styles for e-commerce */
+  .ecommerce-card {
+    @apply bg-white rounded-2xl shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .ecommerce-card-featured {
+    @apply bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl shadow-2xl border-2 border-blue-200 transition-all duration-500 transform hover:-translate-y-3 hover:scale-105;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  .ecommerce-card-featured:hover {
+    box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.3);
+  }
+
+  .ecommerce-card-featured::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+    background-size: 400% 400%;
+    animation: gradientShift 3s ease infinite;
+  }
+
+  /* E-commerce focused buttons */
+  .btn-ecommerce-primary {
+    @apply bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 hover:from-blue-700 hover:to-indigo-700;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-ecommerce-primary::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transition: left 0.5s;
+  }
+
+  .btn-ecommerce-primary:hover::before {
+    left: 100%;
+  }
+
+  .btn-ecommerce-secondary {
+    @apply bg-white text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl border-2 border-gray-200 transform hover:-translate-y-1 transition-all duration-300 hover:border-blue-300 hover:text-blue-700;
+  }
+
+  .btn-ecommerce-success {
+    @apply bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 hover:from-green-600 hover:to-emerald-600;
+  }
+
+  /* E-commerce icon containers */
+  .ecommerce-icon-container {
+    @apply w-20 h-20 rounded-2xl flex items-center justify-center text-3xl mb-6 shadow-lg transform transition-all duration-500 hover:scale-110 hover:rotate-6;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   }
 
-  .gradient-bg-2 {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  .ecommerce-icon-container-alt {
+    @apply w-16 h-16 rounded-xl flex items-center justify-center text-2xl mb-4 shadow-md transform transition-all duration-300 hover:scale-105;
   }
 
-  .gradient-bg-3 {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  /* Section spacing for e-commerce */
+  .section-ecommerce {
+    @apply py-24 lg:py-32 relative overflow-hidden;
   }
 
-  .gradient-bg-4 {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  }
-
-  /* Glass morphism effect */
-  .glass-effect {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  /* Elevated card styles */
-  .elevated-card {
-    @apply bg-white rounded-2xl shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1;
-  }
-
-  /* Feature icon containers */
-  .feature-icon-container {
-    @apply w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-lg transform transition-all duration-300 hover:scale-110;
-  }
-
-  /* Improved buttons */
-  .btn-primary-enhanced {
-    @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300;
-  }
-
-  .btn-secondary-enhanced {
-    @apply bg-white text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl border border-gray-200 transform hover:-translate-y-0.5 transition-all duration-300;
-  }
-
-  /* Section spacing */
-  .section-padding {
-    @apply py-20 lg:py-32;
-  }
-
-  /* Decorative elements */
-  .floating-shapes {
+  /* E-commerce decorative elements */
+  .ecommerce-floating-shapes {
     position: absolute;
     top: 0;
     left: 0;
@@ -103,85 +131,208 @@
     z-index: 0;
   }
 
-  .floating-shape {
+  .ecommerce-shape {
     position: absolute;
     border-radius: 50%;
-    background: linear-gradient(
-      45deg,
-      rgba(99, 102, 241, 0.1),
-      rgba(168, 85, 247, 0.1)
-    );
-    animation: float 6s ease-in-out infinite;
+    opacity: 0.1;
+    animation: floatEcommerce 8s ease-in-out infinite;
   }
 
-  .floating-shape:nth-child(1) {
-    width: 80px;
-    height: 80px;
+  .ecommerce-shape:nth-child(1) {
+    width: 120px;
+    height: 120px;
     top: 10%;
     left: 10%;
+    background: linear-gradient(45deg, #667eea, #764ba2);
     animation-delay: 0s;
   }
 
-  .floating-shape:nth-child(2) {
-    width: 120px;
-    height: 120px;
+  .ecommerce-shape:nth-child(2) {
+    width: 80px;
+    height: 80px;
     top: 20%;
     right: 15%;
+    background: linear-gradient(45deg, #f093fb, #f5576c);
     animation-delay: 2s;
   }
 
-  .floating-shape:nth-child(3) {
-    width: 60px;
-    height: 60px;
+  .ecommerce-shape:nth-child(3) {
+    width: 100px;
+    height: 100px;
     bottom: 20%;
     left: 20%;
+    background: linear-gradient(45deg, #4facfe, #00f2fe);
     animation-delay: 4s;
   }
 
-  .floating-shape:nth-child(4) {
-    width: 100px;
-    height: 100px;
+  .ecommerce-shape:nth-child(4) {
+    width: 60px;
+    height: 60px;
     bottom: 15%;
-    right: 20%;
+    right: 25%;
+    background: linear-gradient(45deg, #43e97b, #38f9d7);
     animation-delay: 1s;
+  }
+
+  /* E-commerce product grid */
+  .ecommerce-grid {
+    @apply grid gap-8;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .ecommerce-grid-featured {
+    @apply grid gap-10;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+
+  /* E-commerce stats counters */
+  .ecommerce-stat {
+    @apply text-center p-8;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 1rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    transition: all 0.5s ease;
+    transform: translateZ(0);
+  }
+
+  .ecommerce-stat:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  .ecommerce-stat-number {
+    @apply text-5xl font-bold mb-2;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* E-commerce testimonial styles */
+  .ecommerce-testimonial {
+    @apply p-8 text-center relative;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 1rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    transition: all 0.5s ease;
+  }
+
+  .ecommerce-testimonial:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  .ecommerce-testimonial::before {
+    content: '"';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    font-size: 60px;
+    color: #667eea;
+    opacity: 0.3;
+    font-family: Georgia, serif;
+  }
+
+  /* E-commerce pricing cards */
+  .ecommerce-pricing-card {
+    @apply p-10 text-center relative;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 1rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    transition: all 0.5s ease;
+  }
+
+  .ecommerce-pricing-card:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  .ecommerce-pricing-card.featured {
+    @apply scale-110 border-2 border-blue-500;
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.05) 0%,
+      rgba(99, 102, 241, 0.1) 100%
+    );
+  }
+
+  .ecommerce-pricing-card.featured::after {
+    content: "Most Popular";
+    position: absolute;
+    top: 20px;
+    right: -30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 8px 40px;
+    font-size: 12px;
+    font-weight: bold;
+    transform: rotate(45deg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  /* E-commerce gradient text utilities */
+  .gradient-text-ecommerce {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  /* Gradient text */
-  .gradient-text {
-    @apply bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
+  .gradient-text-success {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  /* Custom spacing utilities */
-  .space-y-section > * + * {
-    margin-top: 8rem;
+  .gradient-text-warm {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  /* Interactive elements */
-  .interactive-hover {
-    @apply transform transition-all duration-300 hover:scale-105 hover:shadow-lg;
+  /* E-commerce hover effects */
+  .hover-lift {
+    @apply transform transition-all duration-300 hover:-translate-y-2;
+  }
+
+  .hover-lift:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  .hover-glow {
+    @apply transition-all duration-300;
+    filter: drop-shadow(0 0 0 transparent);
+  }
+
+  .hover-glow:hover {
+    filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.3));
+  }
+
+  /* E-commerce interactive elements */
+  .interactive-ecommerce {
+    @apply transform transition-all duration-500 hover:scale-105 cursor-pointer;
+  }
+
+  .interactive-ecommerce:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   }
 }
 
-/* Keyframe animations */
+/* E-commerce focused keyframe animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(50px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -189,32 +340,21 @@
   }
 }
 
-@keyframes slideInLeft {
+@keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateX(-50px);
+    transform: translateY(60px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }
 
 @keyframes scaleIn {
   from {
     opacity: 0;
-    transform: scale(0.9);
+    transform: scale(0.8);
   }
   to {
     opacity: 1;
@@ -225,11 +365,11 @@
 @keyframes bounceIn {
   0% {
     opacity: 0;
-    transform: scale(0.3);
+    transform: scale(0.3) translateY(-50px);
   }
   50% {
     opacity: 1;
-    transform: scale(1.05);
+    transform: scale(1.05) translateY(0);
   }
   70% {
     transform: scale(0.9);
@@ -240,19 +380,63 @@
   }
 }
 
-@keyframes float {
+@keyframes floatEcommerce {
   0%,
   100% {
-    transform: translateY(0px);
+    transform: translateY(0px) rotate(0deg);
   }
-  50% {
-    transform: translateY(-20px);
+  33% {
+    transform: translateY(-30px) rotate(120deg);
+  }
+  66% {
+    transform: translateY(-60px) rotate(240deg);
   }
 }
 
-/* Responsive improvements */
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.8),
+      0 0 30px rgba(102, 126, 234, 0.3);
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* E-commerce responsive improvements */
 @media (max-width: 768px) {
-  .section-padding {
-    @apply py-12;
+  .section-ecommerce {
+    @apply py-16;
+  }
+
+  .ecommerce-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ecommerce-grid-featured {
+    grid-template-columns: 1fr;
+  }
+
+  .ecommerce-stat-number {
+    @apply text-4xl;
+  }
+
+  .btn-ecommerce-primary,
+  .btn-ecommerce-secondary,
+  .btn-ecommerce-success {
+    @apply px-6 py-3 text-base;
   }
 }
