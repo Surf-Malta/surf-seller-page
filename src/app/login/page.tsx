@@ -1,173 +1,83 @@
 "use client";
 
-import { useState } from "react";
 import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/Button";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function LoginPage() {
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    rememberMe: false,
-  });
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      // Create a form that will be submitted to CS-Cart
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action =
-        "https://surf.mt/vendor.php?dispatch=auth.login_form&return_url=vendor.php";
-      form.target = "_self"; // Open in same window
-
-      // Add username field
-      const usernameField = document.createElement("input");
-      usernameField.type = "hidden";
-      usernameField.name = "user_login"; // CS-Cart uses 'user_login' for username
-      usernameField.value = formData.username;
-      form.appendChild(usernameField);
-
-      // Add password field
-      const passwordField = document.createElement("input");
-      passwordField.type = "hidden";
-      passwordField.name = "password"; // CS-Cart uses 'password' for password
-      passwordField.value = formData.password;
-      form.appendChild(passwordField);
-
-      // Add security hash if needed (you might need to get this from CS-Cart)
-      // const securityHashField = document.createElement('input');
-      // securityHashField.type = 'hidden';
-      // securityHashField.name = 'security_hash';
-      // securityHashField.value = 'your_security_hash_here';
-      // form.appendChild(securityHashField);
-
-      // Add dispatch field
-      const dispatchField = document.createElement("input");
-      dispatchField.type = "hidden";
-      dispatchField.name = "dispatch";
-      dispatchField.value = "auth.login";
-      form.appendChild(dispatchField);
-
-      // Add remember me if checked
-      if (formData.rememberMe) {
-        const rememberField = document.createElement("input");
-        rememberField.type = "hidden";
-        rememberField.name = "remember_me";
-        rememberField.value = "Y";
-        form.appendChild(rememberField);
-      }
-
-      // Append form to body and submit
-      document.body.appendChild(form);
-      form.submit();
-
-      // Clean up
-      document.body.removeChild(form);
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("Login failed. Please try again.");
-      setIsLoading(false);
-    }
-  };
+  // Redirect to CS-Cart vendor login immediately
+  useEffect(() => {
+    // Redirect to CS-Cart vendor login page
+    window.location.href =
+      "https://surf.mt/vendor.php?dispatch=auth.login_form&return_url=vendor.php";
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white pt-20 lg:pt-24">
       <Container>
         <div className="flex items-center justify-center min-h-[calc(100vh-5rem)] lg:min-h-[calc(100vh-6rem)]">
           <div className="w-full max-w-md">
-            <div className="elevated-card p-10 animate-scale-in">
-              <div className="text-center mb-8">
-                <h1 className="text-4xl font-bold gradient-text mb-4">
-                  Welcome Back
+            <div className="elevated-card p-10 animate-scale-in text-center">
+              <div className="mb-8">
+                <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <svg
+                    className="w-10 h-10 text-white animate-spin"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+                </div>
+                <h1 className="text-3xl font-bold gradient-text mb-4">
+                  Redirecting to Vendor Login
                 </h1>
-                <p className="text-gray-600">Sign in to your vendor account</p>
+                <p className="text-gray-600">
+                  Taking you to the CS-Cart vendor panel...
+                </p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Username
-                  </label>
-                  <input
-                    type="text"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter your username"
-                    required
-                  />
+              <div className="mb-8">
+                <div className="flex justify-center">
+                  <div className="flex space-x-2">
+                    <div className="w-3 h-3 bg-blue-600 rounded-full animate-bounce"></div>
+                    <div
+                      className="w-3 h-3 bg-blue-600 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.1s" }}
+                    ></div>
+                    <div
+                      className="w-3 h-3 bg-blue-600 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.2s" }}
+                    ></div>
+                  </div>
                 </div>
+              </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter your password"
-                    required
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="rememberMe"
-                      checked={formData.rememberMe}
-                      onChange={handleInputChange}
-                      className="mr-2 rounded"
-                    />
-                    <span className="text-sm text-gray-600">Remember me</span>
-                  </label>
-                  <Link
-                    href="/forgot-password"
-                    className="text-sm text-blue-600 hover:text-blue-700 font-medium"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-
-                <Button
-                  type="submit"
-                  className="btn-primary-enhanced w-full"
-                  isLoading={isLoading}
-                  disabled={
-                    isLoading || !formData.username || !formData.password
-                  }
+              {/* Fallback button in case redirect doesn't work */}
+              <div className="space-y-4">
+                <a
+                  href="https://surf.mt/vendor.php?dispatch=auth.login_form&return_url=vendor.php"
+                  className="btn-primary-enhanced w-full inline-block"
                 >
-                  {isLoading ? "Signing In..." : "Sign In to Vendor Panel"}
-                </Button>
-              </form>
+                  Continue to Vendor Login
+                </a>
 
-              <div className="mt-8 text-center">
-                <p className="text-gray-600">
-                  Don&apos;t have an account?{" "}
-                  <Link
-                    href="/register"
-                    className="text-blue-600 hover:text-blue-700 font-medium"
-                  >
-                    Sign up here
-                  </Link>
-                </p>
+                <div className="text-center">
+                  <p className="text-gray-600 text-sm">
+                    Don&apos;t have an account?{" "}
+                    <Link
+                      href="/register"
+                      className="text-blue-600 hover:text-blue-700 font-medium"
+                    >
+                      Sign up here
+                    </Link>
+                  </p>
+                </div>
               </div>
 
               {/* Information about the redirect */}
@@ -188,11 +98,12 @@ export default function LoginPage() {
                   </svg>
                   <div>
                     <p className="text-sm text-blue-800 font-medium">
-                      Vendor Panel Access
+                      Secure Vendor Access
                     </p>
                     <p className="text-xs text-blue-700 mt-1">
-                      You will be redirected to the CS-Cart vendor panel to
-                      manage your store.
+                      You&apos;re being redirected to our secure CS-Cart vendor
+                      panel where you can manage your store, products, and
+                      orders.
                     </p>
                   </div>
                 </div>

@@ -26,9 +26,6 @@ export function MobileMenu() {
   const { isMobileMenuOpen } = useSelector(
     (state: RootState) => state.navigation
   );
-  const { isAuthenticated, user } = useSelector(
-    (state: RootState) => state.auth
-  );
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -170,52 +167,54 @@ export function MobileMenu() {
             )}
           </div>
 
-          {/* Auth Section */}
+          {/* Auth Section - Simplified */}
           <div className="p-4 border-t border-gray-200">
-            {isAuthenticated ? (
-              <div className="space-y-3">
-                <div className="text-sm text-gray-600">
-                  Welcome,{" "}
-                  <span className="font-medium text-gray-900">
-                    {user?.name}
-                  </span>
-                </div>
-                <Link
-                  href="/dashboard"
-                  onClick={() => dispatch(closeMobileMenu())}
-                >
-                  <Button variant="primary" className="w-full">
-                    Dashboard
-                  </Button>
-                </Link>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => {
-                    // Add logout logic here
-                    dispatch(closeMobileMenu());
-                  }}
-                >
-                  Logout
+            <div className="space-y-3">
+              <a
+                href="https://surf.mt/vendor.php?dispatch=auth.login_form&return_url=vendor.php"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => dispatch(closeMobileMenu())}
+              >
+                <Button variant="outline" className="w-full">
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                    />
+                  </svg>
+                  Vendor Login
                 </Button>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                <Link href="/login" onClick={() => dispatch(closeMobileMenu())}>
-                  <Button variant="outline" className="w-full">
-                    Login
-                  </Button>
-                </Link>
-                <Link
-                  href="/register"
-                  onClick={() => dispatch(closeMobileMenu())}
-                >
-                  <Button variant="primary" className="w-full">
-                    Start Selling
-                  </Button>
-                </Link>
-              </div>
-            )}
+              </a>
+              <Link
+                href="/register"
+                onClick={() => dispatch(closeMobileMenu())}
+              >
+                <Button variant="primary" className="w-full">
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                    />
+                  </svg>
+                  Start Selling
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

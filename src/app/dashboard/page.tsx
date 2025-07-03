@@ -1,216 +1,130 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  boothTitle: string;
-}
-
 export default function DashboardPage() {
-  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    // Get user from localStorage (temporary solution)
-    const userData = localStorage.getItem("currentUser");
-    if (userData) {
-      setUser(JSON.parse(userData));
-    }
-  }, []);
+    // Redirect to home page after 3 seconds
+    const timer = setTimeout(() => {
+      router.push("/");
+    }, 3000);
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white pt-20 lg:pt-24">
-        <Container>
-          <div className="flex items-center justify-center min-h-[calc(100vh-5rem)]">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                Please log in to access your dashboard
-              </h1>
-              <Link href="/login">
-                <Button variant="primary">Go to Login</Button>
-              </Link>
-            </div>
-          </div>
-        </Container>
-      </div>
-    );
-  }
+    return () => clearTimeout(timer);
+  }, [router]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white pt-20 lg:pt-24">
       <Container>
-        <div className="py-8">
-          {/* Welcome Header */}
-          <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
-            <div className="text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-3xl text-white mx-auto mb-4">
-                🎉
+        <div className="flex items-center justify-center min-h-[calc(100vh-5rem)]">
+          <div className="text-center">
+            <div className="ecommerce-card p-12 animate-scale-in max-w-2xl">
+              <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mx-auto mb-6 flex items-center justify-center">
+                <svg
+                  className="w-10 h-10 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
               </div>
-              <h1 className="text-4xl font-bold gradient-text mb-4">
-                Welcome to Surf Seller, {user.name}!
+
+              <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                Dashboard Not Available
               </h1>
-              <p className="text-xl text-gray-600 mb-6">
-                Your registration was successful! You're now ready to start
-                selling.
+
+              <p className="text-lg text-gray-600 mb-8">
+                The dashboard is no longer available. Please use the CS-Cart
+                vendor panel to manage your store.
               </p>
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-                <h3 className="font-semibold text-green-800 mb-2">
-                  🏪 Your Booth: "{user.boothTitle}"
-                </h3>
-                <p className="text-green-700 text-sm">
-                  Your seller account is being reviewed. You'll receive an email
-                  once it's approved (usually within 24 hours).
+
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
+                <div className="flex items-start">
+                  <svg
+                    className="w-6 h-6 text-blue-600 mt-1 mr-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <div>
+                    <h3 className="text-lg font-semibold text-blue-800 mb-2">
+                      Access Your Vendor Panel
+                    </h3>
+                    <p className="text-blue-700 text-sm">
+                      All store management, product uploads, and order tracking
+                      is now handled through the CS-Cart vendor panel.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="https://surf.mt/vendor.php?dispatch=auth.login_form&return_url=vendor.php"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <button className="btn-ecommerce-primary">
+                    <svg
+                      className="w-5 h-5 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    Go to Vendor Panel
+                  </button>
+                </a>
+                <Link href="/">
+                  <button className="btn-ecommerce-secondary">
+                    <svg
+                      className="w-5 h-5 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                      />
+                    </svg>
+                    Back to Home
+                  </button>
+                </Link>
+              </div>
+
+              <div className="mt-6 text-center">
+                <p className="text-gray-500 text-sm">
+                  Automatically redirecting to home page in 3 seconds...
                 </p>
               </div>
             </div>
           </div>
-
-          {/* Quick Actions Grid */}
-          {/* <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-4">📦</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Add Products
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Start listing your first products to sell
-              </p>
-              <Button variant="primary" className="w-full">
-                Add Product
-              </Button>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-4">🏪</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Setup Booth
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Customize your store appearance and details
-              </p>
-              <Button variant="outline" className="w-full">
-                Customize Booth
-              </Button>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                View Analytics
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Track your sales and performance
-              </p>
-              <Button variant="outline" className="w-full">
-                View Stats
-              </Button>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-4">💳</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Payment Setup
-              </h3>
-              <p className="text-gray-600 mb-4">Configure payment methods</p>
-              <Button variant="outline" className="w-full">
-                Setup Payments
-              </Button>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-4">🚚</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Shipping Settings
-              </h3>
-              <p className="text-gray-600 mb-4">Configure shipping options</p>
-              <Button variant="outline" className="w-full">
-                Setup Shipping
-              </Button>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-4">💬</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Get Support
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Need help? We're here for you
-              </p>
-              <Button variant="outline" className="w-full">
-                Contact Support
-              </Button>
-            </div>
-          </div> */}
-
-          {/* Getting Started Guide */}
-          {/* <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Getting Started Guide
-            </h2>
-            <div className="space-y-4">
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                  ✓
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">
-                    Account Created
-                  </h3>
-                  <p className="text-gray-600 text-sm">
-                    You've successfully created your seller account
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                  2
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">
-                    Add Your First Product
-                  </h3>
-                  <p className="text-gray-600 text-sm">
-                    List your first item to start selling
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                  3
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-500">
-                    Get Your First Sale
-                  </h3>
-                  <p className="text-gray-500 text-sm">
-                    Start earning money from your products
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                  4
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-500">
-                    Scale Your Business
-                  </h3>
-                  <p className="text-gray-500 text-sm">
-                    Grow your inventory and customer base
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div> */}
         </div>
       </Container>
     </div>

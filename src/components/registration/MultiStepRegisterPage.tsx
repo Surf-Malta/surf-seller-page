@@ -37,6 +37,7 @@ export default function MultiStepRegisterPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [registrationComplete, setRegistrationComplete] = useState(false);
   const [formData, setFormData] = useState<RegistrationData>({
     boothIdentity: "",
     boothTitle: "",
@@ -93,17 +94,8 @@ export default function MultiStepRegisterPage() {
 
       await set(newSellerRef, sellerData);
 
-      localStorage.setItem(
-        "currentUser",
-        JSON.stringify({
-          id: newSellerRef.key,
-          name: `${formData.firstName} ${formData.lastName}`,
-          email: "",
-          boothTitle: formData.boothTitle,
-        })
-      );
-
-      router.push("/dashboard");
+      // Just show success message, no login state
+      setRegistrationComplete(true);
     } catch (error) {
       console.error("Registration error:", error);
       alert("Registration failed. Please try again.");
@@ -142,6 +134,147 @@ export default function MultiStepRegisterPage() {
     3: "Shipping Setup",
     4: "Growth Options",
   };
+
+  // Show success page after registration
+  if (registrationComplete) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 pt-20 lg:pt-24">
+        <Container>
+          <div className="max-w-4xl mx-auto py-16">
+            <div className="text-center">
+              <div className="ecommerce-card p-12 animate-scale-in">
+                <div className="w-24 h-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto mb-8 flex items-center justify-center text-white text-4xl">
+                  ✅
+                </div>
+
+                <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+                  <span className="gradient-text-ecommerce">
+                    Registration Successful!
+                  </span>
+                </h1>
+
+                <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+                  Thank you for joining Surf Seller! Your store "
+                  {formData.boothTitle}" has been submitted for review.
+                </p>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
+                  <div className="flex items-start">
+                    <svg
+                      className="w-6 h-6 text-blue-600 mt-1 mr-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <div>
+                      <h3 className="text-lg font-semibold text-blue-800 mb-2">
+                        What happens next?
+                      </h3>
+                      <ul className="text-blue-700 space-y-2">
+                        <li>
+                          📧 You'll receive a confirmation email within 24 hours
+                        </li>
+                        <li>
+                          🔍 Our team will review your application (usually
+                          takes 1-2 business days)
+                        </li>
+                        <li>
+                          🚀 Once approved, you'll get access to the vendor
+                          panel to start selling
+                        </li>
+                        <li>
+                          💬 Our support team will contact you with next steps
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6 mb-8">
+                  <div className="bg-white border border-gray-200 rounded-xl p-6">
+                    <div className="text-3xl mb-4">📱</div>
+                    <h4 className="font-bold text-gray-900 mb-2">
+                      Stay Connected
+                    </h4>
+                    <p className="text-gray-600 text-sm">
+                      Follow us on social media for seller tips and updates
+                    </p>
+                  </div>
+                  <div className="bg-white border border-gray-200 rounded-xl p-6">
+                    <div className="text-3xl mb-4">📚</div>
+                    <h4 className="font-bold text-gray-900 mb-2">
+                      Learn & Prepare
+                    </h4>
+                    <p className="text-gray-600 text-sm">
+                      Check out our seller resources while you wait
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link href="/">
+                    <button className="btn-ecommerce-primary">
+                      <svg
+                        className="w-5 h-5 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                        />
+                      </svg>
+                      Back to Home
+                    </button>
+                  </Link>
+                  <Link href="/seller-guide">
+                    <button className="btn-ecommerce-secondary">
+                      <svg
+                        className="w-5 h-5 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                        />
+                      </svg>
+                      Seller Resources
+                    </button>
+                  </Link>
+                </div>
+
+                <div className="mt-8 text-center">
+                  <p className="text-gray-500 text-sm">
+                    Questions? Contact us at{" "}
+                    <a
+                      href="mailto:support@surfseller.com"
+                      className="text-blue-600 hover:text-blue-700 font-medium"
+                    >
+                      support@surfseller.com
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 pt-20 lg:pt-24">
@@ -955,10 +1088,10 @@ export default function MultiStepRegisterPage() {
                               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                             ></path>
                           </svg>
-                          Creating Your Store...
+                          Submitting Application...
                         </span>
                       ) : (
-                        "🚀 Launch My Store!"
+                        "🚀 Submit Application!"
                       )}
                     </button>
                   )}

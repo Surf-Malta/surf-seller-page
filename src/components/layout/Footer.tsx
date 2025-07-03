@@ -8,7 +8,11 @@ export default function Footer() {
       { href: "/register", label: "Start Selling Free", highlight: true },
       { href: "/how-it-works", label: "How It Works" },
       { href: "/pricing", label: "Pricing & Commission" },
-      { href: "/login", label: "Vendor Login" },
+      {
+        href: "https://surf.mt/vendor.php?dispatch=auth.login_form&return_url=vendor.php",
+        label: "Vendor Login",
+        external: true,
+      },
     ],
     "Selling Tools": [
       { href: "/features", label: "Store Builder" },
@@ -123,17 +127,48 @@ export default function Footer() {
                 <ul className="space-y-3">
                   {links.map((link) => (
                     <li key={link.href}>
-                      <Link
-                        href={link.href}
-                        className={`transition-colors hover:text-blue-400 ${
-                          link.highlight
-                            ? "text-yellow-400 font-semibold hover:text-yellow-300"
-                            : "text-gray-300"
-                        }`}
-                      >
-                        {link.highlight && "🚀 "}
-                        {link.label}
-                      </Link>
+                      {link.external ? (
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`transition-colors hover:text-blue-400 ${
+                            link.highlight
+                              ? "text-yellow-400 font-semibold hover:text-yellow-300"
+                              : "text-gray-300"
+                          }`}
+                        >
+                          {link.highlight && "🚀 "}
+                          {link.label}
+                          {link.external && (
+                            <svg
+                              className="w-3 h-3 inline ml-1"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                              />
+                            </svg>
+                          )}
+                        </a>
+                      ) : (
+                        <Link
+                          href={link.href}
+                          className={`transition-colors hover:text-blue-400 ${
+                            link.highlight
+                              ? "text-yellow-400 font-semibold hover:text-yellow-300"
+                              : "text-gray-300"
+                          }`}
+                        >
+                          {link.highlight && "🚀 "}
+                          {link.label}
+                        </Link>
+                      )}
                     </li>
                   ))}
                 </ul>
