@@ -1,3 +1,4 @@
+// src/lib/firebase.ts (Updated with better error handling)
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 import { getAuth } from "firebase/auth";
@@ -25,30 +26,32 @@ const requiredEnvVars = [
 
 const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
 
+let app = null;
+let realtimeDb = null;
+let auth = null;
+let db = null;
+let firebaseInitialized = false;
+
 if (missingEnvVars.length > 0) {
-  console.error(
-    "Missing required Firebase environment variables:",
-    missingEnvVars
+  console.warn(
+    "Firebase environment variables not found. Running in fallback mode."
   );
-  console.error("Please check your .env.local file");
+  console.warn("Missing variables:", missingEnvVars);
+} else {
+  try {
+    app = initializeApp(firebaseConfig);
+    realtimeDb = getDatabase(app);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    firebaseInitialized = true;
+    console.log("Firebase initialized successfully");
+  } catch (error) {
+    console.error("Firebase initialization error:", error);
+    console.warn("Running in fallback mode without Firebase");
+  }
 }
 
-let app;
-let realtimeDb;
-let auth;
-let db;
-
-try {
-  app = initializeApp(firebaseConfig);
-  realtimeDb = getDatabase(app);
-  auth = getAuth(app);
-  db = getFirestore(app);
-  console.log("Firebase initialized successfully");
-} catch (error) {
-  console.error("Firebase initialization error:", error);
-}
-
-export { realtimeDb, auth, db };
+export { realtimeDb, auth, db, firebaseInitialized };
 
 export const generateId = () => {
   return `nav-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
