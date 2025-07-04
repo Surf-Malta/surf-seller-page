@@ -1,5 +1,5 @@
-// Alternative OTP Service with better error handling and debugging
-// src/lib/otpServiceFixed.ts
+// Updated OTP Service with reduced time limits
+// src/lib/otpService.ts
 
 import { ref, set, get, remove } from "firebase/database";
 import { realtimeDb } from "@/lib/firebase";
@@ -37,6 +37,7 @@ export class OTPService {
   private static readonly OTP_EXPIRY_MINUTES = 10;
   private static readonly MAX_ATTEMPTS = 3;
   private static readonly OTP_LENGTH = 6;
+  private static readonly RESEND_COOLDOWN_SECONDS = 60; // Reduced from potential longer time
 
   // Generate random OTP
   private static generateOTP(): string {
@@ -57,7 +58,7 @@ export class OTPService {
     return { valid: true };
   }
 
-  // Send OTP via EmailJS with multiple fallback approaches
+  // Send OTP via EmailJS with reduced cooldown
   static async sendOTP(
     email: string
   ): Promise<{ success: boolean; sessionId?: string; error?: string }> {
@@ -78,7 +79,7 @@ export class OTPService {
         return { success: false, error: "Invalid email format" };
       }
 
-      // Check if there's an existing OTP that's still valid
+      // Check if there's an existing OTP that's still in cooldown
       const existingOTPRef = ref(
         realtimeDb,
         `otps/${email.replace(/[.@]/g, "_")}`
@@ -87,10 +88,17 @@ export class OTPService {
 
       if (existingSnapshot.exists()) {
         const existingOTP: OTPRecord = existingSnapshot.val();
-        if (existingOTP.expiresAt > Date.now()) {
+        const timeSinceCreated = Date.now() - existingOTP.createdAt;
+        const cooldownMs = this.RESEND_COOLDOWN_SECONDS * 1000;
+
+        // Check if still in cooldown period (60 seconds)
+        if (timeSinceCreated < cooldownMs && !existingOTP.isVerified) {
+          const remainingSeconds = Math.ceil(
+            (cooldownMs - timeSinceCreated) / 1000
+          );
           return {
             success: false,
-            error: "OTP already sent. Please wait before requesting a new one.",
+            error: `Please wait ${remainingSeconds} seconds before requesting a new OTP.`,
           };
         }
       }

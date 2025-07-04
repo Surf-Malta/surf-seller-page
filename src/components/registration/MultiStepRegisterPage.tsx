@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
@@ -13,8 +13,7 @@ interface RegistrationData {
   // Step 1 - Business Information
   businessName: string;
   vatType: "individual" | "business";
-  vatNumber?: string;
-  hearAboutSurf: string;
+  vatNumber: string; // Now required for both individual and business
 
   // Step 2 - Contact & Pickup Address
   firstName: string;
@@ -28,11 +27,12 @@ interface RegistrationData {
 
   // Step 3 - Shipping Preferences
   shippingMethod: "own" | "integrated";
-  shippingType?: "fixed_rate" | "free_delivery";
-  deliveryTime?: "1-2_days" | "2-3_days" | "3-4_days";
+  shippingType?: "fixed_rate" | "free_delivery"; // Only for "own" shipping
+  deliveryTime?: "1-2_days" | "2-3_days" | "3-4_days"; // Only for "own" shipping
 
   // Step 4 - Visibility & Ads
   showAdsOnWebsite: boolean;
+  hearAboutSurf: string;
 }
 
 export default function MultiStepRegisterPage() {
@@ -47,12 +47,13 @@ export default function MultiStepRegisterPage() {
   const [otpError, setOtpError] = useState("");
   const [sendingOtp, setSendingOtp] = useState(false);
   const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [canResend, setCanResend] = useState(true);
 
   const [formData, setFormData] = useState<RegistrationData>({
     businessName: "",
     vatType: "individual",
     vatNumber: "",
-    hearAboutSurf: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -65,10 +66,30 @@ export default function MultiStepRegisterPage() {
     shippingType: "fixed_rate",
     deliveryTime: "2-3_days",
     showAdsOnWebsite: true,
+    hearAboutSurf: "",
   });
 
   const totalSteps = 4;
   const progressPercentage = (currentStep / totalSteps) * 100;
+
+  // Countdown effect for resend button
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (resendCooldown > 0) {
+      interval = setInterval(() => {
+        setResendCooldown((prev) => {
+          if (prev <= 1) {
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [resendCooldown]);
 
   const updateFormData = (field: keyof RegistrationData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -80,6 +101,17 @@ export default function MultiStepRegisterPage() {
       setOtpCode("");
       setOtpError("");
       setOtpSessionId("");
+      setResendCooldown(0);
+      setCanResend(true);
+    }
+
+    // Reset shipping type when switching to integrated logistics
+    if (field === "shippingMethod" && value === "integrated") {
+      setFormData((prev) => ({
+        ...prev,
+        shippingType: undefined,
+        deliveryTime: undefined,
+      }));
     }
   };
 
@@ -101,8 +133,16 @@ export default function MultiStepRegisterPage() {
       return;
     }
 
+    if (!canResend) {
+      setOtpError(
+        `Please wait ${resendCooldown} seconds before requesting a new OTP`
+      );
+      return;
+    }
+
     setSendingOtp(true);
     setOtpError("");
+    setCanResend(false);
 
     try {
       const result = await OTPService.sendOTP(formData.email);
@@ -111,11 +151,15 @@ export default function MultiStepRegisterPage() {
         setOtpSent(true);
         setOtpSessionId(result.sessionId);
         setOtpError("");
+        // Start 60-second countdown for resend
+        setResendCooldown(60);
       } else {
         setOtpError(result.error || "Failed to send OTP");
+        setCanResend(true);
       }
     } catch (error) {
       setOtpError("Failed to send OTP. Please try again.");
+      setCanResend(true);
       console.error("OTP send error:", error);
     } finally {
       setSendingOtp(false);
@@ -169,8 +213,37 @@ export default function MultiStepRegisterPage() {
       const sellersRef = ref(realtimeDb, "sellers");
       const newSellerRef = push(sellersRef);
 
+      // Prepare seller data with proper structure
       const sellerData = {
-        ...formData,
+        // Business Information
+        businessName: formData.businessName,
+        vatType: formData.vatType,
+        vatNumber: formData.vatNumber,
+        hearAboutSurf: formData.hearAboutSurf,
+
+        // Contact Information
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+
+        // Address Information
+        address: formData.address,
+        city: formData.city,
+        pincode: formData.pincode,
+        country: formData.country,
+
+        // Shipping Preferences
+        shippingMethod: formData.shippingMethod,
+        ...(formData.shippingMethod === "own" && {
+          shippingType: formData.shippingType,
+          deliveryTime: formData.deliveryTime,
+        }),
+
+        // Marketing Preferences
+        showAdsOnWebsite: formData.showAdsOnWebsite,
+
+        // System Fields
         id: newSellerRef.key,
         status: "pending",
         emailVerified: true,
@@ -181,12 +254,35 @@ export default function MultiStepRegisterPage() {
       await set(newSellerRef, sellerData);
 
       // Clean up OTP after successful registration
-      await OTPService.cleanupOTP(formData.email);
+      try {
+        await OTPService.cleanupOTP(formData.email);
+      } catch (otpCleanupError) {
+        console.warn("OTP cleanup failed:", otpCleanupError);
+        // Don't fail registration if OTP cleanup fails
+      }
 
       setRegistrationComplete(true);
     } catch (error) {
       console.error("Registration error:", error);
-      alert("Registration failed. Please try again.");
+
+      // Show more specific error messages
+      let errorMessage = "Registration failed. Please try again.";
+
+      if (error instanceof Error) {
+        if (error.message.includes("Firebase not initialized")) {
+          errorMessage =
+            "System error: Database not available. Please try again later.";
+        } else if (error.message.includes("Email not verified")) {
+          errorMessage = "Please verify your email address before proceeding.";
+        } else if (error.message.includes("permission")) {
+          errorMessage = "Permission error. Please contact support.";
+        } else if (error.message.includes("network")) {
+          errorMessage =
+            "Network error. Please check your connection and try again.";
+        }
+      }
+
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -197,9 +293,8 @@ export default function MultiStepRegisterPage() {
       case 1:
         return (
           formData.businessName.trim() &&
-          formData.hearAboutSurf &&
-          (formData.vatType === "individual" ||
-            (formData.vatType === "business" && formData.vatNumber?.trim()))
+          formData.vatNumber.trim() && // Now required for both individual and business
+          formData.hearAboutSurf
         );
       case 2:
         return (
@@ -233,28 +328,28 @@ export default function MultiStepRegisterPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 pt-20 lg:pt-24">
         <Container>
-          <div className="max-w-4xl mx-auto py-16">
+          <div className="max-w-4xl mx-auto py-8 px-4">
             <div className="text-center">
-              <div className="ecommerce-card p-12 animate-scale-in">
-                <div className="w-24 h-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto mb-8 flex items-center justify-center text-white text-4xl">
+              <div className="ecommerce-card p-8 lg:p-12 animate-scale-in">
+                <div className="w-16 h-16 lg:w-24 lg:h-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto mb-6 lg:mb-8 flex items-center justify-center text-white text-2xl lg:text-4xl">
                   ✅
                 </div>
 
-                <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+                <h1 className="text-2xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-4 lg:mb-6">
                   <span className="gradient-text-ecommerce">
                     Registration Successful!
                   </span>
                 </h1>
 
-                <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+                <p className="text-lg lg:text-xl text-gray-600 mb-6 lg:mb-8 max-w-2xl mx-auto leading-relaxed">
                   Thank you for joining Surf! Your business "
                   {formData.businessName}" has been submitted for review.
                 </p>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
-                  <div className="flex items-start">
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 lg:p-6 mb-6 lg:mb-8">
+                  <div className="flex flex-col lg:flex-row lg:items-start">
                     <svg
-                      className="w-6 h-6 text-blue-600 mt-1 mr-4"
+                      className="w-6 h-6 text-blue-600 mt-1 mr-0 lg:mr-4 mx-auto lg:mx-0 mb-3 lg:mb-0"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -266,11 +361,11 @@ export default function MultiStepRegisterPage() {
                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    <div>
-                      <h3 className="text-lg font-semibold text-blue-800 mb-2">
+                    <div className="text-center lg:text-left">
+                      <h3 className="text-base lg:text-lg font-semibold text-blue-800 mb-2">
                         What happens next?
                       </h3>
-                      <ul className="text-blue-700 space-y-2">
+                      <ul className="text-sm lg:text-base text-blue-700 space-y-2">
                         <li>
                           📧 You'll receive a confirmation email within 24 hours
                         </li>
@@ -292,7 +387,7 @@ export default function MultiStepRegisterPage() {
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link href="/">
-                    <button className="btn-ecommerce-primary">
+                    <button className="btn-ecommerce-primary w-full sm:w-auto">
                       <svg
                         className="w-5 h-5 mr-2"
                         fill="none"
@@ -321,33 +416,33 @@ export default function MultiStepRegisterPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 pt-20 lg:pt-24">
       <Container>
-        <div className="max-w-6xl mx-auto py-8">
-          {/* Hero Section */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center bg-white rounded-full px-6 py-3 shadow-lg mb-6">
-              <span className="bg-green-500 w-3 h-3 rounded-full mr-3 animate-pulse"></span>
-              <span className="text-sm font-medium text-gray-700">
+        <div className="max-w-6xl mx-auto py-4 lg:py-8 px-4">
+          {/* Hero Section - Mobile Optimized */}
+          <div className="text-center mb-8 lg:mb-12">
+            <div className="inline-flex items-center bg-white rounded-full px-4 lg:px-6 py-2 lg:py-3 shadow-lg mb-4 lg:mb-6">
+              <span className="bg-green-500 w-2 h-2 lg:w-3 lg:h-3 rounded-full mr-2 lg:mr-3 animate-pulse"></span>
+              <span className="text-xs lg:text-sm font-medium text-gray-700">
                 🚀 FREE to Start • No Hidden Fees
               </span>
             </div>
 
-            <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
+            <h1 className="text-3xl lg:text-4xl xl:text-6xl font-bold text-gray-900 mb-4 lg:mb-6">
               <span className="gradient-text-ecommerce">Join Surf</span>
               <br />
               <span className="text-gray-800">Start Selling Today</span>
             </h1>
 
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p className="text-lg lg:text-xl max-w-3xl mx-auto mb-6 lg:mb-8">
               Connect with thousands of customers in Malta and beyond. No setup
               fees, just simple commission-based pricing.
             </p>
           </div>
 
-          {/* Progress Header */}
-          <div className="mb-12">
-            <div className="ecommerce-card p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-gray-900">
+          {/* Progress Header - Mobile Optimized */}
+          <div className="mb-8 lg:mb-12">
+            <div className="ecommerce-card p-4 lg:p-6">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
+                <h2 className="text-lg lg:text-xl font-bold text-gray-900 mb-2 lg:mb-0">
                   Step {currentStep}: {stepTitles[currentStep]}
                 </h2>
                 <div className="text-sm font-medium text-gray-600">
@@ -355,37 +450,38 @@ export default function MultiStepRegisterPage() {
                 </div>
               </div>
 
-              <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
+              <div className="w-full bg-gray-200 rounded-full h-2 lg:h-3 mb-4">
                 <div
-                  className="bg-gradient-to-r from-blue-500 to-indigo-500 h-3 rounded-full transition-all duration-500"
+                  className="bg-gradient-to-r from-blue-500 to-indigo-500 h-2 lg:h-3 rounded-full transition-all duration-500"
                   style={{ width: `${progressPercentage}%` }}
                 />
               </div>
 
               <div className="flex justify-between text-xs text-gray-500">
                 <span>Business Info</span>
-                <span>Contact Details</span>
+                <span className="hidden sm:inline">Contact Details</span>
+                <span className="sm:hidden">Contact</span>
                 <span>Shipping</span>
                 <span>Launch!</span>
               </div>
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12">
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-12">
             {/* Left Section - Info */}
-            <div className="space-y-8">
+            <div className="space-y-6 lg:space-y-8 order-2 lg:order-1">
               {currentStep === 1 && (
-                <div className="ecommerce-card p-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                <div className="ecommerce-card p-6 lg:p-8">
+                  <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-4">
                     🏢 Tell Us About Your Business
                   </h3>
-                  <p className="text-lg text-gray-600 mb-6">
+                  <p className="text-base lg:text-lg text-gray-600 mb-6">
                     Help us understand your business better so we can provide
                     the best selling experience.
                   </p>
                   <div className="space-y-4">
                     <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mt-1">
+                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
                         <svg
                           className="w-4 h-4 text-blue-600"
                           fill="currentColor"
@@ -408,7 +504,7 @@ export default function MultiStepRegisterPage() {
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mt-1">
+                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
                         <svg
                           className="w-4 h-4 text-green-600"
                           fill="currentColor"
@@ -435,18 +531,18 @@ export default function MultiStepRegisterPage() {
               )}
 
               {currentStep === 2 && (
-                <div className="ecommerce-card p-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                <div className="ecommerce-card p-6 lg:p-8">
+                  <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-4">
                     📞 Contact & Address Details
                   </h3>
-                  <p className="text-lg text-gray-600 mb-6">
+                  <p className="text-base lg:text-lg text-gray-600 mb-6">
                     We need your contact details for account verification and
                     order management.
                   </p>
                   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                     <div className="flex items-start">
                       <svg
-                        className="w-5 h-5 text-yellow-600 mt-0.5 mr-3"
+                        className="w-5 h-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -471,34 +567,32 @@ export default function MultiStepRegisterPage() {
               )}
 
               {currentStep === 3 && (
-                <div className="ecommerce-card p-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                <div className="ecommerce-card p-6 lg:p-8">
+                  <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-4">
                     🚚 Smart Shipping Setup
                   </h3>
-                  <p className="text-lg text-gray-600 mb-6">
+                  <p className="text-base lg:text-lg text-gray-600 mb-6">
                     Choose your preferred shipping method to ensure smooth
                     deliveries to your customers.
                   </p>
-                  <div className="space-y-4">
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <h4 className="font-semibold text-blue-800 mb-2">
-                        💡 Pro Tip
-                      </h4>
-                      <p className="text-blue-700 text-sm">
-                        Our integrated shipping partners offer competitive rates
-                        and reliable service across Malta and internationally.
-                      </p>
-                    </div>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-blue-800 mb-2">
+                      💡 Pro Tip
+                    </h4>
+                    <p className="text-blue-700 text-sm">
+                      Our integrated shipping partners offer competitive rates
+                      and reliable service across Malta and internationally.
+                    </p>
                   </div>
                 </div>
               )}
 
               {currentStep === 4 && (
-                <div className="ecommerce-card p-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                <div className="ecommerce-card p-6 lg:p-8">
+                  <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-4">
                     📈 Boost Your Visibility
                   </h3>
-                  <p className="text-lg text-gray-600 mb-6">
+                  <p className="text-base lg:text-lg text-gray-600 mb-6">
                     Increase your product visibility and reach more customers
                     with our advertising options.
                   </p>
@@ -517,7 +611,7 @@ export default function MultiStepRegisterPage() {
             </div>
 
             {/* Right Section - Form */}
-            <div className="ecommerce-card p-10">
+            <div className="ecommerce-card p-6 lg:p-10 order-1 lg:order-2">
               {/* Step 1 Form - Business Information */}
               {currentStep === 1 && (
                 <div className="space-y-6">
@@ -531,7 +625,7 @@ export default function MultiStepRegisterPage() {
                       onChange={(e) =>
                         updateFormData("businessName", e.target.value)
                       }
-                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      className="w-full px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                       placeholder="Enter your business name"
                     />
                   </div>
@@ -544,50 +638,62 @@ export default function MultiStepRegisterPage() {
                       <button
                         type="button"
                         onClick={() => updateFormData("vatType", "individual")}
-                        className={`p-4 border-2 rounded-xl transition-all duration-200 ${
+                        className={`p-3 lg:p-4 border-2 rounded-xl transition-all duration-200 ${
                           formData.vatType === "individual"
                             ? "border-blue-500 bg-blue-50 text-blue-700"
                             : "border-gray-200 hover:border-blue-300"
                         }`}
                       >
                         <div className="text-center">
-                          <div className="text-2xl mb-2">👤</div>
-                          <div className="font-medium">Individual</div>
+                          <div className="text-xl lg:text-2xl mb-2">👤</div>
+                          <div className="font-medium text-sm lg:text-base">
+                            Individual
+                          </div>
                         </div>
                       </button>
                       <button
                         type="button"
                         onClick={() => updateFormData("vatType", "business")}
-                        className={`p-4 border-2 rounded-xl transition-all duration-200 ${
+                        className={`p-3 lg:p-4 border-2 rounded-xl transition-all duration-200 ${
                           formData.vatType === "business"
                             ? "border-blue-500 bg-blue-50 text-blue-700"
                             : "border-gray-200 hover:border-blue-300"
                         }`}
                       >
                         <div className="text-center">
-                          <div className="text-2xl mb-2">🏢</div>
-                          <div className="font-medium">Business</div>
+                          <div className="text-xl lg:text-2xl mb-2">🏢</div>
+                          <div className="font-medium text-sm lg:text-base">
+                            Business
+                          </div>
                         </div>
                       </button>
                     </div>
                   </div>
 
-                  {formData.vatType === "business" && (
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-3">
-                        VAT Number <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.vatNumber || ""}
-                        onChange={(e) =>
-                          updateFormData("vatNumber", e.target.value)
-                        }
-                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                        placeholder="Enter VAT number"
-                      />
-                    </div>
-                  )}
+                  {/* VAT Number - Now required for both individual and business */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                      VAT Number <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.vatNumber}
+                      onChange={(e) =>
+                        updateFormData("vatNumber", e.target.value)
+                      }
+                      className="w-full px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      placeholder={
+                        formData.vatType === "individual"
+                          ? "Enter your personal VAT number"
+                          : "Enter your business VAT number"
+                      }
+                    />
+                    <p className="text-xs text-gray-500 mt-2">
+                      {formData.vatType === "individual"
+                        ? "Required for individual sellers in Malta"
+                        : "Your registered business VAT number"}
+                    </p>
+                  </div>
 
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-3">
@@ -599,7 +705,7 @@ export default function MultiStepRegisterPage() {
                       onChange={(e) =>
                         updateFormData("hearAboutSurf", e.target.value)
                       }
-                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      className="w-full px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     >
                       <option value="">Select an option</option>
                       <option value="google_search">Google Search</option>
@@ -617,7 +723,7 @@ export default function MultiStepRegisterPage() {
               {/* Step 2 Form - Contact & Pickup Address with OTP */}
               {currentStep === 2 && (
                 <div className="space-y-6">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-3">
                         First Name <span className="text-red-500">*</span>
@@ -628,7 +734,7 @@ export default function MultiStepRegisterPage() {
                         onChange={(e) =>
                           updateFormData("firstName", e.target.value)
                         }
-                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        className="w-full px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                         placeholder="Enter your first name"
                       />
                     </div>
@@ -642,7 +748,7 @@ export default function MultiStepRegisterPage() {
                         onChange={(e) =>
                           updateFormData("lastName", e.target.value)
                         }
-                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        className="w-full px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                         placeholder="Enter your last name"
                       />
                     </div>
@@ -654,14 +760,14 @@ export default function MultiStepRegisterPage() {
                       Email ID <span className="text-red-500">*</span>
                     </label>
                     <div className="space-y-3">
-                      <div className="flex gap-3">
+                      <div className="flex flex-col lg:flex-row gap-3">
                         <input
                           type="email"
                           value={formData.email}
                           onChange={(e) =>
                             updateFormData("email", e.target.value)
                           }
-                          className="flex-1 px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                          className="flex-1 px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                           placeholder="Enter your email"
                           disabled={otpVerified}
                         />
@@ -674,7 +780,7 @@ export default function MultiStepRegisterPage() {
                             sendingOtp ||
                             otpVerified
                           }
-                          className={`px-6 py-4 rounded-xl font-medium transition-all duration-200 whitespace-nowrap ${
+                          className={`px-4 lg:px-6 py-3 lg:py-4 rounded-xl font-medium transition-all duration-200 whitespace-nowrap ${
                             otpVerified
                               ? "bg-green-100 text-green-700 border-2 border-green-200"
                               : otpSent
@@ -732,12 +838,12 @@ export default function MultiStepRegisterPage() {
                                 d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                               />
                             </svg>
-                            <span className="text-blue-800 font-medium">
+                            <span className="text-blue-800 font-medium text-sm lg:text-base">
                               Enter the 6-digit code sent to your email
                             </span>
                           </div>
 
-                          <div className="flex gap-3">
+                          <div className="flex flex-col lg:flex-row gap-3">
                             <input
                               type="text"
                               value={otpCode}
@@ -756,7 +862,7 @@ export default function MultiStepRegisterPage() {
                               type="button"
                               onClick={handleVerifyOTP}
                               disabled={otpCode.length !== 6 || verifyingOtp}
-                              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition-all duration-200"
+                              className="px-4 lg:px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition-all duration-200"
                             >
                               {verifyingOtp ? (
                                 <span className="flex items-center">
@@ -787,20 +893,23 @@ export default function MultiStepRegisterPage() {
                             </button>
                           </div>
 
-                          <div className="flex justify-between items-center mt-3">
+                          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mt-3 gap-2">
                             <span className="text-blue-700 text-sm">
                               Didn't receive the code?
                             </span>
                             <button
                               type="button"
-                              onClick={() => {
-                                setOtpSent(false);
-                                setOtpCode("");
-                                setOtpError("");
-                              }}
-                              className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                              onClick={handleSendOTP}
+                              disabled={!canResend || sendingOtp}
+                              className={`text-sm font-medium transition-colors ${
+                                canResend && !sendingOtp
+                                  ? "text-blue-600 hover:text-blue-800 cursor-pointer"
+                                  : "text-gray-400 cursor-not-allowed"
+                              }`}
                             >
-                              Resend OTP
+                              {!canResend
+                                ? `Resend in ${resendCooldown}s`
+                                : "Resend OTP"}
                             </button>
                           </div>
                         </div>
@@ -833,7 +942,7 @@ export default function MultiStepRegisterPage() {
                         <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                           <div className="flex items-center">
                             <svg
-                              className="w-5 h-5 text-red-600 mr-2"
+                              className="w-5 h-5 text-red-600 mr-2 flex-shrink-0"
                               fill="currentColor"
                               viewBox="0 0 20 20"
                             >
@@ -862,7 +971,7 @@ export default function MultiStepRegisterPage() {
                       onChange={(e) =>
                         updateFormData("phoneNumber", e.target.value)
                       }
-                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      className="w-full px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                       placeholder="Enter phone number"
                     />
                   </div>
@@ -877,12 +986,12 @@ export default function MultiStepRegisterPage() {
                       onChange={(e) =>
                         updateFormData("address", e.target.value)
                       }
-                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      className="w-full px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                       placeholder="Enter address"
                     />
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-3">
                         City <span className="text-red-500">*</span>
@@ -891,7 +1000,7 @@ export default function MultiStepRegisterPage() {
                         type="text"
                         value={formData.city}
                         onChange={(e) => updateFormData("city", e.target.value)}
-                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        className="w-full px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                         placeholder="City"
                       />
                     </div>
@@ -905,7 +1014,7 @@ export default function MultiStepRegisterPage() {
                         onChange={(e) =>
                           updateFormData("pincode", e.target.value)
                         }
-                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        className="w-full px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                         placeholder="Pincode"
                       />
                     </div>
@@ -918,7 +1027,7 @@ export default function MultiStepRegisterPage() {
                         onChange={(e) =>
                           updateFormData("country", e.target.value)
                         }
-                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        className="w-full px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                       >
                         <option value="Malta">Malta</option>
                         <option value="Italy">Italy</option>
@@ -930,12 +1039,12 @@ export default function MultiStepRegisterPage() {
                 </div>
               )}
 
-              {/* Step 3 Form - Shipping Preferences */}
+              {/* Step 3 Form - Shipping Preferences (Fixed Logic) */}
               {currentStep === 3 && (
                 <div className="space-y-6">
                   <div className="space-y-4">
                     <div
-                      className={`border-2 rounded-xl p-6 transition-all duration-200 cursor-pointer ${
+                      className={`border-2 rounded-xl p-4 lg:p-6 transition-all duration-200 cursor-pointer ${
                         formData.shippingMethod === "own"
                           ? "border-blue-500 bg-blue-50"
                           : "border-gray-200 hover:border-blue-300"
@@ -954,7 +1063,7 @@ export default function MultiStepRegisterPage() {
                           className="mt-2 w-5 h-5 text-blue-600"
                         />
                         <div className="flex-1">
-                          <h3 className="text-xl font-bold text-gray-900 mb-2">
+                          <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
                             📦 Own Shipping
                           </h3>
                           <p className="text-gray-600 mb-3">
@@ -969,7 +1078,7 @@ export default function MultiStepRegisterPage() {
                     </div>
 
                     <div
-                      className={`border-2 rounded-xl p-6 transition-all duration-200 cursor-pointer ${
+                      className={`border-2 rounded-xl p-4 lg:p-6 transition-all duration-200 cursor-pointer ${
                         formData.shippingMethod === "integrated"
                           ? "border-blue-500 bg-blue-50"
                           : "border-gray-200 hover:border-blue-300"
@@ -990,7 +1099,7 @@ export default function MultiStepRegisterPage() {
                           className="mt-2 w-5 h-5 text-blue-600"
                         />
                         <div className="flex-1">
-                          <h3 className="text-xl font-bold text-gray-900 mb-2">
+                          <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
                             🤝 Use Integrated Local Shipping Partner
                           </h3>
                           <p className="text-gray-600 mb-3">
@@ -1005,19 +1114,20 @@ export default function MultiStepRegisterPage() {
                     </div>
                   </div>
 
-                  {formData.shippingMethod === "integrated" && (
-                    <div className="space-y-6 bg-blue-50 p-6 rounded-xl">
+                  {/* Shipping Type and Delivery Time - Only for Own Shipping */}
+                  {formData.shippingMethod === "own" && (
+                    <div className="space-y-6 bg-blue-50 p-4 lg:p-6 rounded-xl">
                       <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-3">
                           Shipping Type
                         </label>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                           <button
                             type="button"
                             onClick={() =>
                               updateFormData("shippingType", "fixed_rate")
                             }
-                            className={`p-4 border-2 rounded-xl transition-all duration-200 ${
+                            className={`p-3 lg:p-4 border-2 rounded-xl transition-all duration-200 ${
                               formData.shippingType === "fixed_rate"
                                 ? "border-blue-500 bg-white text-blue-700"
                                 : "border-gray-200 hover:border-blue-300 bg-white"
@@ -1030,7 +1140,7 @@ export default function MultiStepRegisterPage() {
                             onClick={() =>
                               updateFormData("shippingType", "free_delivery")
                             }
-                            className={`p-4 border-2 rounded-xl transition-all duration-200 ${
+                            className={`p-3 lg:p-4 border-2 rounded-xl transition-all duration-200 ${
                               formData.shippingType === "free_delivery"
                                 ? "border-blue-500 bg-white text-blue-700"
                                 : "border-gray-200 hover:border-blue-300 bg-white"
@@ -1045,7 +1155,7 @@ export default function MultiStepRegisterPage() {
                         <label className="block text-sm font-semibold text-gray-700 mb-3">
                           Delivery Time Preference
                         </label>
-                        <div className="grid grid-cols-3 gap-3">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
                           {[
                             { value: "1-2_days", label: "1–2 days" },
                             { value: "2-3_days", label: "2–3 days" },
@@ -1066,11 +1176,42 @@ export default function MultiStepRegisterPage() {
                                   : "border-gray-200 hover:border-blue-300 bg-white"
                               }`}
                             >
-                              <div className="font-medium text-sm">
+                              <div className="font-medium text-sm lg:text-base">
                                 {option.label}
                               </div>
                             </button>
                           ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Info message for integrated shipping */}
+                  {formData.shippingMethod === "integrated" && (
+                    <div className="bg-green-50 border border-green-200 rounded-xl p-4 lg:p-6">
+                      <div className="flex items-start">
+                        <svg
+                          className="w-6 h-6 text-green-600 mt-1 mr-3 flex-shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        <div>
+                          <h4 className="font-semibold text-green-800 mb-2">
+                            All Set!
+                          </h4>
+                          <p className="text-green-700 text-sm">
+                            Our shipping partners will handle delivery times and
+                            rates automatically based on your location and
+                            product types.
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -1081,13 +1222,13 @@ export default function MultiStepRegisterPage() {
               {/* Step 4 Form - Visibility & Ads */}
               {currentStep === 4 && (
                 <div className="space-y-6">
-                  <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-xl p-8">
-                    <h3 className="text-xl font-bold text-purple-900 mb-4">
+                  <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-xl p-6 lg:p-8">
+                    <h3 className="text-lg lg:text-xl font-bold text-purple-900 mb-4">
                       Want more visibility?
                     </h3>
 
-                    <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-purple-200">
-                      <div className="flex-1">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between p-4 bg-white rounded-lg border border-purple-200">
+                      <div className="flex-1 mb-4 lg:mb-0">
                         <h4 className="font-semibold text-gray-900 mb-2">
                           Show ads on website
                         </h4>
@@ -1096,7 +1237,7 @@ export default function MultiStepRegisterPage() {
                           listings
                         </p>
                       </div>
-                      <label className="relative inline-flex items-center cursor-pointer ml-4">
+                      <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
                           checked={formData.showAdsOnWebsite}
@@ -1113,7 +1254,7 @@ export default function MultiStepRegisterPage() {
                       <div className="mt-4 p-4 bg-purple-100 rounded-lg">
                         <div className="flex items-center text-purple-800">
                           <svg
-                            className="w-5 h-5 mr-2"
+                            className="w-5 h-5 mr-2 flex-shrink-0"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                           >
@@ -1132,7 +1273,7 @@ export default function MultiStepRegisterPage() {
                     )}
                   </div>
 
-                  <div className="bg-green-50 border border-green-200 rounded-xl p-6">
+                  <div className="bg-green-50 border border-green-200 rounded-xl p-4 lg:p-6">
                     <h4 className="font-bold text-green-800 mb-2">
                       🎯 Ready to Launch!
                     </h4>
@@ -1144,25 +1285,25 @@ export default function MultiStepRegisterPage() {
                 </div>
               )}
 
-              {/* Navigation Buttons */}
-              <div className="flex justify-between pt-8 mt-8 border-t border-gray-200">
+              {/* Navigation Buttons - Mobile Optimized */}
+              <div className="flex flex-col lg:flex-row lg:justify-between pt-6 lg:pt-8 mt-6 lg:mt-8 border-t border-gray-200 gap-4">
                 {currentStep > 1 ? (
                   <button
                     onClick={prevStep}
-                    className="btn-ecommerce-secondary px-8 py-3"
+                    className="btn-ecommerce-secondary px-6 lg:px-8 py-3 order-2 lg:order-1"
                   >
                     ← Previous
                   </button>
                 ) : (
-                  <div></div>
+                  <div className="hidden lg:block"></div>
                 )}
 
-                <div className="flex space-x-4">
+                <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 order-1 lg:order-2">
                   {currentStep < totalSteps ? (
                     <button
                       onClick={nextStep}
                       disabled={!isStepValid()}
-                      className="btn-ecommerce-primary px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="btn-ecommerce-primary px-6 lg:px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed w-full lg:w-auto"
                     >
                       Continue →
                     </button>
@@ -1170,10 +1311,10 @@ export default function MultiStepRegisterPage() {
                     <button
                       onClick={handleSubmit}
                       disabled={!isStepValid() || loading}
-                      className="btn-ecommerce-success px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="btn-ecommerce-success px-6 lg:px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed w-full lg:w-auto"
                     >
                       {loading ? (
-                        <span className="flex items-center">
+                        <span className="flex items-center justify-center">
                           <svg
                             className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                             fill="none"
