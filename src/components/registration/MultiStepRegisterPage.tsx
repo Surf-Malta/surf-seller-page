@@ -807,5 +807,6 @@ export default function MultiStepRegisterPage() {
         </div>
       </Container>
     </div>
+    
   );
 }
