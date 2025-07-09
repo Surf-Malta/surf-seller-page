@@ -77,24 +77,23 @@ export function HeroSection({ hero }: HeroSectionProps) {
             <div className="inline-flex items-center bg-white rounded-full px-6 py-3 shadow-lg mb-8">
               <span className="bg-green-500 w-3 h-3 rounded-full mr-3 animate-pulse"></span>
               <span className="text-sm font-medium text-gray-700">
-                🚀 Join 50,000+ Successful Sellers
+                🚀 Join our pool of local businesses
               </span>
             </div>
 
             <h1 className="text-6xl lg:text-8xl font-bold text-gray-900 mb-8 leading-tight">
-              <span className="gradient-text-ecommerce">Launch Your</span>
+              <span className="gradient-text-ecommerce">Grow Your</span>
               <br />
               <span className="text-gray-800">Online Store</span>
               <br />
-              <span className="gradient-text-success">Today</span>
+              <span className="gradient-text-success">The Smarter Way</span>
             </h1>
           </div>
 
           <div className="animate-slide-up">
             <p className="text-2xl lg:text-3xl text-gray-600 mb-12 leading-relaxed max-w-4xl mx-auto font-light">
-              Turn your passion into profit. Start selling online with zero
-              investment, reach millions of customers, and build your e-commerce
-              empire.
+              Join Malta's local eCommerce Network and reach thousands of
+              customers across the Island.
             </p>
           </div>
 
@@ -102,7 +101,9 @@ export function HeroSection({ hero }: HeroSectionProps) {
           <div className="animate-scale-in mb-16 flex flex-col sm:flex-row gap-6 justify-center">
             <Link href={hero.buttonLink || "/register"}>
               <button className="btn-ecommerce-primary inline-flex items-center space-x-3 group">
-                <span>{hero.buttonText || "Start Selling Now"}</span>
+                <span>
+                  {hero.buttonText || "Get Started For Free (T&C Apply)"}
+                </span>
                 <svg
                   className="w-6 h-6 group-hover:translate-x-1 transition-transform"
                   fill="none"
@@ -146,7 +147,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
                 💰
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Zero Investment
+                Low Investment
               </h3>
               <p className="text-gray-600">
                 Start selling without any upfront costs
@@ -170,31 +171,11 @@ export function HeroSection({ hero }: HeroSectionProps) {
                 📈
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Scale Globally
+                High visibility
               </h3>
               <p className="text-gray-600">
                 Reach customers worldwide instantly
               </p>
-            </div>
-          </div>
-
-          {/* Success metrics */}
-          <div className="grid md:grid-cols-4 gap-8 animate-fade-in">
-            <div className="ecommerce-stat">
-              <div className="ecommerce-stat-number">50K+</div>
-              <div className="text-gray-600 font-medium">Active Sellers</div>
-            </div>
-            <div className="ecommerce-stat">
-              <div className="ecommerce-stat-number">2M+</div>
-              <div className="text-gray-600 font-medium">Products Sold</div>
-            </div>
-            <div className="ecommerce-stat">
-              <div className="ecommerce-stat-number">₹100Cr+</div>
-              <div className="text-gray-600 font-medium">Revenue Generated</div>
-            </div>
-            <div className="ecommerce-stat">
-              <div className="ecommerce-stat-number">99.9%</div>
-              <div className="text-gray-600 font-medium">Uptime</div>
             </div>
           </div>
 

@@ -150,7 +150,7 @@ export function Header() {
         {isScrolled && (
           <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white py-1 text-center text-xs font-medium">
             <span className="animate-pulse">
-              ✨ Join 50,000+ successful sellers
+              ✨ Join our pool of local businesses
             </span>
             <span className="mx-2">•</span>
             <span>₹100Cr+ revenue generated</span>

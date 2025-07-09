@@ -10,10 +10,10 @@ export default function HomePage() {
         <HeroSection
           hero={{
             id: "home-hero",
-            title: "Launch Your Online Store Today",
+            title: "Grow your online the smarter way",
             content:
               "Transform your business dreams into reality. Join 50,000+ successful entrepreneurs who've built their e-commerce empire with zero investment. Start selling online and reach millions of customers worldwide.",
-            buttonText: "Start Your Store FREE",
+            buttonText: "Get Started For Free (T&C Apply)",
             buttonLink: "/register",
           }}
         />
@@ -36,8 +36,8 @@ export default function HomePage() {
               </h2>
 
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                See how ordinary people built extraordinary e-commerce
-                businesses
+                See how businesses across the word has seen success being a part
+                of a local ecommerce platform like Surf.
               </p>
             </div>
 
@@ -142,12 +142,12 @@ export default function HomePage() {
               <h2 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
                 <span className="gradient-text-ecommerce">Start Selling</span>
                 <br />
-                <span className="text-gray-800">In 3 Simple Steps</span>
+                <span className="text-gray-800">In 5 Simple Steps</span>
               </h2>
 
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                No technical knowledge required. Get your store up and running
-                in minutes.
+                Take off (No tech required)- let's just keep "Have your store up
+                and running instantly".
               </p>
             </div>
 
@@ -162,11 +162,11 @@ export default function HomePage() {
                   </div>
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Register & Setup
+                  Register & Set Up
                 </h3>
                 <p className="text-gray-600 text-lg leading-relaxed">
-                  Create your account and set up your store in under 10 minutes.
-                  Choose from beautiful templates and customize your brand.
+                  Create your account using valid business information and get
+                  approved instantly.
                 </p>
               </div>
 
@@ -179,16 +179,15 @@ export default function HomePage() {
                     className="absolute -top-4 -right-4 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-2xl animate-bounce"
                     style={{ animationDelay: "0.5s" }}
                   >
-                    📦
+                    📋
                   </div>
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Add Products
+                  Choose Your Plan
                 </h3>
                 <p className="text-gray-600 text-lg leading-relaxed">
-                  Upload your products with high-quality images and
-                  descriptions. Set competitive prices and manage your inventory
-                  effortlessly.
+                  Select the plan that best suits your needs from our carefully
+                  crafted options for local success.
                 </p>
               </div>
 
@@ -201,6 +200,50 @@ export default function HomePage() {
                     className="absolute -top-4 -right-4 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-2xl animate-bounce"
                     style={{ animationDelay: "1s" }}
                   >
+                    📦
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  Add Products
+                </h3>
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  Upload products manually or connect your website to import
+                  your entire catalog in a flash.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto mt-16">
+              <div className="text-center group">
+                <div className="relative mb-8">
+                  <div className="w-24 h-24 bg-gradient-to-r from-orange-500 to-red-500 rounded-full mx-auto flex items-center justify-center text-white text-3xl font-bold group-hover:scale-110 transition-transform duration-300">
+                    4
+                  </div>
+                  <div
+                    className="absolute -top-4 -right-4 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-2xl animate-bounce"
+                    style={{ animationDelay: "1.5s" }}
+                  >
+                    🚚
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  Choose Your Logistics
+                </h3>
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  Pick from our list of trusted local delivery partners to
+                  handle your shipments.
+                </p>
+              </div>
+
+              <div className="text-center group">
+                <div className="relative mb-8">
+                  <div className="w-24 h-24 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full mx-auto flex items-center justify-center text-white text-3xl font-bold group-hover:scale-110 transition-transform duration-300">
+                    5
+                  </div>
+                  <div
+                    className="absolute -top-4 -right-4 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-2xl animate-bounce"
+                    style={{ animationDelay: "2s" }}
+                  >
                     💰
                   </div>
                 </div>
@@ -208,8 +251,7 @@ export default function HomePage() {
                   Start Earning
                 </h3>
                 <p className="text-gray-600 text-lg leading-relaxed">
-                  Go live and start receiving orders! We handle payments,
-                  provide analytics, and support you every step of the way.
+                  Go live and start receiving orders right away!
                 </p>
               </div>
             </div>
@@ -252,28 +294,29 @@ export default function HomePage() {
               </div>
 
               <h2 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-                <span className="gradient-text-ecommerce">No Hidden Fees</span>
+                <span className="gradient-text-ecommerce">
+                  When You Succeed
+                </span>
                 <br />
-                <span className="text-gray-800">Pay Only When You Sell</span>
+                <span className="text-gray-800">We Succeed</span>
               </h2>
 
               <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-12">
                 Start for free and pay only a small commission on successful
-                sales. No setup fees, no monthly charges, no surprises.
+                sale.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-3 gap-12 max-w-4xl mx-auto">
               <div className="ecommerce-card p-10 text-center">
                 <div className="text-6xl font-bold gradient-text-ecommerce mb-4">
-                  ₹0
+                  0€
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
                   Setup Cost
                 </h3>
                 <p className="text-gray-600 text-lg">
-                  Launch your store without any upfront investment. Everything
-                  you need to start is completely free.
+                  Everything you need to start is completely free.
                 </p>
               </div>
 
@@ -282,11 +325,22 @@ export default function HomePage() {
                   5%
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Commission Only
+                  Low commission
                 </h3>
                 <p className="text-gray-600 text-lg">
-                  Pay only when you make a sale. Our success is tied to your
-                  success. No monthly fees, ever.
+                  Pay only when you make a sale.
+                </p>
+              </div>
+
+              <div className="ecommerce-card p-10 text-center">
+                <div className="text-6xl font-bold gradient-text-success mb-4">
+                  0%
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  Commission
+                </h3>
+                <p className="text-gray-600 text-lg">
+                  Enjoy our 0% commission offer to support your growth.
                 </p>
               </div>
             </div>
@@ -312,12 +366,12 @@ export default function HomePage() {
               <h2 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
                 <span className="gradient-text-ecommerce">Built for</span>
                 <br />
-                <span className="text-gray-800">E-commerce Success</span>
+                <span className="text-gray-800">Local E-commerce Success.</span>
               </h2>
 
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Everything you need to build, grow, and scale your online
-                business
+                Everything you need to build, grow and scale your online
+                business.
               </p>
             </div>
 
