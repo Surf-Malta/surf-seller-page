@@ -1,3 +1,4 @@
+// src/store/provider.tsx
 "use client";
 
 import { Provider } from "react-redux";
@@ -11,7 +12,7 @@ interface ReduxProviderProps {
 export function ReduxProvider({ children }: ReduxProviderProps) {
   return (
     <Provider store={store}>
-      <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
+      <PersistGate loading={null} persistor={persistor}>
         {children}
       </PersistGate>
     </Provider>

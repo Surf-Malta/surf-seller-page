@@ -1,24 +1,11 @@
-// Updated OTP Service with reduced time limits
 // src/lib/otpService.ts
-
 import { ref, set, get, remove } from "firebase/database";
 import { realtimeDb } from "@/lib/firebase";
 import emailjs from "@emailjs/browser";
 
-// Initialize EmailJS with your public key
 const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
 const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-
-// Debug logging
-console.log("EmailJS Configuration:", {
-  hasPublicKey: !!EMAILJS_PUBLIC_KEY,
-  hasServiceId: !!EMAILJS_SERVICE_ID,
-  hasTemplateId: !!EMAILJS_TEMPLATE_ID,
-  publicKey: EMAILJS_PUBLIC_KEY?.substring(0, 10) + "...",
-  serviceId: EMAILJS_SERVICE_ID,
-  templateId: EMAILJS_TEMPLATE_ID,
-});
 
 if (EMAILJS_PUBLIC_KEY) {
   emailjs.init(EMAILJS_PUBLIC_KEY);
@@ -37,7 +24,7 @@ export class OTPService {
   private static readonly OTP_EXPIRY_MINUTES = 10;
   private static readonly MAX_ATTEMPTS = 3;
   private static readonly OTP_LENGTH = 6;
-  private static readonly RESEND_COOLDOWN_SECONDS = 60; // Reduced from potential longer time
+  private static readonly RESEND_COOLDOWN_SECONDS = 60;
 
   // Generate random OTP
   private static generateOTP(): string {
@@ -58,7 +45,7 @@ export class OTPService {
     return { valid: true };
   }
 
-  // Send OTP via EmailJS with reduced cooldown
+  // Send OTP via EmailJS
   static async sendOTP(
     email: string
   ): Promise<{ success: boolean; sessionId?: string; error?: string }> {
@@ -91,7 +78,7 @@ export class OTPService {
         const timeSinceCreated = Date.now() - existingOTP.createdAt;
         const cooldownMs = this.RESEND_COOLDOWN_SECONDS * 1000;
 
-        // Check if still in cooldown period (60 seconds)
+        // Check if still in cooldown period
         if (timeSinceCreated < cooldownMs && !existingOTP.isVerified) {
           const remainingSeconds = Math.ceil(
             (cooldownMs - timeSinceCreated) / 1000
@@ -122,9 +109,8 @@ export class OTPService {
         otpRecord
       );
 
-      // Try multiple email parameter configurations
+      // Email configurations to try
       const emailConfigs = [
-        // Configuration 1: Standard EmailJS format
         {
           to_email: email,
           to_name: email.split("@")[0],
@@ -133,7 +119,6 @@ export class OTPService {
           user_email: email,
           reply_to: email,
         },
-        // Configuration 2: Alternative field names
         {
           email: email,
           to_email: email,
@@ -147,7 +132,6 @@ export class OTPService {
           expiry_minutes: this.OTP_EXPIRY_MINUTES.toString(),
           expiry: this.OTP_EXPIRY_MINUTES.toString(),
         },
-        // Configuration 3: Simple format
         {
           email_to: email,
           name_to: email.split("@")[0],
@@ -162,13 +146,6 @@ export class OTPService {
       for (let i = 0; i < emailConfigs.length; i++) {
         const emailParams = emailConfigs[i];
 
-        console.log(`Trying email configuration ${i + 1}:`, {
-          ...emailParams,
-          otp_code: "****** (hidden)",
-          otp: "****** (hidden)",
-          code: "****** (hidden)",
-        });
-
         try {
           const response = await emailjs.send(
             EMAILJS_SERVICE_ID!,
@@ -177,10 +154,8 @@ export class OTPService {
             EMAILJS_PUBLIC_KEY
           );
 
-          console.log("Email sent successfully with config", i + 1, response);
           return { success: true, sessionId: `otp_${now}` };
         } catch (error: any) {
-          console.error(`Configuration ${i + 1} failed:`, error);
           lastError = error;
 
           // If it's a 422 error, try next configuration
@@ -196,27 +171,23 @@ export class OTPService {
       // If all configurations failed
       throw lastError || new Error("All email configurations failed");
     } catch (error: any) {
-      console.error("Error sending OTP:", error);
-
       // Clean up stored OTP on email failure
       if (realtimeDb) {
         try {
           await remove(ref(realtimeDb, `otps/${email.replace(/[.@]/g, "_")}`));
         } catch (cleanupError) {
-          console.error("Error cleaning up failed OTP:", cleanupError);
+          // Silent cleanup failure
         }
       }
 
       let errorMessage = "Failed to send OTP";
 
       if (error.status === 422) {
-        errorMessage =
-          "Email configuration error. Please check your EmailJS template setup.";
+        errorMessage = "Email configuration error. Please try again.";
       } else if (error.status === 400) {
         errorMessage = "Invalid email parameters. Please try again.";
       } else if (error.status === 401) {
-        errorMessage =
-          "EmailJS authentication failed. Please check your configuration.";
+        errorMessage = "Email service authentication failed.";
       } else if (error.text) {
         errorMessage = `Email service error: ${error.text}`;
       } else if (error.message) {
@@ -227,7 +198,7 @@ export class OTPService {
     }
   }
 
-  // Verify OTP (same as before)
+  // Verify OTP
   static async verifyOTP(
     email: string,
     inputOTP: string
@@ -251,7 +222,7 @@ export class OTPService {
 
       // Check if OTP is expired
       if (otpRecord.expiresAt < Date.now()) {
-        await remove(otpRef); // Clean up expired OTP
+        await remove(otpRef);
         return {
           success: false,
           error: "OTP has expired. Please request a new one.",
@@ -265,7 +236,7 @@ export class OTPService {
 
       // Check attempts limit
       if (otpRecord.attempts >= this.MAX_ATTEMPTS) {
-        await remove(otpRef); // Clean up after max attempts
+        await remove(otpRef);
         return {
           success: false,
           error:
@@ -296,7 +267,6 @@ export class OTPService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error verifying OTP:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : "Failed to verify OTP",
@@ -321,7 +291,6 @@ export class OTPService {
       const otpRecord: OTPRecord = snapshot.val();
       return otpRecord.isVerified && otpRecord.expiresAt > Date.now();
     } catch (error) {
-      console.error("Error checking email verification:", error);
       return false;
     }
   }
@@ -336,7 +305,7 @@ export class OTPService {
       const otpRef = ref(realtimeDb, `otps/${email.replace(/[.@]/g, "_")}`);
       await remove(otpRef);
     } catch (error) {
-      console.error("Error cleaning up OTP:", error);
+      // Silent cleanup failure
     }
   }
 }

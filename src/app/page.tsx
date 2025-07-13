@@ -1,269 +1,248 @@
+// src/app/page.tsx
 import { HeroSection } from "@/components/home/HeroSection";
 import FeaturesSection from "@/components/home/FeaturesSection";
 import CTASection from "@/components/home/CTASection";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* Add proper spacing from header */}
-      <div className="pt-20">
+    <div className="min-h-screen bg-white">
+      {/* Hero Section - Reduced spacing */}
+      <div className="pt-16">
         <HeroSection
           hero={{
             id: "home-hero",
             title: "Grow your online the smarter way",
             content:
-              "Transform your business dreams into reality. Join 50,000+ successful entrepreneurs who've built their e-commerce empire with zero investment. Start selling online and reach millions of customers worldwide.",
+              "Join Malta's local eCommerce Network and reach thousands of customers across the Island.",
             buttonText: "Get Started For Free (T&C Apply)",
             buttonLink: "/register",
           }}
         />
 
-        {/* Success Stories Section */}
-        <section className="section-ecommerce bg-gradient-to-br from-blue-50 to-indigo-100">
+        {/* Trust Bar - New compact section */}
+        <section className="py-8 bg-gradient-to-r from-gray-50 to-gray-100 border-y border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-20">
-              <div className="inline-flex items-center bg-white rounded-full px-6 py-3 shadow-lg mb-8">
-                <span className="bg-green-500 w-3 h-3 rounded-full mr-3 animate-pulse"></span>
-                <span className="text-sm font-medium text-gray-700">
-                  ✨ SUCCESS STORIES
-                </span>
-              </div>
-
-              <h2 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-                <span className="gradient-text-ecommerce">Real Stories</span>
-                <br />
-                <span className="text-gray-800">Real Success</span>
-              </h2>
-
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                See how businesses across the word has seen success being a part
-                of a local ecommerce platform like Surf.
-              </p>
+            <div className="text-center text-sm text-gray-600 mb-4">
+              Trusted by entrepreneurs worldwide
             </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="ecommerce-card p-8 text-center group hover-lift">
-                <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-2xl">
-                  👨‍💼
+            <div className="flex justify-center items-center space-x-12 opacity-60">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  Rajesh Kumar
-                </h3>
-                <p className="text-gray-600 mb-4 italic">
-                  "From ₹0 to ₹5 lakhs monthly revenue in just 6 months. This
-                  platform changed my life!"
-                </p>
-                <div className="text-sm text-gray-500">
-                  Electronics Seller, Mumbai
-                </div>
-                <div className="mt-4 flex justify-center">
-                  {[...Array(5)].map((_, i) => (
-                    <svg
-                      key={i}
-                      className="w-5 h-5 text-yellow-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
+                <span className="font-medium">50K+ Active Sellers</span>
               </div>
-
-              <div className="ecommerce-card p-8 text-center group hover-lift">
-                <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-2xl">
-                  👩‍💼
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                  </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  Priya Sharma
-                </h3>
-                <p className="text-gray-600 mb-4 italic">
-                  "Started my fashion store from home. Now I have a team of 10
-                  people!"
-                </p>
-                <div className="text-sm text-gray-500">
-                  Fashion Boutique, Delhi
-                </div>
-                <div className="mt-4 flex justify-center">
-                  {[...Array(5)].map((_, i) => (
-                    <svg
-                      key={i}
-                      className="w-5 h-5 text-yellow-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
+                <span className="font-medium">₹100Cr+ Revenue</span>
               </div>
-
-              <div className="ecommerce-card p-8 text-center group hover-lift">
-                <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-2xl">
-                  👨‍🎓
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  Amit Patel
-                </h3>
-                <p className="text-gray-600 mb-4 italic">
-                  "College student to successful entrepreneur. Earning more than
-                  my friends' salaries!"
-                </p>
-                <div className="text-sm text-gray-500">
-                  Handmade Crafts, Ahmedabad
-                </div>
-                <div className="mt-4 flex justify-center">
-                  {[...Array(5)].map((_, i) => (
-                    <svg
-                      key={i}
-                      className="w-5 h-5 text-yellow-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
+                <span className="font-medium">99.9% Uptime</span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* How It Works Section */}
-        <section className="section-ecommerce bg-white">
+        {/* Value Proposition - Compact section */}
+        <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-20">
-              <div className="inline-flex items-center bg-blue-50 rounded-full px-6 py-3 mb-8">
-                <span className="text-blue-600 font-semibold text-sm">
-                  🚀 HOW IT WORKS
-                </span>
+            <div className="text-center mb-12">
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                Why{" "}
+                <span className="text-blue-600">Entrepreneurs Choose Surf</span>
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Everything you need to build, grow and scale your online
+                business
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-4 gap-6">
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100 hover:shadow-lg transition-all duration-300 group">
+                <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="text-2xl">🚀</span>
+                </div>
+                <h3 className="font-bold text-gray-900 mb-2">Quick Launch</h3>
+                <p className="text-sm text-gray-600">
+                  Get your store live in under 10 minutes
+                </p>
               </div>
 
-              <h2 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-                <span className="gradient-text-ecommerce">Start Selling</span>
-                <br />
-                <span className="text-gray-800">In 5 Simple Steps</span>
-              </h2>
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-100 hover:shadow-lg transition-all duration-300 group">
+                <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="text-2xl">💳</span>
+                </div>
+                <h3 className="font-bold text-gray-900 mb-2">
+                  Secure Payments
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Accept all payment methods with bank-level security
+                </p>
+              </div>
 
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-100 hover:shadow-lg transition-all duration-300 group">
+                <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="text-2xl">📱</span>
+                </div>
+                <h3 className="font-bold text-gray-900 mb-2">Mobile Ready</h3>
+                <p className="text-sm text-gray-600">
+                  Your store works perfectly on all devices
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-6 border border-orange-100 hover:shadow-lg transition-all duration-300 group">
+                <div className="w-12 h-12 bg-orange-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="text-2xl">📊</span>
+                </div>
+                <h3 className="font-bold text-gray-900 mb-2">
+                  Smart Analytics
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Track sales and growth with real-time insights
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* How It Works - Streamlined */}
+        <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium mb-4">
+                🚀 Get Started
+              </div>
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                Start Selling in{" "}
+                <span className="text-blue-600">5 Simple Steps</span>
+              </h2>
+              <p className="text-lg text-gray-600">
                 Take off (No tech required)- let's just keep "Have your store up
                 and running instantly".
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-12">
-              <div className="text-center group">
-                <div className="relative mb-8">
-                  <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full mx-auto flex items-center justify-center text-white text-3xl font-bold group-hover:scale-110 transition-transform duration-300">
+            <div className="grid md:grid-cols-3 gap-8 relative">
+              {/* Connection lines */}
+              <div className="hidden md:block absolute top-1/2 left-1/3 right-1/3 h-0.5 bg-gradient-to-r from-blue-200 to-purple-200 transform -translate-y-1/2"></div>
+
+              <div className="relative">
+                <div className="bg-white rounded-2xl p-8 border border-gray-200 hover:shadow-xl transition-all duration-300 relative z-10">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mb-6 mx-auto">
                     1
                   </div>
-                  <div className="absolute -top-4 -right-4 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-2xl animate-bounce">
-                    ⚡
-                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
+                    Register & Set Up
+                  </h3>
+                  <p className="text-gray-600 text-center">
+                    Create your account using valid business information and get
+                    approved instantly.
+                  </p>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Register & Set Up
-                </h3>
-                <p className="text-gray-600 text-lg leading-relaxed">
-                  Create your account using valid business information and get
-                  approved instantly.
-                </p>
               </div>
 
-              <div className="text-center group">
-                <div className="relative mb-8">
-                  <div className="w-24 h-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto flex items-center justify-center text-white text-3xl font-bold group-hover:scale-110 transition-transform duration-300">
+              <div className="relative">
+                <div className="bg-white rounded-2xl p-8 border border-gray-200 hover:shadow-xl transition-all duration-300 relative z-10">
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mb-6 mx-auto">
                     2
                   </div>
-                  <div
-                    className="absolute -top-4 -right-4 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-2xl animate-bounce"
-                    style={{ animationDelay: "0.5s" }}
-                  >
-                    📋
-                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
+                    Choose Your Plan
+                  </h3>
+                  <p className="text-gray-600 text-center">
+                    Select the plan that best suits your needs from our
+                    carefully crafted options for local success.
+                  </p>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Choose Your Plan
-                </h3>
-                <p className="text-gray-600 text-lg leading-relaxed">
-                  Select the plan that best suits your needs from our carefully
-                  crafted options for local success.
-                </p>
               </div>
 
-              <div className="text-center group">
-                <div className="relative mb-8">
-                  <div className="w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto flex items-center justify-center text-white text-3xl font-bold group-hover:scale-110 transition-transform duration-300">
+              <div className="relative">
+                <div className="bg-white rounded-2xl p-8 border border-gray-200 hover:shadow-xl transition-all duration-300 relative z-10">
+                  <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mb-6 mx-auto">
                     3
                   </div>
-                  <div
-                    className="absolute -top-4 -right-4 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-2xl animate-bounce"
-                    style={{ animationDelay: "1s" }}
-                  >
-                    📦
-                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
+                    Add Products
+                  </h3>
+                  <p className="text-gray-600 text-center">
+                    Upload products manually or connect your website to import
+                    your entire catalog in a flash.
+                  </p>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Add Products
-                </h3>
-                <p className="text-gray-600 text-lg leading-relaxed">
-                  Upload products manually or connect your website to import
-                  your entire catalog in a flash.
-                </p>
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto mt-16">
-              <div className="text-center group">
-                <div className="relative mb-8">
-                  <div className="w-24 h-24 bg-gradient-to-r from-orange-500 to-red-500 rounded-full mx-auto flex items-center justify-center text-white text-3xl font-bold group-hover:scale-110 transition-transform duration-300">
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-12">
+              <div className="relative">
+                <div className="bg-white rounded-2xl p-8 border border-gray-200 hover:shadow-xl transition-all duration-300 relative z-10">
+                  <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mb-6 mx-auto">
                     4
                   </div>
-                  <div
-                    className="absolute -top-4 -right-4 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-2xl animate-bounce"
-                    style={{ animationDelay: "1.5s" }}
-                  >
-                    🚚
-                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
+                    Choose Your Logistics
+                  </h3>
+                  <p className="text-gray-600 text-center">
+                    Pick from our list of trusted local delivery partners to
+                    handle your shipments.
+                  </p>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Choose Your Logistics
-                </h3>
-                <p className="text-gray-600 text-lg leading-relaxed">
-                  Pick from our list of trusted local delivery partners to
-                  handle your shipments.
-                </p>
               </div>
 
-              <div className="text-center group">
-                <div className="relative mb-8">
-                  <div className="w-24 h-24 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full mx-auto flex items-center justify-center text-white text-3xl font-bold group-hover:scale-110 transition-transform duration-300">
+              <div className="relative">
+                <div className="bg-white rounded-2xl p-8 border border-gray-200 hover:shadow-xl transition-all duration-300 relative z-10">
+                  <div className="w-16 h-16 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mb-6 mx-auto">
                     5
                   </div>
-                  <div
-                    className="absolute -top-4 -right-4 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-2xl animate-bounce"
-                    style={{ animationDelay: "2s" }}
-                  >
-                    💰
-                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
+                    Start Earning
+                  </h3>
+                  <p className="text-gray-600 text-center">
+                    Go live and start receiving orders right away!
+                  </p>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Start Earning
-                </h3>
-                <p className="text-gray-600 text-lg leading-relaxed">
-                  Go live and start receiving orders right away!
-                </p>
               </div>
             </div>
 
-            <div className="text-center mt-16">
+            <div className="text-center mt-12">
               <a
                 href="/register"
-                className="btn-ecommerce-primary inline-flex items-center"
+                className="inline-flex items-center bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
               >
                 Get Started Now - It's FREE!
                 <svg
-                  className="w-6 h-6 ml-2"
+                  className="w-5 h-5 ml-2"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -282,200 +261,133 @@ export default function HomePage() {
 
         <FeaturesSection />
 
-        {/* Pricing Teaser Section */}
-        <section className="section-ecommerce bg-gradient-to-br from-gray-50 to-blue-50">
+        {/* Pricing - Compact & Modern */}
+        <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-20">
-              <div className="inline-flex items-center bg-white rounded-full px-6 py-3 shadow-lg mb-8">
-                <span className="bg-green-500 w-3 h-3 rounded-full mr-3 animate-pulse"></span>
-                <span className="text-sm font-medium text-gray-700">
-                  💎 TRANSPARENT PRICING
-                </span>
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
+                💎 Transparent Pricing
               </div>
-
-              <h2 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-                <span className="gradient-text-ecommerce">
-                  When You Succeed
-                </span>
-                <br />
-                <span className="text-gray-800">We Succeed</span>
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                <span className="text-green-600">When You Succeed</span>, We
+                Succeed
               </h2>
-
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-12">
+              <p className="text-lg text-gray-600">
                 Start for free and pay only a small commission on successful
                 sale.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-12 max-w-4xl mx-auto">
-              <div className="ecommerce-card p-10 text-center">
-                <div className="text-6xl font-bold gradient-text-ecommerce mb-4">
-                  0€
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-3xl p-8 border border-gray-200">
+                <div className="grid md:grid-cols-3 gap-8 text-center">
+                  <div>
+                    <div className="text-5xl font-bold text-green-600 mb-2">
+                      €0
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Setup Cost
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      Everything you need to start is completely free
+                    </p>
+                  </div>
+
+                  <div className="border-l border-r border-gray-300 md:border-l md:border-r md:border-t-0 md:border-b-0">
+                    <div className="text-5xl font-bold text-blue-600 mb-2">
+                      5%
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Low commission
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      Pay only when you make a sale
+                    </p>
+                  </div>
+
+                  <div>
+                    <div className="text-5xl font-bold text-purple-600 mb-2">
+                      0%
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Commission
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      Enjoy our 0% commission offer to support your growth
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Setup Cost
-                </h3>
-                <p className="text-gray-600 text-lg">
-                  Everything you need to start is completely free.
-                </p>
-              </div>
 
-              <div className="ecommerce-card p-10 text-center">
-                <div className="text-6xl font-bold gradient-text-success mb-4">
-                  5%
+                <div className="mt-8 text-center">
+                  <a
+                    href="/pricing"
+                    className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300"
+                  >
+                    View Detailed Pricing
+                    <svg
+                      className="w-4 h-4 ml-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 7l5 5m0 0l-5 5m5-5H6"
+                      />
+                    </svg>
+                  </a>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Low commission
-                </h3>
-                <p className="text-gray-600 text-lg">
-                  Pay only when you make a sale.
-                </p>
-              </div>
-
-              <div className="ecommerce-card p-10 text-center">
-                <div className="text-6xl font-bold gradient-text-success mb-4">
-                  0%
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Commission
-                </h3>
-                <p className="text-gray-600 text-lg">
-                  Enjoy our 0% commission offer to support your growth.
-                </p>
-              </div>
-            </div>
-
-            <div className="text-center mt-12">
-              <a href="/pricing" className="btn-ecommerce-secondary">
-                View Detailed Pricing
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* Why Choose Us Section */}
-        <section className="section-ecommerce bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-20">
-              <div className="inline-flex items-center bg-purple-50 rounded-full px-6 py-3 mb-8">
-                <span className="text-purple-600 font-semibold text-sm">
-                  ⭐ WHY CHOOSE US
-                </span>
-              </div>
-
-              <h2 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-                <span className="gradient-text-ecommerce">Built for</span>
-                <br />
-                <span className="text-gray-800">Local E-commerce Success.</span>
-              </h2>
-
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Everything you need to build, grow and scale your online
-                business.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="ecommerce-card p-8 text-center group hover-lift">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl mx-auto mb-6 flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform">
-                  🚀
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Quick Launch
-                </h3>
-                <p className="text-gray-600">
-                  Get your store live in under 10 minutes with our one-click
-                  setup
-                </p>
-              </div>
-
-              <div className="ecommerce-card p-8 text-center group hover-lift">
-                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl mx-auto mb-6 flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform">
-                  💳
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Secure Payments
-                </h3>
-                <p className="text-gray-600">
-                  Accept all payment methods with bank-level security and
-                  instant settlements
-                </p>
-              </div>
-
-              <div className="ecommerce-card p-8 text-center group hover-lift">
-                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl mx-auto mb-6 flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform">
-                  📱
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Mobile Ready
-                </h3>
-                <p className="text-gray-600">
-                  Your store works perfectly on all devices with app-like
-                  experience
-                </p>
-              </div>
-
-              <div className="ecommerce-card p-8 text-center group hover-lift">
-                <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl mx-auto mb-6 flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform">
-                  📊
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Smart Analytics
-                </h3>
-                <p className="text-gray-600">
-                  Track sales, customers, and growth with real-time business
-                  insights
-                </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Final CTA Section */}
-        <section className="section-ecommerce bg-gradient-to-r from-blue-50 to-indigo-100">
+        {/* Social Proof - New section */}
+        <section className="py-16 bg-gradient-to-br from-blue-600 to-indigo-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="ecommerce-card-featured p-16 text-center">
-              <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-                Ready to Join the E-commerce Revolution?
+            <div className="text-center text-white">
+              <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+                Join Malta's{" "}
+                <span className="text-yellow-300">Success Stories</span>
               </h2>
-              <p className="text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                Over 50,000 entrepreneurs have already transformed their lives.
-                Your success story starts today.
+              <p className="text-xl text-blue-100 mb-12 max-w-2xl mx-auto">
+                Real businesses, real growth, real results on our platform
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
-                <a
-                  href="/register"
-                  className="btn-ecommerce-primary text-xl px-12 py-4"
-                >
-                  🚀 Start Your Store FREE
-                </a>
-                <a
-                  href="/how-it-works"
-                  className="btn-ecommerce-secondary text-xl px-12 py-4"
-                >
-                  See How It Works
-                </a>
-              </div>
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div className="text-3xl mb-4">👨‍💼</div>
+                  <blockquote className="text-white/90 italic mb-4">
+                    "From €0 to €50k monthly revenue in 6 months. This platform
+                    transformed my business."
+                  </blockquote>
+                  <div className="text-yellow-300 font-semibold">
+                    - Alex M., Electronics
+                  </div>
+                </div>
 
-              <div className="grid md:grid-cols-3 gap-8 text-center">
-                <div>
-                  <div className="text-3xl font-bold text-green-600 mb-2">
-                    100%
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div className="text-3xl mb-4">👩‍💼</div>
+                  <blockquote className="text-white/90 italic mb-4">
+                    "Started from home, now I have a team of 8. Malta's best
+                    e-commerce platform."
+                  </blockquote>
+                  <div className="text-yellow-300 font-semibold">
+                    - Maria S., Fashion
                   </div>
-                  <div className="text-gray-600">Free to Start</div>
                 </div>
-                <div>
-                  <div className="text-3xl font-bold text-blue-600 mb-2">
-                    24/7
+
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div className="text-3xl mb-4">👨‍🎓</div>
+                  <blockquote className="text-white/90 italic mb-4">
+                    "Student to entrepreneur. Earning more than my friends'
+                    full-time jobs."
+                  </blockquote>
+                  <div className="text-yellow-300 font-semibold">
+                    - David C., Crafts
                   </div>
-                  <div className="text-gray-600">Expert Support</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-purple-600 mb-2">
-                    10min
-                  </div>
-                  <div className="text-gray-600">Setup Time</div>
                 </div>
               </div>
             </div>

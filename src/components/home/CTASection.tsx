@@ -1,141 +1,118 @@
+// src/components/home/CTASection.tsx
 import { Container } from "@/components/ui/Container";
 import Link from "next/link";
 
 export default function CTASection() {
   return (
-    <section className="section-ecommerce bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full">
-          {/* Floating e-commerce icons */}
-          <div className="absolute top-20 left-10 animate-float opacity-10">
-            <svg
-              className="w-20 h-20 text-white"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
-            </svg>
-          </div>
+    <section className="relative py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 overflow-hidden">
+      {/* Premium background effects */}
+      <div className="absolute inset-0">
+        {/* Animated gradient orbs */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl animate-pulse"></div>
+        <div
+          className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse"
+          style={{ animationDelay: "2s" }}
+        ></div>
+        <div
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-indigo-400/10 to-blue-400/10 rounded-full blur-3xl animate-pulse"
+          style={{ animationDelay: "4s" }}
+        ></div>
 
-          <div
-            className="absolute top-32 right-16 animate-float opacity-10"
-            style={{ animationDelay: "2s" }}
-          >
-            <svg
-              className="w-16 h-16 text-white"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
-              <path
-                fillRule="evenodd"
-                d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-
-          <div
-            className="absolute bottom-24 left-20 animate-float opacity-10"
-            style={{ animationDelay: "4s" }}
-          >
-            <svg
-              className="w-18 h-18 text-white"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-
-          <div
-            className="absolute bottom-32 right-24 animate-float opacity-10"
-            style={{ animationDelay: "1s" }}
-          >
-            <svg
-              className="w-14 h-14 text-white"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-        </div>
-
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/50 to-purple-900/50"></div>
+        {/* Floating particles */}
+        <div className="absolute top-20 left-20 w-2 h-2 bg-white/30 rounded-full animate-bounce"></div>
+        <div
+          className="absolute top-40 right-32 w-3 h-3 bg-blue-300/40 rounded-full animate-bounce"
+          style={{ animationDelay: "1s" }}
+        ></div>
+        <div
+          className="absolute bottom-32 left-40 w-2 h-2 bg-purple-300/40 rounded-full animate-bounce"
+          style={{ animationDelay: "3s" }}
+        ></div>
+        <div
+          className="absolute bottom-20 right-20 w-4 h-4 bg-cyan-300/30 rounded-full animate-bounce"
+          style={{ animationDelay: "2s" }}
+        ></div>
       </div>
 
       <Container className="relative z-10">
-        <div className="text-center text-white max-w-5xl mx-auto">
-          {/* Badge */}
-          <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 mb-8 animate-scale-in">
-            <span className="bg-green-400 w-3 h-3 rounded-full mr-3 animate-pulse"></span>
-            <span className="text-sm font-medium">
-              🚀 Limited Time: Zero Setup Fees
+        <div className="text-center text-white max-w-6xl mx-auto">
+          {/* Premium badge */}
+          <div className="inline-flex items-center bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-sm border border-yellow-400/30 rounded-full px-8 py-4 mb-8 animate-scale-in">
+            <div className="w-3 h-3 bg-yellow-400 rounded-full mr-4 animate-pulse"></div>
+            <span className="text-lg font-semibold text-yellow-300">
+              🚀 Limited Time: Zero Setup Fees Forever
             </span>
           </div>
 
-          {/* Headline */}
+          {/* Main headline */}
           <div className="animate-bounce-in">
-            <h2 className="text-5xl lg:text-7xl font-bold mb-8 leading-tight">
+            <h2 className="text-5xl lg:text-8xl font-bold mb-8 leading-tight">
               <span className="text-white">Ready to</span>
               <br />
-              <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                Transform Your Business?
+              <span className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
+                Dominate Malta's
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                E-commerce Market?
               </span>
             </h2>
           </div>
 
-          {/* Description */}
+          {/* Premium description */}
           <div className="animate-slide-up">
-            <p className="text-2xl lg:text-3xl mb-8 opacity-90 leading-relaxed font-light">
-              Join over 50,000 successful entrepreneurs who've built their
-              online empire with us.
-              <br />
-              <span className="text-yellow-400 font-semibold">
-                Start selling today and see results tomorrow.
+            <p className="text-2xl lg:text-3xl mb-8 text-blue-100 leading-relaxed font-light max-w-4xl mx-auto">
+              Join Malta's elite circle of{" "}
+              <span className="text-yellow-300 font-semibold">
+                successful entrepreneurs
+              </span>{" "}
+              who've transformed their businesses into digital powerhouses.
+            </p>
+
+            <p className="text-xl text-blue-200 mb-12 max-w-3xl mx-auto">
+              Start selling today. Scale tomorrow.{" "}
+              <span className="text-yellow-300 font-semibold">
+                Dominate forever.
               </span>
             </p>
           </div>
 
-          {/* Success metrics */}
-          <div className="grid md:grid-cols-3 gap-8 mb-12 animate-fade-in">
+          {/* Premium success metrics */}
+          <div className="grid md:grid-cols-4 gap-8 mb-16 animate-fade-in">
             <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-400 mb-2">
-                ₹10L+
+              <div className="text-5xl font-bold text-yellow-400 mb-3">
+                €2M+
               </div>
-              <div className="text-white/80">Average Monthly Revenue</div>
+              <div className="text-blue-200 text-lg">Revenue Generated</div>
+              <div className="text-blue-300 text-sm">This Year Alone</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-green-400 mb-2">
-                48hrs
-              </div>
-              <div className="text-white/80">Average Store Launch Time</div>
+              <div className="text-5xl font-bold text-green-400 mb-3">5K+</div>
+              <div className="text-blue-200 text-lg">Active Sellers</div>
+              <div className="text-blue-300 text-sm">Growing Daily</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-blue-400 mb-2">95%</div>
-              <div className="text-white/80">Customer Satisfaction Rate</div>
+              <div className="text-5xl font-bold text-cyan-400 mb-3">24hrs</div>
+              <div className="text-blue-200 text-lg">Avg Launch Time</div>
+              <div className="text-blue-300 text-sm">Record: 10 Minutes</div>
+            </div>
+            <div className="text-center">
+              <div className="text-5xl font-bold text-purple-400 mb-3">
+                99.9%
+              </div>
+              <div className="text-blue-200 text-lg">Success Rate</div>
+              <div className="text-blue-300 text-sm">Industry Leading</div>
             </div>
           </div>
 
-          {/* Call to action buttons */}
-          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12 animate-scale-in">
-            <Link href="/register">
-              <button className="group relative bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-10 py-5 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300 hover:scale-105">
-                <span className="relative z-10 flex items-center">
-                  🚀 Start Your Store FREE
+          {/* Premium CTA buttons */}
+          <div className="flex flex-col lg:flex-row gap-6 justify-center mb-16 animate-scale-in max-w-2xl mx-auto">
+            <Link href="/register" className="flex-1">
+              <button className="group relative w-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-gray-900 px-10 py-6 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-yellow-500/25 transform hover:-translate-y-2 transition-all duration-500 hover:scale-105 overflow-hidden">
+                <span className="relative z-10 flex items-center justify-center">
+                  🚀 Launch My Empire FREE
                   <svg
-                    className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform"
+                    className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform duration-300"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -143,20 +120,23 @@ export default function CTASection() {
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
+                      strokeWidth={3}
                       d="M13 7l5 5m0 0l-5 5m5-5H6"
                     />
                   </svg>
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-orange-400 rounded-2xl blur-lg opacity-0 group-hover:opacity-50 transition-opacity"></div>
+                {/* Premium shine effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                {/* Glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-orange-400 rounded-2xl blur-lg opacity-0 group-hover:opacity-50 transition-opacity duration-500 -z-10"></div>
               </button>
             </Link>
 
-            <Link href="/how-it-works">
-              <button className="group bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 px-10 py-5 rounded-2xl font-bold text-xl hover:bg-white/20 hover:border-white/50 transform hover:-translate-y-2 transition-all duration-300">
-                <span className="flex items-center">
+            <Link href="/how-it-works" className="flex-1">
+              <button className="group w-full bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 px-10 py-6 rounded-2xl font-bold text-xl hover:bg-white/20 hover:border-white/50 transform hover:-translate-y-2 transition-all duration-500">
+                <span className="flex items-center justify-center">
                   <svg
-                    className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform"
+                    className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform duration-300"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -168,21 +148,21 @@ export default function CTASection() {
                       d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V9a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2z"
                     />
                   </svg>
-                  Watch Demo
+                  Watch Success Stories
                 </span>
               </button>
             </Link>
           </div>
 
-          {/* Trust indicators */}
+          {/* Premium trust indicators */}
           <div className="animate-fade-in">
-            <p className="text-white/60 mb-6 text-lg">
-              Trusted by entrepreneurs worldwide
+            <p className="text-blue-200 mb-8 text-lg">
+              Trusted by Malta's most ambitious entrepreneurs
             </p>
 
-            <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
-              {/* Trust badges */}
-              <div className="flex items-center space-x-2">
+            <div className="flex flex-wrap justify-center items-center gap-12 opacity-80">
+              {/* Enhanced trust badges */}
+              <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20">
                 <svg
                   className="w-6 h-6 text-green-400"
                   fill="currentColor"
@@ -194,10 +174,10 @@ export default function CTASection() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-sm font-medium">SSL Secured</span>
+                <span className="font-semibold">Bank-Level Security</span>
               </div>
 
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20">
                 <svg
                   className="w-6 h-6 text-blue-400"
                   fill="currentColor"
@@ -209,10 +189,10 @@ export default function CTASection() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-sm font-medium">100% Safe</span>
+                <span className="font-semibold">Malta Compliant</span>
               </div>
 
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20">
                 <svg
                   className="w-6 h-6 text-yellow-400"
                   fill="currentColor"
@@ -220,10 +200,10 @@ export default function CTASection() {
                 >
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
-                <span className="text-sm font-medium">5-Star Rated</span>
+                <span className="font-semibold">5-Star Platform</span>
               </div>
 
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20">
                 <svg
                   className="w-6 h-6 text-purple-400"
                   fill="currentColor"
@@ -235,19 +215,20 @@ export default function CTASection() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-sm font-medium">24/7 Support</span>
+                <span className="font-semibold">24/7 Expert Support</span>
               </div>
             </div>
           </div>
         </div>
       </Container>
 
-      {/* Bottom decorative wave */}
+      {/* Premium bottom wave */}
       <div className="absolute bottom-0 left-0 w-full">
         <svg
           viewBox="0 0 1440 120"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          className="w-full h-auto"
         >
           <path
             d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"

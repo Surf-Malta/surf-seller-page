@@ -1,3 +1,4 @@
+// src/components/layout/MobileMenu.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -30,9 +31,6 @@ export function MobileMenu() {
 
   useEffect(() => {
     if (!realtimeDb) {
-      console.warn(
-        "Firebase not initialized - mobile navigation will be empty"
-      );
       setLoading(false);
       return;
     }
@@ -50,7 +48,6 @@ export function MobileMenu() {
             .sort((a, b) => a.order - b.order);
           setNavigationItems(navItems);
         } else {
-          console.warn("No navigation items found in Firebase");
           setNavigationItems([]);
         }
         setLoading(false);
@@ -58,7 +55,6 @@ export function MobileMenu() {
 
       return () => unsubscribe();
     } catch (error) {
-      console.error("Error fetching navigation items:", error);
       setNavigationItems([]);
       setLoading(false);
     }
@@ -125,18 +121,8 @@ export function MobileMenu() {
                   </div>
                 ))}
               </div>
-            ) : navigationItems.length === 0 ? (
-              // No navigation items
-              <div className="text-center py-8">
-                <div className="text-gray-500 text-sm">
-                  No navigation items configured
-                </div>
-                <div className="text-xs text-gray-400 mt-2">
-                  Please add navigation items in Firebase
-                </div>
-              </div>
             ) : (
-              // Navigation items from Firebase
+              // Navigation items from Firebase (no fallback message)
               navigationItems.map((item) => (
                 <Link
                   key={item.id}
@@ -167,7 +153,7 @@ export function MobileMenu() {
             )}
           </div>
 
-          {/* Auth Section - Simplified */}
+          {/* Auth Section */}
           <div className="p-4 border-t border-gray-200">
             <div className="space-y-3">
               <a

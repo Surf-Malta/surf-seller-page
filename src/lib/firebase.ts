@@ -1,3 +1,4 @@
+// src/lib/firebase.ts
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 import { getAuth } from "firebase/auth";
@@ -25,14 +26,6 @@ const requiredEnvVars = [
 
 const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
 
-if (missingEnvVars.length > 0) {
-  console.error(
-    "Missing required Firebase environment variables:",
-    missingEnvVars
-  );
-  console.error("Please check your .env.local file");
-}
-
 let app;
 let realtimeDb;
 let auth;
@@ -43,9 +36,15 @@ try {
   realtimeDb = getDatabase(app);
   auth = getAuth(app);
   db = getFirestore(app);
-  console.log("Firebase initialized successfully");
+
+  // Only log in development
+  if (process.env.NODE_ENV === "development" && missingEnvVars.length > 0) {
+    console.warn("Missing Firebase environment variables:", missingEnvVars);
+  }
 } catch (error) {
-  console.error("Firebase initialization error:", error);
+  if (process.env.NODE_ENV === "development") {
+    console.error("Firebase initialization error:", error);
+  }
 }
 
 export { realtimeDb, auth, db };

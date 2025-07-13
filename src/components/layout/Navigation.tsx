@@ -1,3 +1,4 @@
+// src/components/layout/Navigation.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -26,7 +27,6 @@ export function Navigation() {
 
   useEffect(() => {
     if (!realtimeDb) {
-      console.warn("Firebase not initialized - navigation will be empty");
       setLoading(false);
       return;
     }
@@ -44,7 +44,6 @@ export function Navigation() {
             .sort((a, b) => a.order - b.order);
           setNavigationItems(navItems);
         } else {
-          console.warn("No navigation items found in Firebase");
           setNavigationItems([]);
         }
         setLoading(false);
@@ -52,7 +51,6 @@ export function Navigation() {
 
       return () => unsubscribe();
     } catch (error) {
-      console.error("Error fetching navigation items:", error);
       setNavigationItems([]);
       setLoading(false);
     }
@@ -79,15 +77,9 @@ export function Navigation() {
     );
   }
 
-  // If no navigation items from Firebase, show empty nav
+  // Return empty nav if no items (no debug message)
   if (navigationItems.length === 0) {
-    return (
-      <nav className="flex items-center space-x-1">
-        <div className="text-sm text-gray-500 px-3 py-2">
-          No navigation items configured
-        </div>
-      </nav>
-    );
+    return <nav className="flex items-center space-x-1" />;
   }
 
   return (
