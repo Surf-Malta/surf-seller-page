@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface LogoProps {
@@ -18,19 +19,13 @@ export function Logo({ className, size = "md" }: LogoProps) {
       {/* Logo Icon */}
       <div className="relative mr-3">
         <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
-          <svg
-            className="w-6 h-6 text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2.5}
-              d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5L2 21m5-8v8a2 2 0 002 2h6a2 2 0 002-2v-8"
-            />
-          </svg>
+          <Image
+            src="/mainIcon.png"
+            alt="Surf Seller Logo"
+            width={24}
+            height={24}
+            className="w-6 h-6"
+          />
         </div>
         {/* Floating dot indicator */}
         <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse border-2 border-white"></div>
