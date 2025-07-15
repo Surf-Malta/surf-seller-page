@@ -111,10 +111,10 @@ export function MobileMenu() {
           </div>
 
           {/* Navigation Items */}
-          <div className="flex-1 px-4 py-6 space-y-2">
+          <div className="flex-1 px-4 py-6 space-y-3">
             {loading ? (
               // Loading skeleton
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <div key={i} className="animate-pulse">
                     <div className="h-16 bg-gray-200 rounded-lg"></div>
@@ -129,15 +129,15 @@ export function MobileMenu() {
                   href={item.href}
                   onClick={() => handleItemClick(item.id)}
                   className={cn(
-                    "flex flex-col p-3 rounded-lg transition-colors",
+                    "flex flex-col p-4 rounded-xl transition-colors",
                     isActiveItem(item.href)
                       ? "bg-blue-50 border border-blue-200"
-                      : "hover:bg-gray-50"
+                      : "hover:bg-gray-50 border border-gray-100"
                   )}
                 >
                   <span
                     className={cn(
-                      "font-medium",
+                      "font-medium text-base",
                       isActiveItem(item.href)
                         ? "text-blue-600"
                         : "text-gray-900"
@@ -153,14 +153,15 @@ export function MobileMenu() {
             )}
           </div>
 
-          {/* Auth Section */}
+          {/* Auth Section - Fixed spacing */}
           <div className="p-4 border-t border-gray-200">
-            <div className="space-y-3">
+            <div className="space-y-4">
               <a
                 href="https://surf.mt/vendor.php?dispatch=auth.login_form&return_url=vendor.php"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => dispatch(closeMobileMenu())}
+                className="block"
               >
                 <Button variant="outline" className="w-full">
                   <svg
@@ -176,14 +177,18 @@ export function MobileMenu() {
                       d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
                     />
                   </svg>
-                  Vendor Login
+                  Seller Login
                 </Button>
               </a>
               <Link
                 href="/register"
                 onClick={() => dispatch(closeMobileMenu())}
+                className="block"
               >
-                <Button variant="primary" className="w-full">
+                <Button
+                  variant="primary"
+                  className="w-full bg-gradient-to-b from-[#9101CF] to-[#5D0196]"
+                >
                   <svg
                     className="w-4 h-4 mr-2"
                     fill="none"
