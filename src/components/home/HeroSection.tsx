@@ -1,3 +1,5 @@
+"use client";
+
 // src/components/home/HeroSection.tsx
 import { Container } from "@/components/ui/Container";
 import Link from "next/link";
@@ -97,7 +99,12 @@ export function HeroSection({ hero }: HeroSectionProps) {
                 </button>
               </Link>
 
-              <button className="group bg-white/80 backdrop-blur-sm text-gray-700 border border-gray-300 px-4 sm:px-6 py-3 sm:py-4 rounded-lg sm:rounded-xl lg:rounded-2xl font-semibold text-sm sm:text-base hover:bg-white hover:shadow-lg transition-all duration-300 w-full sm:w-auto">
+              <button
+                className="group bg-white/80 backdrop-blur-sm text-gray-700 border border-gray-300 px-4 sm:px-6 py-3 sm:py-4 rounded-lg sm:rounded-xl lg:rounded-2xl font-semibold text-sm sm:text-base hover:bg-white hover:shadow-lg transition-all duration-300 w-full sm:w-auto"
+                onClick={() =>
+                  window.open("https://youtube.com/@surfsellerhub", "_blank")
+                }
+              >
                 <span className="flex items-center justify-center">
                   <svg
                     className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 group-hover:scale-110 transition-transform"
@@ -112,7 +119,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
                       d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V9a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2z"
                     />
                   </svg>
-                  Watch Demo
+                  Seller Guide
                 </span>
               </button>
             </div>
