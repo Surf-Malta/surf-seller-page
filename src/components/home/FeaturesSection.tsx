@@ -218,7 +218,7 @@ export default function FeaturesSection() {
               Everything You Need
             </span>
             <br />
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] bg-clip-text text-transparent">
               To Grow Your Online Presence in Malta
             </span>
           </h2>
@@ -330,7 +330,7 @@ export default function FeaturesSection() {
 
         {/* Bottom CTA */}
         <div className="text-center">
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-12 text-white relative overflow-hidden">
+          <div className="bg-gradient-to-br from-[#9101CF] to-[#5D0196] rounded-3xl p-12 text-white relative overflow-hidden">
             {/* Background decoration */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full translate-y-32 -translate-x-32"></div>

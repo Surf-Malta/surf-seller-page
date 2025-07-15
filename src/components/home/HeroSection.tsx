@@ -17,7 +17,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ hero }: HeroSectionProps) {
   return (
-    <section className="relative bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/50 overflow-hidden">
+    <section className="relative bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/50 overflow-hidden pt-24 lg:pt-0">
       {/* Modern geometric background */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-indigo-400/20 rounded-full blur-3xl"></div>
@@ -68,7 +68,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
             {/* CTA Buttons - Fixed mobile layout */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href={hero.buttonLink || "/register"}>
-                <button className="group relative bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-2xl font-semibold text-base shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden whitespace-nowrap w-full sm:w-auto">
+                <button className="group relative bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white px-6 py-3 rounded-2xl font-semibold text-base shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden whitespace-nowrap w-full sm:w-auto">
                   <span className="relative z-10 flex items-center justify-center">
                     <span>
                       Get Started For Free
@@ -121,7 +121,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
             {/* Main dashboard mockup */}
             <div className="relative bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden transform rotate-2 hover:rotate-0 transition-transform duration-500">
               {/* Header */}
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4">
+              <div className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] p-4">
                 <div className="flex items-center space-x-2">
                   <div className="w-3 h-3 bg-white/30 rounded-full"></div>
                   <div className="w-3 h-3 bg-white/30 rounded-full"></div>

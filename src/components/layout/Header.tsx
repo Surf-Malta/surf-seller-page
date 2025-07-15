@@ -132,7 +132,7 @@ export function Header() {
               <button
                 onClick={() => handleNavigation("/register", "register")}
                 disabled={loadingStates["register"]}
-                className="group relative bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold text-sm hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 overflow-hidden"
+                className="group relative bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white px-6 py-3 rounded-xl font-semibold text-sm hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 overflow-hidden"
               >
                 {/* Shine effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
