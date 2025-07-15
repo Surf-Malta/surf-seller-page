@@ -177,9 +177,9 @@ export default function HomePage() {
                   </div>
 
                   <div className="border-l border-r border-gray-300 md:border-l md:border-r md:border-t-0 md:border-b-0 relative">
-                    {/* Most Popular Badge */}
-                    <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
-                      <div className="bg-[#9810FA] text-white px-4 py-2 rounded-full text-sm font-bold">
+                    {/* Most Popular Badge - Different approach for mobile vs desktop */}
+                    <div className="md:absolute md:-top-12 md:left-1/2 md:transform md:-translate-x-1/2 mb-4 md:mb-0">
+                      <div className="bg-[#9810FA] text-white px-4 py-2 rounded-full text-sm font-bold inline-block">
                         Most Popular
                       </div>
                     </div>
