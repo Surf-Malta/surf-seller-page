@@ -208,7 +208,7 @@ export default function FeaturesSection() {
       <Container className="relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-full text-sm font-semibold mb-6 shadow-lg">
+          <div className="inline-flex items-center bg-gradient-to-r from-[#FF6900] to-[#FB2C36] text-white px-6 py-3 rounded-full text-sm font-semibold mb-6 shadow-lg">
             <span className="w-2 h-2 bg-white rounded-full mr-3 animate-pulse"></span>
             Enterprise-Grade Features
           </div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import Image from "next/image";
+import { Logo } from "../ui/Logo";
 
 export default function Footer() {
   const footerLinks = {
@@ -67,19 +68,7 @@ export default function Footer() {
             <div className="mb-8">
               {/* Logo */}
               <div className="flex items-center justify-center mb-6">
-                <div className="flex items-center">
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-700 rounded-xl flex items-center justify-center mr-3">
-                    <span className="text-white font-bold text-lg">S</span>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold">
-                      <span className="bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
-                        Surf
-                      </span>
-                      <span className="text-gray-600 ml-1">| Seller Hub</span>
-                    </div>
-                  </div>
-                </div>
+                <Logo />
               </div>
             </div>
 
@@ -102,7 +91,7 @@ export default function Footer() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
               <Link href="/register" className="flex-1">
-                <button className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-3 px-6 rounded-xl font-bold text-base hover:from-purple-700 hover:to-purple-800 transform hover:-translate-y-1 transition-all duration-300 shadow-lg whitespace-nowrap">
+                <button className="w-full bg-gradient-to-r from-[#A600F7] to-[#9101CF] text-white py-3 px-6 rounded-xl font-bold text-base hover:from-purple-700 hover:to-purple-800 transform hover:-translate-y-1 transition-all duration-300 shadow-lg whitespace-nowrap">
                   🚀 Start Selling FREE
                 </button>
               </Link>

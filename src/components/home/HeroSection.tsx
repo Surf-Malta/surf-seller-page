@@ -37,7 +37,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
       ></div>
 
       <Container className="relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[85vh] py-12">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 xl:gap-20 items-center min-h-[85vh] py-12">
           {/* Left Content */}
           <div className="space-y-8">
             {/* Badge */}
@@ -48,14 +48,14 @@ export function HeroSection({ hero }: HeroSectionProps) {
               </span>
             </div>
 
-            {/* Main Headline - Fixed to 2 lines with smaller font */}
+            {/* Main Headline */}
             <div className="space-y-4">
-              <h1 className="text-4xl lg:text-5xl xl:text-5xl font-bold leading-tight">
+              <h1 className="text-5xl lg:text-6xl xl:text-6xl font-bold leading-tight">
                 <span className="bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
                   Grow Your Online Store
                 </span>
                 <br />
-                <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[#FF6900] to-[#FB2C36] bg-clip-text text-transparent">
                   The Smarter Way
                 </span>
               </h1>
@@ -65,12 +65,17 @@ export function HeroSection({ hero }: HeroSectionProps) {
               </p>
             </div>
 
-            {/* CTA Buttons - Fixed to single line */}
+            {/* CTA Buttons - Fixed mobile layout */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href={hero.buttonLink || "/register"}>
-                <button className="group relative bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-2xl font-semibold text-base shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden whitespace-nowrap">
-                  <span className="relative z-10 flex items-center">
-                    {hero.buttonText || "Start Selling Free"}
+                <button className="group relative bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-2xl font-semibold text-base shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden whitespace-nowrap w-full sm:w-auto">
+                  <span className="relative z-10 flex items-center justify-center">
+                    <span>
+                      Get Started For Free
+                      <span className="text-xs opacity-80 ml-1">
+                        (T&C Apply)
+                      </span>
+                    </span>
                     <svg
                       className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
                       fill="none"
@@ -90,8 +95,8 @@ export function HeroSection({ hero }: HeroSectionProps) {
                 </button>
               </Link>
 
-              <button className="group bg-white/80 backdrop-blur-sm text-gray-700 border border-gray-300 px-6 py-3 rounded-2xl font-semibold text-base hover:bg-white hover:shadow-lg transition-all duration-300 whitespace-nowrap">
-                <span className="flex items-center">
+              <button className="group bg-white/80 backdrop-blur-sm text-gray-700 border border-gray-300 px-6 py-3 rounded-2xl font-semibold text-base hover:bg-white hover:shadow-lg transition-all duration-300 whitespace-nowrap w-full sm:w-auto">
+                <span className="flex items-center justify-center">
                   <svg
                     className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform"
                     fill="none"
@@ -109,24 +114,6 @@ export function HeroSection({ hero }: HeroSectionProps) {
                 </span>
               </button>
             </div>
-
-            {/* Quick Stats */}
-            {/* <div className="flex items-center space-x-8 pt-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">50K+</div>
-                <div className="text-sm text-gray-600">Active Sellers</div>
-              </div>
-              <div className="w-px h-12 bg-gray-300"></div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">₹100Cr+</div>
-                <div className="text-sm text-gray-600">Revenue Generated</div>
-              </div>
-              <div className="w-px h-12 bg-gray-300"></div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">99.9%</div>
-                <div className="text-sm text-gray-600">Uptime</div>
-              </div>
-            </div> */}
           </div>
 
           {/* Right Visual */}

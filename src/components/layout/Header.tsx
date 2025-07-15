@@ -124,7 +124,7 @@ export function Header() {
                         d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
                       />
                     </svg>
-                    Vendor Login
+                    Seller Login
                   </span>
                 )}
               </button>
@@ -162,22 +162,7 @@ export function Header() {
                       Loading...
                     </>
                   ) : (
-                    <>
-                      <svg
-                        className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                        />
-                      </svg>
-                      Start Selling FREE
-                    </>
+                    <>Start Selling FREE</>
                   )}
                 </span>
               </button>
@@ -263,8 +248,7 @@ export function Header() {
           </div>
         </Container>
 
-        {/* Success notification bar */}
-        {isScrolled && (
+        {/* {isScrolled && (
           <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white py-1 text-center text-xs font-medium overflow-hidden">
             <div className="animate-marquee whitespace-nowrap">
               <span className="mx-8">✨ Malta's #1 E-commerce Platform</span>
@@ -276,7 +260,7 @@ export function Header() {
               <span className="mx-8">Zero setup cost</span>
             </div>
           </div>
-        )}
+        )} */}
       </header>
 
       {/* Mobile Menu */}

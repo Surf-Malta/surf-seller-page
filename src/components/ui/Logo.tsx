@@ -9,40 +9,36 @@ interface LogoProps {
 
 export function Logo({ className, size = "md" }: LogoProps) {
   const sizes = {
-    sm: "text-xl",
-    md: "text-2xl",
-    lg: "text-3xl",
+    sm: "h-8",
+    md: "h-10",
+    lg: "h-12",
   };
 
   return (
-    <Link href="/" className={cn("flex items-center group", className)}>
-      {/* Logo Icon */}
-      <div className="relative mr-3">
-        <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
-          <Image
-            src="/mainIcon.png"
-            alt="Surf Seller Logo"
-            width={24}
-            height={24}
-            className="w-6 h-6"
-          />
-        </div>
-        {/* Floating dot indicator */}
-        <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse border-2 border-white"></div>
-      </div>
-
-      {/* Logo Text */}
-      <div className="flex flex-col">
-        <div className={cn("font-bold", sizes[size])}>
-          <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            Surf
-          </span>
-          <span className="text-gray-900 ml-1">Seller</span>
-        </div>
-        <div className="text-xs text-gray-500 font-medium -mt-1">
-          E-commerce Platform
-        </div>
-      </div>
+    <Link href="/" className={cn("flex items-center", className)}>
+      <Image
+        src="/mainSurf.png"
+        alt="Surf Logo"
+        width={160}
+        height={40}
+        className={cn("w-auto", sizes[size])}
+      />
+      {/* Divider */}
+      <div className="w-[3px] h-6 bg-gray-400 mx-3 rounded-3xl"></div>
+      {/* Seller Hub Text */}
+      <span
+        className="text-center italic font-semibold"
+        style={{
+          color: "#333",
+          fontFamily: "Poppins, sans-serif",
+          fontSize: "16px",
+          fontWeight: "600",
+          letterSpacing: "0.64px",
+          fontStyle: "italic",
+        }}
+      >
+        Seller Hub
+      </span>
     </Link>
   );
 }
