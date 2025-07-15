@@ -50,7 +50,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
 
             {/* Main Headline */}
             <div className="space-y-4">
-              <h1 className="text-5xl lg:text-6xl xl:text-6xl font-bold leading-tight">
+              <h1 className="text-5xl lg:text-6xl xl:text-5xl font-bold leading-tight">
                 <span className="bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
                   Grow Your Online Store
                 </span>
