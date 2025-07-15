@@ -73,7 +73,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
                       <span className="hidden sm:inline">
                         Get Started For Free
                       </span>
-                      <span className="sm:hidden">Start FREE</span>
+                      <span className="sm:hidden">Get Started For Free</span>
                       <span className="text-xs opacity-80 ml-1">
                         (T&C Apply)
                       </span>

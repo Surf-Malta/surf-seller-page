@@ -210,7 +210,7 @@ export default function FeaturesSection() {
         <div className="text-center mb-10 sm:mb-12 lg:mb-16">
           <div className="inline-flex items-center bg-gradient-to-r from-[#FF6900] to-[#FB2C36] text-white px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6 shadow-lg">
             <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full mr-2 sm:mr-3 animate-pulse"></span>
-            Enterprise-Grade Features
+            Advanced Features
           </div>
 
           <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 px-2">

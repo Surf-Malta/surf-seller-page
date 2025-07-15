@@ -124,7 +124,7 @@ export default function HomePage() {
                 <span className="hidden sm:inline">
                   Get Started Now - It's FREE!
                 </span>
-                <span className="sm:hidden">Start FREE!</span>
+                <span className="sm:hidden">Get Started Now - It's FREE!</span>
                 <svg
                   className="w-4 h-4 sm:w-5 sm:h-5 ml-1.5 sm:ml-2"
                   fill="none"

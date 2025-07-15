@@ -96,9 +96,10 @@ export default function Footer() {
               Surf, where going online is simple and rewarding
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-sm sm:max-w-md mx-auto px-4">
+            {/* Fixed button container with proper sizing for full text */}
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-3 justify-center max-w-sm sm:max-w-xl mx-auto px-4">
               <Link href="/register" className="flex-1">
-                <button className="w-full bg-gradient-to-r from-[#A600F7] to-[#9101CF] text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base hover:from-purple-700 hover:to-purple-800 transform hover:-translate-y-1 transition-all duration-300 shadow-lg">
+                <button className="w-full bg-gradient-to-r from-[#A600F7] to-[#9101CF] text-white py-2.5 sm:py-3 px-2 sm:px-2 lg:px-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-xs lg:text-sm hover:from-purple-700 hover:to-purple-800 transform hover:-translate-y-1 transition-all duration-300 shadow-lg whitespace-nowrap">
                   <span className="hidden sm:inline">
                     🚀 Start Selling FREE
                   </span>
@@ -106,7 +107,7 @@ export default function Footer() {
                 </button>
               </Link>
               <Link href="/seller-guide" className="flex-1">
-                <button className="w-full bg-purple-100 text-purple-700 py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base hover:bg-purple-200 transform hover:-translate-y-1 transition-all duration-300">
+                <button className="w-full bg-purple-100 text-purple-700 py-2.5 sm:py-3 px-2 sm:px-2 lg:px-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-xs lg:text-sm hover:bg-purple-200 transform hover:-translate-y-1 transition-all duration-300 whitespace-nowrap">
                   Seller Guide
                 </button>
               </Link>

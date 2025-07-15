@@ -24,7 +24,7 @@ export function Logo({ className, size = "md" }: LogoProps) {
         className={cn("w-auto", sizes[size])}
       />
       {/* Divider */}
-      <div className="w-[3px] h-6 bg-gray-400 mx-3 rounded-3xl"></div>
+      <div className="w-[3px] h-6 bg-[#606060] mx-3 rounded-3xl"></div>
       {/* Seller Hub Text */}
       <span
         className="text-center italic font-semibold"
