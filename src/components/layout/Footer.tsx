@@ -1,49 +1,32 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
-import { Logo } from "../ui/Logo";
+import Image from "next/image";
 
 export default function Footer() {
   const footerLinks = {
     "Get Started": [
-      { href: "/register", label: "Start Selling Free", highlight: true },
-      { href: "/how-it-works", label: "How It Works" },
+      { href: "/register", label: "Register now" },
+      { href: "/login", label: "Seller Login", external: true },
       { href: "/pricing", label: "Pricing & Commission" },
-      {
-        href: "https://surf.mt/vendor.php?dispatch=auth.login_form&return_url=vendor.php",
-        label: "Vendor Login",
-        external: true,
-      },
     ],
-    "Selling Tools": [
-      { href: "/features", label: "Store Builder" },
-      { href: "/inventory", label: "Inventory Management" },
-      { href: "/analytics", label: "Sales Analytics" },
-      { href: "/marketing", label: "Marketing Tools" },
+    "Seller Links": [
+      { href: "/terms", label: "Terms & Conditions" },
+      { href: "/acceptable-use", label: "Acceptable Use Policy" },
+    ],
+    "Company Links": [
+      { href: "/about", label: "About Surf" },
+      { href: "/blog", label: "Blogs" },
     ],
     "Support & Resources": [
       { href: "/help", label: "Help Center" },
       { href: "/contact", label: "Contact Support" },
       { href: "/seller-guide", label: "Seller Guide" },
-      { href: "/success-stories", label: "Success Stories" },
-    ],
-    Company: [
-      { href: "/about", label: "About Us" },
-      { href: "/careers", label: "Careers" },
-      { href: "/blog", label: "Seller Blog" },
-      { href: "/press", label: "Press & Media" },
-    ],
-    Legal: [
-      { href: "/privacy", label: "Privacy Policy" },
-      { href: "/terms", label: "Terms of Service" },
-      { href: "/seller-agreement", label: "Seller Agreement" },
-      { href: "/cookies", label: "Cookie Policy" },
     ],
   };
 
   const socialLinks = [
     { href: "#", icon: "facebook", label: "Facebook" },
-    { href: "#", icon: "twitter", label: "Twitter" },
-    { href: "#", icon: "instagram", label: "Instagram" },
+    { href: "#", icon: "reddit", label: "Reddit" },
     { href: "#", icon: "linkedin", label: "LinkedIn" },
     { href: "#", icon: "youtube", label: "YouTube" },
   ];
@@ -55,14 +38,9 @@ export default function Footer() {
           <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
         </svg>
       ),
-      twitter: (
+      reddit: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
-        </svg>
-      ),
-      instagram: (
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987s11.987-5.367 11.987-11.987C24.014 5.367 18.647.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.49-3.333-1.297C3.678 14.394 3.678 12.017 5.116 10.579c1.438-1.438 3.815-1.438 5.253 0 .72.72 1.081 1.666 1.081 2.612s-.361 1.891-1.081 2.612c-.885.807-2.036 1.297-3.333 1.297v-.002zm7.072 0c-1.297 0-2.448-.49-3.333-1.297-1.438-1.438-1.438-3.815 0-5.253 1.438-1.438 3.815-1.438 5.253 0 .72.72 1.081 1.666 1.081 2.612s-.361 1.891-1.081 2.612c-.885.807-2.036 1.297-3.333 1.297v-.002z" />
+          <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z" />
         </svg>
       ),
       linkedin: (
@@ -80,48 +58,67 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 text-white relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-20 w-32 h-32 border border-white rounded-full"></div>
-        <div className="absolute bottom-32 right-32 w-24 h-24 border border-white rounded-full"></div>
-        <div className="absolute top-1/2 left-1/3 w-16 h-16 border border-white rounded-full"></div>
-      </div>
-
+    <footer className="bg-white relative overflow-hidden border-t border-gray-100">
       <Container className="relative z-10">
         {/* Main footer content */}
         <div className="py-16">
           {/* Top section with logo and CTA */}
           <div className="text-center mb-16">
             <div className="mb-8">
-              <Logo size="lg" className="justify-center" />
+              {/* Logo */}
+              <div className="flex items-center justify-center mb-6">
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-700 rounded-xl flex items-center justify-center mr-3">
+                    <span className="text-white font-bold text-lg">S</span>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold">
+                      <span className="bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
+                        Surf
+                      </span>
+                      <span className="text-gray-600 ml-1">| Seller Hub</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <h3 className="text-3xl font-bold mb-4">
+
+            <h3 className="text-4xl font-bold mb-4 text-gray-900">
               Ready to Start Your E-commerce Journey?
             </h3>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Join thousands of successful sellers who've transformed their
-              lives through online selling.
+            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+              Sellers across Malta are embracing the future of commerce with
+              Surf, where going online is simple and rewarding
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/register">
-                <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-indigo-700 transform hover:-translate-y-1 transition-all duration-300 shadow-xl">
+
+            {/* Avatar */}
+            {/* <div className="mb-8">
+              <div className="w-16 h-16 bg-green-100 rounded-full mx-auto flex items-center justify-center">
+                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm">👤</span>
+                </div>
+              </div>
+            </div> */}
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+              <Link href="/register" className="flex-1">
+                <button className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-3 px-6 rounded-xl font-bold text-base hover:from-purple-700 hover:to-purple-800 transform hover:-translate-y-1 transition-all duration-300 shadow-lg whitespace-nowrap">
                   🚀 Start Selling FREE
                 </button>
               </Link>
-              <Link href="/how-it-works">
-                <button className="bg-white/10 backdrop-blur-sm text-white border border-white/30 px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transform hover:-translate-y-1 transition-all duration-300">
-                  Learn How It Works
+              <Link href="/seller-guide" className="flex-1">
+                <button className="w-full bg-purple-100 text-purple-700 py-3 px-6 rounded-xl font-bold text-base hover:bg-purple-200 transform hover:-translate-y-1 transition-all duration-300 whitespace-nowrap">
+                  Seller Guide
                 </button>
               </Link>
             </div>
           </div>
 
           {/* Links grid */}
-          <div className="grid lg:grid-cols-5 md:grid-cols-3 gap-8 mb-12">
+          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-12 max-w-58xl mx-auto">
             {Object.entries(footerLinks).map(([category, links]) => (
               <div key={category}>
-                <h4 className="font-bold text-lg mb-6 text-blue-400">
+                <h4 className="font-bold text-lg mb-6 text-gray-900">
                   {category}
                 </h4>
                 <ul className="space-y-3">
@@ -129,43 +126,31 @@ export default function Footer() {
                     <li key={link.href}>
                       {link.external ? (
                         <a
-                          href={link.href}
+                          href="https://surf.mt/vendor.php?dispatch=auth.login_form&return_url=vendor.php"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={`transition-colors hover:text-blue-400 ${
-                            link.highlight
-                              ? "text-yellow-400 font-semibold hover:text-yellow-300"
-                              : "text-gray-300"
-                          }`}
+                          className="text-gray-600 hover:text-purple-600 transition-colors flex items-center"
                         >
-                          {link.highlight && "🚀 "}
                           {link.label}
-                          {link.external && (
-                            <svg
-                              className="w-3 h-3 inline ml-1"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                              />
-                            </svg>
-                          )}
+                          <svg
+                            className="w-3 h-3 ml-1"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                            />
+                          </svg>
                         </a>
                       ) : (
                         <Link
                           href={link.href}
-                          className={`transition-colors hover:text-blue-400 ${
-                            link.highlight
-                              ? "text-yellow-400 font-semibold hover:text-yellow-300"
-                              : "text-gray-300"
-                          }`}
+                          className="text-gray-600 hover:text-purple-600 transition-colors"
                         >
-                          {link.highlight && "🚀 "}
                           {link.label}
                         </Link>
                       )}
@@ -176,86 +161,56 @@ export default function Footer() {
             ))}
           </div>
 
-          {/* Success metrics */}
-          <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 mb-12">
-            <h4 className="text-center text-xl font-bold mb-8 text-blue-400">
-              Our E-commerce Success Story
-            </h4>
-            <div className="grid md:grid-cols-4 gap-8 text-center">
-              <div>
-                <div className="text-3xl font-bold text-yellow-400 mb-2">
-                  50K+
+          {/* Social links and contact section */}
+          <div className="border-t border-gray-200 pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div className="mb-6 md:mb-0">
+                <p className="text-gray-600 mb-3 font-medium">
+                  Connect with us
+                </p>
+                <div className="flex space-x-3">
+                  {socialLinks.map((social) => (
+                    <Link
+                      key={social.icon}
+                      href={social.href}
+                      className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-all duration-300"
+                      aria-label={social.label}
+                    >
+                      {getSocialIcon(social.icon)}
+                    </Link>
+                  ))}
                 </div>
-                <div className="text-gray-300">Active Sellers</div>
               </div>
-              <div>
-                <div className="text-3xl font-bold text-green-400 mb-2">
-                  ₹100Cr+
-                </div>
-                <div className="text-gray-300">Revenue Generated</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-blue-400 mb-2">2M+</div>
-                <div className="text-gray-300">Products Sold</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-purple-400 mb-2">
-                  99.9%
-                </div>
-                <div className="text-gray-300">Uptime</div>
-              </div>
-            </div>
-          </div>
 
-          {/* Social links and contact */}
-          <div className="flex flex-col md:flex-row justify-between items-center border-t border-gray-700 pt-8">
-            <div className="mb-6 md:mb-0">
-              <p className="text-gray-300 mb-2">Connect with us</p>
-              <div className="flex space-x-4">
-                {socialLinks.map((social) => (
-                  <Link
-                    key={social.icon}
-                    href={social.href}
-                    className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-blue-600 transition-all duration-300 hover:scale-110"
-                    aria-label={social.label}
+              <div className="text-center md:text-right">
+                <p className="text-gray-600 mb-3 font-medium">
+                  Need help? We're here 24/7
+                </p>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <a
+                    href="mailto:sell@surf.mt"
+                    className="text-orange-500 hover:text-orange-600 transition-colors flex items-center"
                   >
-                    {getSocialIcon(social.icon)}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            <div className="text-center md:text-right">
-              <p className="text-gray-300 mb-2">Need help? We're here 24/7</p>
-              <div className="flex flex-col md:flex-row gap-4">
-                <a
-                  href="mailto:support@surfseller.com"
-                  className="text-blue-400 hover:text-blue-300"
-                >
-                  📧 support@surfseller.com
-                </a>
-                <a
-                  href="tel:+919876543210"
-                  className="text-blue-400 hover:text-blue-300"
-                >
-                  📞 +91 98765 43210
-                </a>
+                    📧 sell@surf.mt
+                  </a>
+                  <a
+                    href="tel:+35677413456"
+                    className="text-orange-500 hover:text-orange-600 transition-colors flex items-center"
+                  >
+                    📞 +356 7741 3456
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-gray-700 py-6 text-center text-gray-400">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p>
-              &copy; 2024 Surf Seller. All rights reserved. Made with ❤️ for
-              entrepreneurs.
-            </p>
-            <p className="mt-2 md:mt-0">
-              <span className="text-green-400">🟢 All systems operational</span>
-            </p>
-          </div>
+        <div className="border-t border-gray-200 py-6 text-center text-gray-500">
+          <p>
+            © 2025 Surf Creative Solutions. All rights reserved. Made with ❤️ in
+            Malta.
+          </p>
         </div>
       </Container>
     </footer>

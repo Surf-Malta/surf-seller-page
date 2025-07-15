@@ -126,74 +126,70 @@ export default function FeaturesSection() {
   const defaultFeatures = [
     {
       id: "1",
-      title: "Instant Store Setup",
+      title: "Easy Seller Onboarding",
       content:
-        "Launch your professional online store in minutes with our AI-powered setup wizard. No coding required.",
+        "Start selling online with simple tools made for local businesses.",
       features: [
-        "One-click deployment",
-        "AI-optimized templates",
-        "Mobile-first design",
-        "SEO optimization",
+        "Quick seller registration",
+        "Access to a dedicated seller dashboard",
+        "List products manually, via bulk CSV upload, or through integrations",
+        "Connect your existing store from Shopify, WooCommerce, or PrestaShop",
       ],
     },
     {
       id: "2",
-      title: "Secure Payment Processing",
-      content:
-        "Accept all major payment methods with bank-level security and instant settlements to your account.",
+      title: "Secure Payment Integration",
+      content: "Accept payments smoothly with trusted gateways.",
       features: [
-        "Banking integration",
-        "PCI DSS compliant",
+        "PayPal and local payment options",
+        "Secure checkout with PCI compliance",
         "Fraud protection",
-        "Multi-currency support",
+        "Easy seller payout setup",
       ],
     },
     {
       id: "3",
       title: "Mobile Commerce Excellence",
-      content:
-        "Deliver exceptional shopping experiences on any device with our progressive web app technology.",
+      content: "Deliver a smooth shopping experience across all devices.",
       features: [
-        "PWA technology",
-        "Offline capabilities",
-        "Touch-optimized UI",
-        "App store ready",
+        "Mobile-responsive shopping experience",
+        "Easy navigation and product displays",
+        "Fast and secure mobile checkout",
+        "Optimized for speed and usability",
       ],
     },
     {
       id: "4",
-      title: "Smart Logistics Network",
+      title: "Smart Shipping & Delivery",
       content:
-        "Automated shipping with reliable logistics partners for same-day and international delivery.",
+        "Flexible shipping tools to serve local and international customers.",
       features: [
-        "Same-day delivery",
+        "Real-time shipping rates",
         "Real-time tracking",
-        "Smart routing",
-        "International shipping",
+        "Flexible delivery with local partners including MaltaPost and DHL",
+        "Seller-specific shipping methods",
       ],
     },
     {
       id: "5",
-      title: "AI-Powered Analytics",
-      content:
-        "Advanced business intelligence with predictive analytics to optimize your sales and inventory.",
+      title: "Built-in Reports & Insights",
+      content: "Make informed decisions with marketplace analytics.",
       features: [
-        "Predictive analytics",
-        "Sales forecasting",
+        "Order, product & inventory stats",
+        "Sales reports per seller",
         "Customer insights",
         "Performance optimization",
       ],
     },
     {
       id: "6",
-      title: "24/7 Premium Support",
-      content:
-        "Dedicated account management with round-the-clock priority support from our expert team.",
+      title: "Dedicated Seller Support",
+      content: "Get help when you need it — always.",
       features: [
-        "Account manager",
-        "Priority support",
-        "Live chat",
-        "Phone support",
+        "Onboarding assistance for sellers",
+        "Knowledge base and tutorials",
+        "Priority seller support via email & chat",
+        "Community support group",
       ],
     },
   ];
@@ -223,13 +219,13 @@ export default function FeaturesSection() {
             </span>
             <br />
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              To Dominate Malta's Market
+              To Grow Your Online Presence in Malta
             </span>
           </h2>
 
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Professional-grade e-commerce tools designed specifically for Malta
-            businesses to compete globally
+            Professional e-commerce tools designed specifically for Malta
+            businesses
           </p>
         </div>
 
@@ -252,11 +248,11 @@ export default function FeaturesSection() {
                 ></div>
 
                 {/* Featured badge for middle card */}
-                {index === 1 && (
+                {/* {index === 1 && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
                     Most Popular
                   </div>
-                )}
+                )} */}
 
                 <div className="relative z-10">
                   {/* Icon */}
@@ -345,22 +341,22 @@ export default function FeaturesSection() {
                 Business?
               </h3>
               <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-                Join Malta's most successful e-commerce platform and start
-                scaling your business today.
+                Join Malta's most successful e-commerce marketplace platform and
+                start scaling your business today.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
                 <Link href="/register" className="flex-1">
-                  <button className="w-full bg-white text-blue-600 py-4 px-8 rounded-xl font-bold text-lg hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                    Start Free Store
+                  <button className="w-full bg-white text-blue-600 py-3 px-6 rounded-xl font-bold text-base hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 whitespace-nowrap">
+                    Create Free Account
                   </button>
                 </Link>
                 <a
                   href="https://surf.mt/vendor.php?dispatch=auth.login_form&return_url=vendor.php"
                   className="flex-1"
                 >
-                  <button className="w-full bg-white/10 backdrop-blur-sm text-white border border-white/30 py-4 px-8 rounded-xl font-bold text-lg hover:bg-white/20 transition-all duration-300">
-                    Vendor Login
+                  <button className="w-full bg-white/10 backdrop-blur-sm text-white border border-white/30 py-3 px-6 rounded-xl font-bold text-base hover:bg-white/20 transition-all duration-300 whitespace-nowrap">
+                    Seller Login
                   </button>
                 </a>
               </div>

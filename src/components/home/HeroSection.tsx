@@ -48,18 +48,14 @@ export function HeroSection({ hero }: HeroSectionProps) {
               </span>
             </div>
 
-            {/* Main Headline */}
+            {/* Main Headline - Fixed to 2 lines with smaller font */}
             <div className="space-y-4">
-              <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
+              <h1 className="text-4xl lg:text-5xl xl:text-5xl font-bold leading-tight">
                 <span className="bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
-                  Grow Your
+                  Grow Your Online Store
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  Online Store
-                </span>
-                <br />
-                <span className="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                   The Smarter Way
                 </span>
               </h1>
@@ -69,14 +65,14 @@ export function HeroSection({ hero }: HeroSectionProps) {
               </p>
             </div>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons - Fixed to single line */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href={hero.buttonLink || "/register"}>
-                <button className="group relative bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+                <button className="group relative bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-2xl font-semibold text-base shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden whitespace-nowrap">
                   <span className="relative z-10 flex items-center">
                     {hero.buttonText || "Start Selling Free"}
                     <svg
-                      className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform"
+                      className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -94,10 +90,10 @@ export function HeroSection({ hero }: HeroSectionProps) {
                 </button>
               </Link>
 
-              <button className="group bg-white/80 backdrop-blur-sm text-gray-700 border border-gray-300 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-white hover:shadow-lg transition-all duration-300">
+              <button className="group bg-white/80 backdrop-blur-sm text-gray-700 border border-gray-300 px-6 py-3 rounded-2xl font-semibold text-base hover:bg-white hover:shadow-lg transition-all duration-300 whitespace-nowrap">
                 <span className="flex items-center">
                   <svg
-                    className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform"
+                    className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -115,7 +111,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
             </div>
 
             {/* Quick Stats */}
-            <div className="flex items-center space-x-8 pt-4">
+            {/* <div className="flex items-center space-x-8 pt-4">
               <div className="text-center">
                 <div className="text-2xl font-bold text-gray-900">50K+</div>
                 <div className="text-sm text-gray-600">Active Sellers</div>
@@ -130,7 +126,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
                 <div className="text-2xl font-bold text-gray-900">99.9%</div>
                 <div className="text-sm text-gray-600">Uptime</div>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Right Visual */}
@@ -257,7 +253,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
               className="absolute top-1/2 -right-8 bg-purple-500 text-white px-3 py-2 rounded-full text-xs font-bold shadow-lg animate-bounce"
               style={{ animationDelay: "2s" }}
             >
-              🌍 Global Reach
+              🌍 Local Reach
             </div>
           </div>
         </div>

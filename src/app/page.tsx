@@ -19,8 +19,7 @@ export default function HomePage() {
           }}
         />
 
-        {/* Trust Bar - New compact section */}
-        <section className="py-8 bg-gradient-to-r from-gray-50 to-gray-100 border-y border-gray-200">
+        {/* <section className="py-8 bg-gradient-to-r from-gray-50 to-gray-100 border-y border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center text-sm text-gray-600 mb-4">
               Trusted by entrepreneurs worldwide
@@ -73,10 +72,9 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
-        {/* Value Proposition - Compact section */}
-        <section className="py-16 bg-white">
+        {/* <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
@@ -135,7 +133,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* How It Works - Streamlined */}
         <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
@@ -149,8 +147,7 @@ export default function HomePage() {
                 <span className="text-blue-600">5 Simple Steps</span>
               </h2>
               <p className="text-lg text-gray-600">
-                Take off (No tech required)- let's just keep "Have your store up
-                and running instantly".
+                Have your store up and running instantly.
               </p>
             </div>
 
@@ -295,10 +292,10 @@ export default function HomePage() {
 
                   <div className="border-l border-r border-gray-300 md:border-l md:border-r md:border-t-0 md:border-b-0">
                     <div className="text-5xl font-bold text-blue-600 mb-2">
-                      5%
+                      Low
                     </div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      Low commission
+                      commission
                     </h3>
                     <p className="text-gray-600 text-sm">
                       Pay only when you make a sale
@@ -323,7 +320,7 @@ export default function HomePage() {
                     href="/pricing"
                     className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300"
                   >
-                    View Detailed Pricing
+                    Register Now
                     <svg
                       className="w-4 h-4 ml-2"
                       fill="none"
@@ -394,7 +391,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <CTASection />
+        {/* <CTASection /> */}
       </div>
     </div>
   );
