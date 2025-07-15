@@ -215,7 +215,7 @@ export function Header() {
               <button
                 onClick={() => handleNavigation("/register", "mobile-register")}
                 disabled={loadingStates["mobile-register"]}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-xl font-semibold text-sm hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 disabled:opacity-50"
+                className="flex-1 bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white py-3 px-4 rounded-xl font-semibold text-sm hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 disabled:opacity-50"
               >
                 {loadingStates["mobile-register"] ? (
                   <span className="flex items-center justify-center">
