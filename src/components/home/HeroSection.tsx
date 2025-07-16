@@ -19,7 +19,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ hero }: HeroSectionProps) {
   return (
-    <section className="relative bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/50 overflow-hidden pt-16 sm:pt-20 lg:pt-0">
+    <section className="relative bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/50 overflow-hidden pt-16 sm:pt-20 lg:pt-30">
       {/* Modern geometric background */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-60 sm:w-80 h-60 sm:h-80 bg-gradient-to-br from-blue-400/20 to-indigo-400/20 rounded-full blur-3xl"></div>
@@ -39,7 +39,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
       ></div>
 
       <Container className="relative z-10">
-        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 xl:gap-20 items-center min-h-[75vh] sm:min-h-[80vh] lg:min-h-[85vh] py-8 sm:py-12">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 xl:gap-20 items-center min-h-[75vh] sm:min-h-[80vh] lg:min-h-[65vh] py-8 sm:py-12 lg:py-10">
           {/* Left Content */}
           <div className="space-y-6 sm:space-y-8 text-center lg:text-left">
             {/* Badge */}

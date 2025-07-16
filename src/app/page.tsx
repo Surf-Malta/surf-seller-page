@@ -6,8 +6,8 @@ import CTASection from "@/components/home/CTASection";
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section - Mobile optimized spacing */}
-      <div className="pt-16">
+      {/* Hero Section - Reduced top spacing for desktop */}
+      <div className="pt-16 lg:pt-0">
         <HeroSection
           hero={{
             id: "home-hero",
