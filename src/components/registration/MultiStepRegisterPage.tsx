@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { ref, push, set } from "firebase/database";
 import { realtimeDb } from "@/lib/firebase";
 import { OTPService } from "@/lib/otpService";
+import { VATService, VATVerificationResult } from "@/lib/vatService";
 
 interface RegistrationData {
   // Step 1 - Business Information
@@ -40,6 +41,8 @@ export default function MultiStepRegisterPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [registrationComplete, setRegistrationComplete] = useState(false);
+
+  // OTP States
   const [otpSent, setOtpSent] = useState(false);
   const [otpSessionId, setOtpSessionId] = useState<string>("");
   const [otpCode, setOtpCode] = useState("");
@@ -49,6 +52,15 @@ export default function MultiStepRegisterPage() {
   const [verifyingOtp, setVerifyingOtp] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [canResend, setCanResend] = useState(true);
+
+  // VAT Verification States
+  const [vatVerifying, setVatVerifying] = useState(false);
+  const [vatVerified, setVatVerified] = useState(false);
+  const [vatError, setVatError] = useState("");
+  const [vatCompanyInfo, setVatCompanyInfo] = useState<{
+    name?: string;
+    address?: string;
+  }>({});
 
   const [formData, setFormData] = useState<RegistrationData>({
     businessName: "",
@@ -105,6 +117,21 @@ export default function MultiStepRegisterPage() {
       setCanResend(true);
     }
 
+    // Reset VAT verification when VAT type changes
+    if (field === "vatType") {
+      setVatVerified(false);
+      setVatError("");
+      setVatCompanyInfo({});
+      setFormData((prev) => ({ ...prev, vatNumber: "" }));
+    }
+
+    // Reset VAT verification when VAT number changes for business
+    if (field === "vatNumber" && formData.vatType === "business") {
+      setVatVerified(false);
+      setVatError("");
+      setVatCompanyInfo({});
+    }
+
     // Reset shipping type when switching to integrated logistics
     if (field === "shippingMethod" && value === "integrated") {
       setFormData((prev) => ({
@@ -124,6 +151,56 @@ export default function MultiStepRegisterPage() {
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
+    }
+  };
+
+  // VAT Verification Handler
+  const handleVerifyVAT = async () => {
+    if (!formData.vatNumber.trim()) {
+      setVatError("Please enter your VAT number");
+      return;
+    }
+
+    if (!VATService.validateMaltaVATFormat(formData.vatNumber)) {
+      setVatError("Invalid Malta VAT format. Must be MT followed by 8 digits.");
+      return;
+    }
+
+    setVatVerifying(true);
+    setVatError("");
+
+    try {
+      const result = await VATService.verifyVAT(formData.vatNumber);
+
+      if (result.success && result.valid) {
+        setVatVerified(true);
+        setVatCompanyInfo({
+          name: result.companyName,
+          address: result.companyAddress,
+        });
+        setVatError("");
+
+        // Auto-fill business name if available and not already filled
+        if (result.companyName && !formData.businessName.trim()) {
+          updateFormData("businessName", result.companyName);
+        }
+      } else if (result.success && result.valid === false) {
+        setVatVerified(false);
+        setVatError(
+          "This VAT number is not valid or not found in the EU VIES database. Please check the number and try again."
+        );
+      } else {
+        setVatVerified(false);
+        setVatError(
+          result.error || "VAT verification failed. Please try again."
+        );
+      }
+    } catch (error) {
+      setVatVerified(false);
+      setVatError("Failed to verify VAT number. Please try again.");
+      console.error("VAT verification error:", error);
+    } finally {
+      setVatVerifying(false);
     }
   };
 
@@ -208,6 +285,13 @@ export default function MultiStepRegisterPage() {
         throw new Error("Email not verified. Please verify your email first.");
       }
 
+      // Additional validation for business VAT
+      if (formData.vatType === "business" && !vatVerified) {
+        throw new Error(
+          "Please verify your business VAT number before proceeding."
+        );
+      }
+
       const sellersRef = ref(realtimeDb, "sellers");
       const newSellerRef = push(sellersRef);
 
@@ -215,6 +299,11 @@ export default function MultiStepRegisterPage() {
         businessName: formData.businessName,
         vatType: formData.vatType,
         vatNumber: formData.vatNumber,
+        ...(formData.vatType === "business" &&
+          vatVerified && {
+            vatVerified: true,
+            vatCompanyInfo: vatCompanyInfo,
+          }),
         hearAboutSurf: formData.hearAboutSurf,
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -256,6 +345,8 @@ export default function MultiStepRegisterPage() {
             "System error: Database not available. Please try again later.";
         } else if (error.message.includes("Email not verified")) {
           errorMessage = "Please verify your email address before proceeding.";
+        } else if (error.message.includes("VAT number")) {
+          errorMessage = error.message;
         }
       }
 
@@ -268,11 +359,19 @@ export default function MultiStepRegisterPage() {
   const isStepValid = () => {
     switch (currentStep) {
       case 1:
-        return (
+        const basicValidation =
           formData.businessName.trim() &&
           formData.vatNumber.trim() &&
-          formData.hearAboutSurf
-        );
+          VATService.validateMaltaVATFormat(formData.vatNumber) &&
+          formData.hearAboutSurf;
+
+        // For business VAT, require verification
+        if (formData.vatType === "business") {
+          return basicValidation && vatVerified;
+        }
+
+        // For individual VAT, only require format validation
+        return basicValidation;
       case 2:
         return (
           formData.firstName.trim() &&
@@ -528,7 +627,8 @@ export default function MultiStepRegisterPage() {
                           VAT Compliant
                         </h4>
                         <p className="text-gray-600 text-sm">
-                          Full Malta VAT compliance support
+                          Malta VAT compliance for both individual and business
+                          sellers
                         </p>
                       </div>
                     </div>
@@ -618,7 +718,7 @@ export default function MultiStepRegisterPage() {
 
             {/* Right Section - Form with FIXED mobile padding */}
             <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 border-2 border-purple-100 rounded-2xl shadow-xl p-4 sm:p-6 lg:p-10 order-1 lg:order-2">
-              {/* Step 1 Form - Business Information */}
+              {/* Step 1 Form - Business Information with VAT Verification */}
               {currentStep === 1 && (
                 <div className="space-y-6">
                   <div>
@@ -676,28 +776,224 @@ export default function MultiStepRegisterPage() {
                     </div>
                   </div>
 
+                  {/* Enhanced VAT Number Section with Verification */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-3">
                       VAT Number <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      value={formData.vatNumber}
-                      onChange={(e) =>
-                        updateFormData("vatNumber", e.target.value)
-                      }
-                      className="w-full px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
-                      placeholder={
-                        formData.vatType === "individual"
-                          ? "Enter your personal VAT number"
-                          : "Enter your business VAT number"
-                      }
-                    />
-                    <p className="text-xs text-gray-500 mt-2">
-                      {formData.vatType === "individual"
-                        ? "Required for individual sellers in Malta"
-                        : "Your registered business VAT number"}
-                    </p>
+                    <div className="space-y-3">
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <input
+                          type="text"
+                          value={formData.vatNumber}
+                          onChange={(e) => {
+                            const value = e.target.value.toUpperCase();
+                            updateFormData("vatNumber", value);
+                          }}
+                          className="flex-1 px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                          placeholder="MT12345678 (Malta VAT format)"
+                          disabled={
+                            vatVerified && formData.vatType === "business"
+                          }
+                        />
+
+                        {/* Show Verify button only for business VAT */}
+                        {formData.vatType === "business" && (
+                          <button
+                            type="button"
+                            onClick={handleVerifyVAT}
+                            disabled={
+                              !formData.vatNumber ||
+                              vatVerifying ||
+                              vatVerified ||
+                              !VATService.validateMaltaVATFormat(
+                                formData.vatNumber
+                              )
+                            }
+                            className={`px-4 sm:px-6 py-3 lg:py-4 rounded-xl font-medium transition-all duration-200 whitespace-nowrap ${
+                              vatVerified
+                                ? "bg-green-100 text-green-700 border-2 border-green-200"
+                                : VATService.validateMaltaVATFormat(
+                                    formData.vatNumber
+                                  )
+                                ? "bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white hover:from-[#8001BF] hover:to-[#4D0186]"
+                                : "bg-gray-100 text-gray-500 border-2 border-gray-200 cursor-not-allowed"
+                            }`}
+                          >
+                            {vatVerifying ? (
+                              <span className="flex items-center">
+                                <svg
+                                  className="animate-spin -ml-1 mr-2 h-4 w-4"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                  ></circle>
+                                  <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                  ></path>
+                                </svg>
+                                Verifying...
+                              </span>
+                            ) : vatVerified ? (
+                              "✓ Verified"
+                            ) : (
+                              "Verify VAT"
+                            )}
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Individual VAT Info */}
+                      {formData.vatType === "individual" &&
+                        VATService.validateMaltaVATFormat(
+                          formData.vatNumber
+                        ) && (
+                          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                            <div className="flex items-start">
+                              <svg
+                                className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                              <div>
+                                <h4 className="font-semibold text-blue-800">
+                                  Individual VAT Format Accepted
+                                </h4>
+                                <p className="text-blue-700 text-sm mt-1">
+                                  Your individual VAT number format is valid. No
+                                  verification required for individual sellers.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                      {/* VAT Format Help - Show for both individual and business */}
+                      {!VATService.validateMaltaVATFormat(formData.vatNumber) &&
+                        formData.vatNumber && (
+                          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                            <div className="flex items-start">
+                              <svg
+                                className="w-5 h-5 text-amber-600 mt-0.5 mr-3 flex-shrink-0"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                              <div>
+                                <h4 className="font-semibold text-amber-800">
+                                  Malta VAT Format Required
+                                </h4>
+                                <p className="text-amber-700 text-sm mt-1">
+                                  {formData.vatType === "individual"
+                                    ? 'Malta individual VAT numbers must start with "MT" followed by 8 digits (e.g., MT12345678)'
+                                    : 'Malta business VAT numbers must start with "MT" followed by 8 digits (e.g., MT12345678)'}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                      {/* VAT Verification Success */}
+                      {vatVerified && formData.vatType === "business" && (
+                        <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                          <div className="flex items-start">
+                            <svg
+                              className="w-5 h-5 text-green-600 mt-0.5 mr-3 flex-shrink-0"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            <div className="flex-1">
+                              <h4 className="font-semibold text-green-800">
+                                ✓ VAT Number Verified
+                              </h4>
+                              {vatCompanyInfo.name && (
+                                <div className="mt-2 text-sm text-green-700">
+                                  <p>
+                                    <strong>Company:</strong>{" "}
+                                    {vatCompanyInfo.name}
+                                  </p>
+                                  {vatCompanyInfo.address && (
+                                    <p>
+                                      <strong>Address:</strong>{" "}
+                                      {vatCompanyInfo.address}
+                                    </p>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* VAT Verification Error */}
+                      {vatError && formData.vatType === "business" && (
+                        <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                          <div className="flex items-start">
+                            <svg
+                              className="w-5 h-5 text-red-600 mt-0.5 mr-3 flex-shrink-0"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            <div>
+                              <h4 className="font-semibold text-red-800">
+                                VAT Verification Failed
+                              </h4>
+                              <p className="text-red-700 text-sm mt-1">
+                                {vatError}
+                              </p>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setVatError("");
+                                  setVatVerified(false);
+                                }}
+                                className="text-red-600 hover:text-red-800 text-sm font-medium mt-2 underline"
+                              >
+                                Try Again
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      <p className="text-xs text-gray-500 mt-2">
+                        {formData.vatType === "individual"
+                          ? "Individual Malta VAT numbers follow the same MT + 8 digits format"
+                          : "We'll verify your business VAT number with the EU VIES system"}
+                      </p>
+                    </div>
                   </div>
 
                   <div>
