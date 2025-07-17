@@ -366,7 +366,7 @@ export default function MultiStepRegisterPage() {
                         <div className="flex items-start space-x-3 bg-white/50 rounded-lg p-3">
                           <span className="text-purple-600 font-bold">🚀</span>
                           <span>
-                            Once approved, you'll get access to the vendor panel
+                            Once approved, you'll get access to the seller panel
                             to start selling
                           </span>
                         </div>
@@ -616,8 +616,8 @@ export default function MultiStepRegisterPage() {
               )}
             </div>
 
-            {/* Right Section - Form */}
-            <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 border-2 border-purple-100 rounded-2xl shadow-xl p-6 lg:p-10 order-1 lg:order-2">
+            {/* Right Section - Form with FIXED mobile padding */}
+            <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 border-2 border-purple-100 rounded-2xl shadow-xl p-4 sm:p-6 lg:p-10 order-1 lg:order-2">
               {/* Step 1 Form - Business Information */}
               {currentStep === 1 && (
                 <div className="space-y-6">
@@ -765,7 +765,7 @@ export default function MultiStepRegisterPage() {
                       Email ID <span className="text-red-500">*</span>
                     </label>
                     <div className="space-y-3">
-                      <div className="flex flex-col lg:flex-row gap-3">
+                      <div className="flex flex-col sm:flex-row gap-3">
                         <input
                           type="email"
                           value={formData.email}
@@ -785,7 +785,7 @@ export default function MultiStepRegisterPage() {
                             sendingOtp ||
                             otpVerified
                           }
-                          className={`px-4 lg:px-6 py-3 lg:py-4 rounded-xl font-medium transition-all duration-200 whitespace-nowrap ${
+                          className={`px-4 sm:px-6 py-3 lg:py-4 rounded-xl font-medium transition-all duration-200 whitespace-nowrap ${
                             otpVerified
                               ? "bg-green-100 text-green-700 border-2 border-green-200"
                               : otpSent
@@ -848,7 +848,7 @@ export default function MultiStepRegisterPage() {
                             </span>
                           </div>
 
-                          <div className="flex flex-col lg:flex-row gap-3">
+                          <div className="flex flex-col sm:flex-row gap-3">
                             <input
                               type="text"
                               value={otpCode}
@@ -867,7 +867,7 @@ export default function MultiStepRegisterPage() {
                               type="button"
                               onClick={handleVerifyOTP}
                               disabled={otpCode.length !== 6 || verifyingOtp}
-                              className="px-4 lg:px-6 py-3 bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white rounded-lg font-medium hover:from-[#8001BF] hover:to-[#4D0186] disabled:opacity-50 transition-all duration-200"
+                              className="px-4 sm:px-6 py-3 bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white rounded-lg font-medium hover:from-[#8001BF] hover:to-[#4D0186] disabled:opacity-50 transition-all duration-200"
                             >
                               {verifyingOtp ? (
                                 <span className="flex items-center">
@@ -898,7 +898,7 @@ export default function MultiStepRegisterPage() {
                             </button>
                           </div>
 
-                          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mt-3 gap-2">
+                          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-3 gap-2">
                             <span className="text-purple-700 text-sm">
                               Didn't receive the code?
                             </span>
@@ -996,7 +996,7 @@ export default function MultiStepRegisterPage() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-3">
                         City <span className="text-red-500">*</span>
@@ -1088,7 +1088,7 @@ export default function MultiStepRegisterPage() {
                             <label className="block text-sm font-semibold text-gray-700 mb-3">
                               Shipping Type
                             </label>
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               <button
                                 type="button"
                                 onClick={() =>
@@ -1125,7 +1125,7 @@ export default function MultiStepRegisterPage() {
                             <label className="block text-sm font-semibold text-gray-700 mb-3">
                               Delivery Time Preference
                             </label>
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                               {[
                                 { value: "1-2_days", label: "1–2 days" },
                                 { value: "2-3_days", label: "2–3 days" },
@@ -1235,8 +1235,8 @@ export default function MultiStepRegisterPage() {
                       Want more visibility?
                     </h3>
 
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between p-4 bg-white rounded-lg border border-purple-200">
-                      <div className="flex-1 mb-4 lg:mb-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 bg-white rounded-lg border border-purple-200">
+                      <div className="flex-1 mb-4 sm:mb-0">
                         <h4 className="font-semibold text-gray-900 mb-2">
                           Show ads on website
                         </h4>
@@ -1294,24 +1294,24 @@ export default function MultiStepRegisterPage() {
               )}
 
               {/* Navigation Buttons - Mobile Optimized */}
-              <div className="flex flex-col lg:flex-row lg:justify-between pt-6 lg:pt-8 mt-6 lg:mt-8 border-t border-gray-200 gap-4">
+              <div className="flex flex-col sm:flex-row sm:justify-between pt-6 lg:pt-8 mt-6 lg:mt-8 border-t border-gray-200 gap-4">
                 {currentStep > 1 ? (
                   <button
                     onClick={prevStep}
-                    className="bg-white border-2 border-gray-300 text-gray-700 px-6 lg:px-8 py-3 rounded-xl font-medium hover:bg-gray-50 transition-all duration-200 order-2 lg:order-1"
+                    className="bg-white border-2 border-gray-300 text-gray-700 px-6 lg:px-8 py-3 rounded-xl font-medium hover:bg-gray-50 transition-all duration-200 order-2 sm:order-1"
                   >
                     ← Previous
                   </button>
                 ) : (
-                  <div className="hidden lg:block"></div>
+                  <div className="hidden sm:block"></div>
                 )}
 
-                <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 order-1 lg:order-2">
+                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 order-1 sm:order-2">
                   {currentStep < totalSteps ? (
                     <button
                       onClick={nextStep}
                       disabled={!isStepValid()}
-                      className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white px-6 lg:px-8 py-3 rounded-xl font-medium hover:from-[#8001BF] hover:to-[#4D0186] disabled:opacity-50 disabled:cursor-not-allowed w-full lg:w-auto transition-all duration-200"
+                      className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white px-6 lg:px-8 py-3 rounded-xl font-medium hover:from-[#8001BF] hover:to-[#4D0186] disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto transition-all duration-200"
                     >
                       Continue →
                     </button>
@@ -1319,7 +1319,7 @@ export default function MultiStepRegisterPage() {
                     <button
                       onClick={handleSubmit}
                       disabled={!isStepValid() || loading}
-                      className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white px-6 lg:px-8 py-3 rounded-xl font-medium hover:from-[#8001BF] hover:to-[#4D0186] disabled:opacity-50 disabled:cursor-not-allowed w-full lg:w-auto transition-all duration-200"
+                      className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white px-6 lg:px-8 py-3 rounded-xl font-medium hover:from-[#8001BF] hover:to-[#4D0186] disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto transition-all duration-200"
                     >
                       {loading ? (
                         <span className="flex items-center justify-center">
