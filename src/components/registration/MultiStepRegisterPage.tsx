@@ -791,7 +791,7 @@ export default function MultiStepRegisterPage() {
                             updateFormData("vatNumber", value);
                           }}
                           className="flex-1 px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
-                          placeholder="MT12345678 (Malta VAT format)"
+                          placeholder="MT12345678"
                           disabled={
                             vatVerified && formData.vatType === "business"
                           }
@@ -874,10 +874,10 @@ export default function MultiStepRegisterPage() {
                                 <h4 className="font-semibold text-blue-800">
                                   Individual VAT Format Accepted
                                 </h4>
-                                <p className="text-blue-700 text-sm mt-1">
+                                {/* <p className="text-blue-700 text-sm mt-1">
                                   Your individual VAT number format is valid. No
                                   verification required for individual sellers.
-                                </p>
+                                </p> */}
                               </div>
                             </div>
                           </div>
