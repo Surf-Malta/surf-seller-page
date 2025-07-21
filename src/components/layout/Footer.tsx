@@ -1,3 +1,4 @@
+// src/components/layout/Footer.tsx - UPDATED WITH DIRECT BLOG LINK
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import Image from "next/image";
@@ -8,7 +9,6 @@ export default function Footer() {
     "Get Started": [
       { href: "/register", label: "Register now" },
       { href: "/login", label: "Seller Login", external: true },
-      // { href: "/pricing", label: "Pricing & Commission" },
     ],
     "Seller Links": [
       { href: "/terms", label: "Terms & Conditions" },
@@ -16,12 +16,27 @@ export default function Footer() {
     ],
     "Company Links": [
       { href: "/about", label: "About Surf" },
-      { href: "/blog", label: "Blogs" },
+      {
+        href: "https://surf.mt/blogs/",
+        label: "Blogs",
+        external: true,
+        directLink: true,
+      },
     ],
     "Support & Resources": [
-      { href: "/help", label: "Help Center" },
-      { href: "/contact", label: "Contact Support" },
-      { href: "/seller-guide", label: "Seller Guide" },
+      // { href: "/help", label: "Help Center" },
+      {
+        href: "https://wa.me/35677215267",
+        label: "Contact Support",
+        external: true,
+        directLink: true,
+      },
+      {
+        href: "https://www.youtube.com/@SurfSellerHub",
+        label: "Seller Guide",
+        external: true,
+        directLink: true,
+      },
     ],
   };
 
@@ -106,11 +121,29 @@ export default function Footer() {
                   <span className="sm:hidden">🚀 Start FREE</span>
                 </button>
               </Link>
-              <Link href="/seller-guide" className="flex-1">
-                <button className="w-full bg-purple-100 text-purple-700 py-2.5 sm:py-3 px-2 sm:px-2 lg:px-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-xs lg:text-sm hover:bg-purple-200 transform hover:-translate-y-1 transition-all duration-300 whitespace-nowrap">
+              <a
+                href="https://www.youtube.com/@SurfSellerHub"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1"
+              >
+                <button className="w-full bg-purple-100 text-purple-700 py-2.5 sm:py-3 px-2 sm:px-2 lg:px-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-xs lg:text-sm hover:bg-purple-200 transform hover:-translate-y-1 transition-all duration-300 whitespace-nowrap flex items-center justify-center">
                   Seller Guide
+                  <svg
+                    className="w-2.5 h-2.5 sm:w-3 sm:h-3 ml-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                    />
+                  </svg>
                 </button>
-              </Link>
+              </a>
             </div>
           </div>
 
@@ -124,9 +157,13 @@ export default function Footer() {
                 <ul className="space-y-2 sm:space-y-3">
                   {links.map((link) => (
                     <li key={link.href}>
-                      {link.external ? (
+                      {link.external || link.directLink ? (
                         <a
-                          href="https://surf.mt/vendor.php?dispatch=auth.login_form&return_url=vendor.php"
+                          href={
+                            link.directLink
+                              ? link.href
+                              : "https://surf.mt/vendor.php?dispatch=auth.login_form&return_url=vendor.php"
+                          }
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-xs sm:text-sm text-gray-600 hover:text-purple-600 transition-colors flex items-center leading-relaxed"
