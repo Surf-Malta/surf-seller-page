@@ -11,10 +11,8 @@ export default function AboutPage() {
         <div className="max-w-6xl mx-auto py-8 lg:py-12 px-4">
           {/* Hero Section */}
           <div className="text-center mb-12 lg:mb-16">
-            <div className="inline-flex items-center bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-full px-4 lg:px-6 py-2 lg:py-3 shadow-lg mb-4 lg:mb-6">
-              <span className="text-blue-600 font-semibold text-sm">
-                🌟 About Surf Malta
-              </span>
+            <div className="inline-flex items-center bg-gradient-to-r from-[#FF6900] to-[#FB2C36] text-white px-4 lg:px-6 py-2 lg:py-3 shadow-lg mb-4 lg:mb-6 rounded-full">
+              <span className="font-semibold text-sm">🌟 About Surf Malta</span>
             </div>
             <h1 className="text-4xl lg:text-7xl font-bold mb-6 lg:mb-8">
               <span className="bg-gradient-to-r from-[#0066CC] to-[#0052A3] bg-clip-text text-transparent">
@@ -33,9 +31,9 @@ export default function AboutPage() {
           </div>
 
           {/* Mission Statement */}
-          <div className="bg-gradient-to-br from-blue-50 via-white to-cyan-50 border-2 border-blue-200 rounded-3xl p-8 lg:p-12 mb-12">
+          <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 border-2 border-purple-200 rounded-3xl p-8 lg:p-12 mb-12">
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full mx-auto mb-6 flex items-center justify-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-[#9101CF] to-[#5D0196] rounded-full mx-auto mb-6 flex items-center justify-center">
                 <svg
                   className="w-8 h-8 text-white"
                   fill="none"
@@ -71,7 +69,7 @@ export default function AboutPage() {
           {/* Core Values */}
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12 mb-12">
             {/* Customer-Centric */}
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-8">
+            <div className="bg-gradient-to-br from-green-50 via-white to-emerald-50 border-2 border-green-200 rounded-2xl p-8">
               <div className="w-12 h-12 bg-green-500 rounded-xl mb-6 flex items-center justify-center">
                 <svg
                   className="w-6 h-6 text-white"
@@ -97,7 +95,7 @@ export default function AboutPage() {
             </div>
 
             {/* Innovation */}
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-2xl p-8">
+            <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 border-2 border-purple-200 rounded-2xl p-8">
               <div className="w-12 h-12 bg-purple-500 rounded-xl mb-6 flex items-center justify-center">
                 <svg
                   className="w-6 h-6 text-white"
@@ -125,7 +123,7 @@ export default function AboutPage() {
           </div>
 
           {/* Team Section */}
-          <div className="bg-gradient-to-br from-gray-50 to-blue-50 border-2 border-gray-200 rounded-3xl p-8 lg:p-12 mb-12">
+          <div className="bg-gradient-to-br from-orange-50 via-white to-red-50 border-2 border-orange-200 rounded-3xl p-8 lg:p-12 mb-12">
             <div className="text-center mb-8">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
                 Our Team
@@ -140,14 +138,14 @@ export default function AboutPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="text-center">
-                <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                <div className="w-20 h-20 bg-gradient-to-r from-[#FF6900] to-[#FB2C36] rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
                   T
                 </div>
                 <h4 className="font-semibold text-gray-900">Technology</h4>
                 <p className="text-gray-600 text-sm">Cutting-edge solutions</p>
               </div>
               <div className="text-center">
-                <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                <div className="w-20 h-20 bg-gradient-to-r from-[#9101CF] to-[#5D0196] rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
                   I
                 </div>
                 <h4 className="font-semibold text-gray-900">Innovation</h4>
@@ -173,7 +171,7 @@ export default function AboutPage() {
           </div>
 
           {/* Shark Tank Section */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-3xl p-8 lg:p-12 mb-12">
+          <div className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white rounded-3xl p-8 lg:p-12 mb-12">
             <div className="text-center">
               <div className="w-16 h-16 bg-white/20 rounded-full mx-auto mb-6 flex items-center justify-center">
                 <svg
@@ -193,14 +191,14 @@ export default function AboutPage() {
               <h2 className="text-3xl lg:text-4xl font-bold mb-6">
                 Shark Tank Malta Feature
               </h2>
-              <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-purple-100 mb-8 max-w-3xl mx-auto leading-relaxed">
                 We had a fantastic pitch of Surf to the sharks during our recent
                 appearance on Shark Tank Malta. Here's a peek of what happened.
               </p>
               <a
                 href="https://youtu.be/FFaJCEufuX0?si=cVogPEdt0wYpEGwZ"
                 target="_blank"
-                className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg flex items-center justify-center"
+                className="bg-white text-purple-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg flex items-center justify-center"
                 rel="noopener noreferrer"
               >
                 <button>Watch Our Pitch</button>
@@ -209,7 +207,7 @@ export default function AboutPage() {
           </div>
 
           {/* Call to Action for Content Creators */}
-          <div className="bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-200 rounded-3xl p-8 lg:p-12 mb-12">
+          <div className="bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 border-2 border-yellow-200 rounded-3xl p-8 lg:p-12 mb-12">
             <div className="text-center">
               <div className="w-16 h-16 bg-yellow-500 rounded-full mx-auto mb-6 flex items-center justify-center">
                 <svg
@@ -236,11 +234,6 @@ export default function AboutPage() {
                 with a vibrant community that's changing the game.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {/* <Link href="/register">
-                  <button className="bg-yellow-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-yellow-600 transition-all duration-300 shadow-lg">
-                    Become a Creator
-                  </button>
-                </Link> */}
                 <a
                   href="https://wa.me/35677215267"
                   target="_blank"
@@ -281,7 +274,7 @@ export default function AboutPage() {
 
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-[#FF6900] to-[#FB2C36] rounded-2xl mx-auto mb-6 flex items-center justify-center">
                   <svg
                     className="w-8 h-8 text-white"
                     fill="none"
@@ -305,7 +298,7 @@ export default function AboutPage() {
               </div>
 
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-[#9101CF] to-[#5D0196] rounded-2xl mx-auto mb-6 flex items-center justify-center">
                   <svg
                     className="w-8 h-8 text-white"
                     fill="none"

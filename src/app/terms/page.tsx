@@ -11,10 +11,8 @@ export default function TermsAndConditionsPage() {
         <div className="max-w-4xl mx-auto py-8 lg:py-12 px-4">
           {/* Header */}
           <div className="text-center mb-8 lg:mb-12">
-            <div className="inline-flex items-center bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-full px-4 lg:px-6 py-2 lg:py-3 shadow-lg mb-4 lg:mb-6">
-              <span className="text-purple-600 font-semibold text-sm">
-                📋 Legal Terms
-              </span>
+            <div className="inline-flex items-center bg-gradient-to-r from-[#FF6900] to-[#FB2C36] text-white px-4 lg:px-6 py-2 lg:py-3 shadow-lg mb-4 lg:mb-6 rounded-full">
+              <span className="font-semibold text-sm">📋 Legal Terms</span>
             </div>
             <h1 className="text-3xl lg:text-5xl font-bold mb-4 lg:mb-6">
               <span className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] bg-clip-text text-transparent">
@@ -28,56 +26,56 @@ export default function TermsAndConditionsPage() {
           </div>
 
           {/* Navigation */}
-          <div className="bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-200 rounded-2xl p-6 mb-8">
-            <h2 className="text-lg font-bold text-purple-900 mb-4">
+          <div className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 border border-blue-200 rounded-2xl p-6 mb-8">
+            <h2 className="text-lg font-bold text-blue-900 mb-4">
               Quick Navigation
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
               <a
                 href="#definitions"
-                className="text-purple-700 hover:text-purple-900 hover:underline"
+                className="text-blue-700 hover:text-blue-900 hover:underline"
               >
                 1. Definitions
               </a>
               <a
                 href="#eligibility"
-                className="text-purple-700 hover:text-purple-900 hover:underline"
+                className="text-blue-700 hover:text-blue-900 hover:underline"
               >
                 2. Seller Eligibility
               </a>
               <a
                 href="#obligations"
-                className="text-purple-700 hover:text-purple-900 hover:underline"
+                className="text-blue-700 hover:text-blue-900 hover:underline"
               >
                 3. Seller Obligations
               </a>
               <a
                 href="#fees"
-                className="text-purple-700 hover:text-purple-900 hover:underline"
+                className="text-blue-700 hover:text-blue-900 hover:underline"
               >
                 4. Platform Fees
               </a>
               <a
                 href="#fulfillment"
-                className="text-purple-700 hover:text-purple-900 hover:underline"
+                className="text-blue-700 hover:text-blue-900 hover:underline"
               >
                 5. Order Fulfillment
               </a>
               <a
                 href="#returns"
-                className="text-purple-700 hover:text-purple-900 hover:underline"
+                className="text-blue-700 hover:text-blue-900 hover:underline"
               >
                 6. Returns & Refunds
               </a>
               <a
                 href="#prohibited"
-                className="text-purple-700 hover:text-purple-900 hover:underline"
+                className="text-blue-700 hover:text-blue-900 hover:underline"
               >
                 7. Prohibited Products
               </a>
               <a
                 href="#termination"
-                className="text-purple-700 hover:text-purple-900 hover:underline"
+                className="text-blue-700 hover:text-blue-900 hover:underline"
               >
                 8. Termination
               </a>
@@ -297,7 +295,7 @@ export default function TermsAndConditionsPage() {
                 1.5 Platform Fees and Payment Terms
               </h2>
               <div className="space-y-4 text-gray-700 leading-relaxed">
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+                <div className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 border border-blue-200 rounded-xl p-6">
                   <h3 className="text-xl font-semibold text-blue-900 mb-4">
                     Platform Fee Structure
                   </h3>
