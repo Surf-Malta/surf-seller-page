@@ -334,8 +334,8 @@ export default function AcceptableUsePage() {
                 3. Platform Oversight and Enforcement
               </h2>
               <div className="space-y-6">
-                <div className="bg-gradient-to-br from-blue-50 via-cyan-25 to-blue-50 border border-blue-200 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold text-blue-800 mb-4">
+                <div className="bg-gradient-to-br from-purple-50 via-pink-25 to-purple-50 border border-purple-200 rounded-xl p-6">
+                  <h3 className="text-lg font-semibold text-purple-800 mb-4">
                     Compliance Monitoring
                   </h3>
                   <p className="text-gray-700 mb-4">
@@ -345,23 +345,23 @@ export default function AcceptableUsePage() {
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="flex items-center space-x-2">
-                      <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                      <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
                       <span className="text-gray-700">Keyword monitoring</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                      <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
                       <span className="text-gray-700">
                         Manual listing reviews
                       </span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                      <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
                       <span className="text-gray-700">
                         Buyer and community reports
                       </span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                      <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
                       <span className="text-gray-700">
                         Routine listing audits
                       </span>

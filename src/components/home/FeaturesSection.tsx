@@ -342,7 +342,7 @@ export default function FeaturesSection() {
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-md mx-auto">
                 <Link href="/register" className="flex-1">
-                  <button className="w-full bg-white text-blue-600 py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+                  <button className="w-full bg-white text-purple-600 py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
                     Create Free Account
                   </button>
                 </Link>

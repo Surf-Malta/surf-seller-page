@@ -123,7 +123,7 @@ export default function AboutPage() {
           </div>
 
           {/* Team Section */}
-          <div className="bg-gradient-to-br from-orange-50 via-white to-red-50 border-2 border-orange-200 rounded-3xl p-8 lg:p-12 mb-12">
+          <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 border-2 border-purple-200 rounded-3xl p-8 lg:p-12 mb-12">
             <div className="text-center mb-8">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
                 Our Team
@@ -138,28 +138,28 @@ export default function AboutPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="text-center">
-                <div className="w-20 h-20 bg-gradient-to-r from-[#FF6900] to-[#FB2C36] rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                <div className="w-20 h-20 bg-gradient-to-r from-[#9101CF] to-[#5D0196] rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
                   T
                 </div>
                 <h4 className="font-semibold text-gray-900">Technology</h4>
                 <p className="text-gray-600 text-sm">Cutting-edge solutions</p>
               </div>
               <div className="text-center">
-                <div className="w-20 h-20 bg-gradient-to-r from-[#9101CF] to-[#5D0196] rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                <div className="w-20 h-20 bg-gradient-to-r from-[#FF6900] to-[#FB2C36] rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
                   I
                 </div>
                 <h4 className="font-semibold text-gray-900">Innovation</h4>
                 <p className="text-gray-600 text-sm">Creative business ideas</p>
               </div>
               <div className="text-center">
-                <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                <div className="w-20 h-20 bg-gradient-to-r from-[#9101CF] to-[#5D0196] rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
                   D
                 </div>
                 <h4 className="font-semibold text-gray-900">Diversity</h4>
                 <p className="text-gray-600 text-sm">Inclusive team culture</p>
               </div>
               <div className="text-center">
-                <div className="w-20 h-20 bg-gradient-to-r from-orange-500 to-red-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                <div className="w-20 h-20 bg-gradient-to-r from-[#FF6900] to-[#FB2C36] rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
                   E
                 </div>
                 <h4 className="font-semibold text-gray-900">Excellence</h4>
@@ -274,7 +274,7 @@ export default function AboutPage() {
 
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-[#FF6900] to-[#FB2C36] rounded-2xl mx-auto mb-6 flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-[#9101CF] to-[#5D0196] rounded-2xl mx-auto mb-6 flex items-center justify-center">
                   <svg
                     className="w-8 h-8 text-white"
                     fill="none"
@@ -298,7 +298,7 @@ export default function AboutPage() {
               </div>
 
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-[#9101CF] to-[#5D0196] rounded-2xl mx-auto mb-6 flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-[#FF6900] to-[#FB2C36] rounded-2xl mx-auto mb-6 flex items-center justify-center">
                   <svg
                     className="w-8 h-8 text-white"
                     fill="none"
@@ -323,7 +323,7 @@ export default function AboutPage() {
               </div>
 
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-[#9101CF] to-[#5D0196] rounded-2xl mx-auto mb-6 flex items-center justify-center">
                   <svg
                     className="w-8 h-8 text-white"
                     fill="none"

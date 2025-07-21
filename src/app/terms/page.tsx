@@ -26,56 +26,56 @@ export default function TermsAndConditionsPage() {
           </div>
 
           {/* Navigation */}
-          <div className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 border border-blue-200 rounded-2xl p-6 mb-8">
-            <h2 className="text-lg font-bold text-blue-900 mb-4">
+          <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 border border-purple-200 rounded-2xl p-6 mb-8">
+            <h2 className="text-lg font-bold text-purple-900 mb-4">
               Quick Navigation
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
               <a
                 href="#definitions"
-                className="text-blue-700 hover:text-blue-900 hover:underline"
+                className="text-purple-700 hover:text-purple-900 hover:underline"
               >
                 1. Definitions
               </a>
               <a
                 href="#eligibility"
-                className="text-blue-700 hover:text-blue-900 hover:underline"
+                className="text-purple-700 hover:text-purple-900 hover:underline"
               >
                 2. Seller Eligibility
               </a>
               <a
                 href="#obligations"
-                className="text-blue-700 hover:text-blue-900 hover:underline"
+                className="text-purple-700 hover:text-purple-900 hover:underline"
               >
                 3. Seller Obligations
               </a>
               <a
                 href="#fees"
-                className="text-blue-700 hover:text-blue-900 hover:underline"
+                className="text-purple-700 hover:text-purple-900 hover:underline"
               >
                 4. Platform Fees
               </a>
               <a
                 href="#fulfillment"
-                className="text-blue-700 hover:text-blue-900 hover:underline"
+                className="text-purple-700 hover:text-purple-900 hover:underline"
               >
                 5. Order Fulfillment
               </a>
               <a
                 href="#returns"
-                className="text-blue-700 hover:text-blue-900 hover:underline"
+                className="text-purple-700 hover:text-purple-900 hover:underline"
               >
                 6. Returns & Refunds
               </a>
               <a
                 href="#prohibited"
-                className="text-blue-700 hover:text-blue-900 hover:underline"
+                className="text-purple-700 hover:text-purple-900 hover:underline"
               >
                 7. Prohibited Products
               </a>
               <a
                 href="#termination"
-                className="text-blue-700 hover:text-blue-900 hover:underline"
+                className="text-purple-700 hover:text-purple-900 hover:underline"
               >
                 8. Termination
               </a>
@@ -295,34 +295,34 @@ export default function TermsAndConditionsPage() {
                 1.5 Platform Fees and Payment Terms
               </h2>
               <div className="space-y-4 text-gray-700 leading-relaxed">
-                <div className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 border border-blue-200 rounded-xl p-6">
-                  <h3 className="text-xl font-semibold text-blue-900 mb-4">
+                <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 border border-purple-200 rounded-xl p-6">
+                  <h3 className="text-xl font-semibold text-purple-900 mb-4">
                     Platform Fee Structure
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="bg-white rounded-lg p-4 border border-blue-200">
-                      <div className="font-semibold text-blue-800">
+                    <div className="bg-white rounded-lg p-4 border border-purple-200">
+                      <div className="font-semibold text-purple-800">
                         €0 - €15
                       </div>
-                      <div className="text-blue-600">→ €2.99</div>
+                      <div className="text-purple-600">→ €2.99</div>
                     </div>
-                    <div className="bg-white rounded-lg p-4 border border-blue-200">
-                      <div className="font-semibold text-blue-800">
+                    <div className="bg-white rounded-lg p-4 border border-purple-200">
+                      <div className="font-semibold text-purple-800">
                         €16 - €30
                       </div>
-                      <div className="text-blue-600">→ €3.99</div>
+                      <div className="text-purple-600">→ €3.99</div>
                     </div>
-                    <div className="bg-white rounded-lg p-4 border border-blue-200">
-                      <div className="font-semibold text-blue-800">
+                    <div className="bg-white rounded-lg p-4 border border-purple-200">
+                      <div className="font-semibold text-purple-800">
                         €31 - €50
                       </div>
-                      <div className="text-blue-600">→ €4.99</div>
+                      <div className="text-purple-600">→ €4.99</div>
                     </div>
-                    <div className="bg-white rounded-lg p-4 border border-blue-200">
-                      <div className="font-semibold text-blue-800">
+                    <div className="bg-white rounded-lg p-4 border border-purple-200">
+                      <div className="font-semibold text-purple-800">
                         €51 and above
                       </div>
-                      <div className="text-blue-600">→ €5.99</div>
+                      <div className="text-purple-600">→ €5.99</div>
                     </div>
                   </div>
                 </div>
