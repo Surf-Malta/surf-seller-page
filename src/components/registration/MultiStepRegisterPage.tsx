@@ -1,3 +1,4 @@
+// src/components/registration/MultiStepRegisterPage.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -5,7 +6,15 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ref, push, set } from "firebase/database";
+import {
+  ref,
+  push,
+  set,
+  query,
+  orderByChild,
+  equalTo,
+  get,
+} from "firebase/database";
 import { realtimeDb } from "@/lib/firebase";
 import { OTPService } from "@/lib/otpService";
 import { VATService, VATVerificationResult } from "@/lib/vatService";
@@ -41,6 +50,12 @@ export default function MultiStepRegisterPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [registrationComplete, setRegistrationComplete] = useState(false);
+
+  // Email duplicate check states
+  const [emailCheckLoading, setEmailCheckLoading] = useState(false);
+  const [emailExists, setEmailExists] = useState(false);
+  const [emailCheckError, setEmailCheckError] = useState("");
+  const [emailCheckComplete, setEmailCheckComplete] = useState(false); // NEW STATE
 
   // OTP States
   const [otpSent, setOtpSent] = useState(false);
@@ -103,10 +118,64 @@ export default function MultiStepRegisterPage() {
     };
   }, [resendCooldown]);
 
+  // UPDATED: Check if email already exists in database
+  const checkEmailExists = async (email: string): Promise<boolean> => {
+    if (!realtimeDb || !email.trim()) {
+      setEmailCheckComplete(false);
+      return false;
+    }
+
+    try {
+      setEmailCheckLoading(true);
+      setEmailCheckError("");
+      setEmailCheckComplete(false); // Reset completion state
+
+      // Query the sellers collection for existing email
+      // Note: Check both 'email' and 'address' fields for backward compatibility
+      const sellersRef = ref(realtimeDb, "sellers");
+
+      // First check the new 'email' field
+      const emailQuery = query(
+        sellersRef,
+        orderByChild("email"),
+        equalTo(email.toLowerCase().trim())
+      );
+
+      // Also check the legacy 'address' field
+      const addressQuery = query(
+        sellersRef,
+        orderByChild("address"),
+        equalTo(email.toLowerCase().trim())
+      );
+      const snapshot = await get(emailQuery);
+      const addressSnapshot = await get(addressQuery);
+
+      const exists = snapshot.exists() || addressSnapshot.exists();
+      setEmailExists(exists);
+      setEmailCheckComplete(true); // Mark check as complete
+
+      if (exists) {
+        setEmailCheckError(
+          "An account with this email already exists. Please use a different email or login if you already have an account."
+        );
+      }
+
+      return exists;
+    } catch (error) {
+      console.error("Error checking email:", error);
+      setEmailCheckError("Unable to verify email. Please try again.");
+      setEmailCheckComplete(false); // Mark as incomplete on error
+      return false;
+    } finally {
+      setEmailCheckLoading(false);
+    }
+  };
+
+  // UPDATED: Form data update handler
   const updateFormData = (field: keyof RegistrationData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
-    // Reset OTP state if email changes
+    // Reset email-related states when email changes
     if (field === "email") {
       setOtpSent(false);
       setOtpVerified(false);
@@ -115,6 +184,19 @@ export default function MultiStepRegisterPage() {
       setOtpSessionId("");
       setResendCooldown(0);
       setCanResend(true);
+      setEmailExists(false);
+      setEmailCheckError("");
+      setEmailCheckComplete(false); // Reset completion state
+
+      // Check email after a short delay (debounce)
+      if (value && value.trim()) {
+        const timeoutId = setTimeout(() => {
+          checkEmailExists(value.trim());
+        }, 500);
+
+        // Clear previous timeout
+        return () => clearTimeout(timeoutId);
+      }
     }
 
     // Reset VAT verification when VAT type changes
@@ -204,9 +286,36 @@ export default function MultiStepRegisterPage() {
     }
   };
 
+  // UPDATED: Enhanced OTP sending with proper email validation
   const handleSendOTP = async () => {
     if (!formData.email.trim()) {
       setOtpError("Please enter your email address");
+      return;
+    }
+
+    // If email check is still loading, wait for it to complete
+    if (emailCheckLoading) {
+      setOtpError("Please wait for email validation to complete");
+      return;
+    }
+
+    // If email check hasn't been completed yet, trigger it and wait
+    if (!emailCheckComplete) {
+      setOtpError("Please wait while we validate your email");
+      const emailAlreadyExists = await checkEmailExists(formData.email.trim());
+      if (emailAlreadyExists) {
+        setOtpError(
+          "This email is already registered. Please use a different email."
+        );
+        return;
+      }
+    }
+
+    // Double-check email existence before proceeding
+    if (emailExists) {
+      setOtpError(
+        "This email is already registered. Please use a different email."
+      );
       return;
     }
 
@@ -280,6 +389,14 @@ export default function MultiStepRegisterPage() {
         throw new Error("Firebase not initialized");
       }
 
+      // Final check for email duplication before submission
+      const emailAlreadyExists = await checkEmailExists(formData.email.trim());
+      if (emailAlreadyExists) {
+        throw new Error(
+          "This email is already registered. Please use a different email address."
+        );
+      }
+
       const isVerified = await OTPService.isEmailVerified(formData.email);
       if (!isVerified) {
         throw new Error("Email not verified. Please verify your email first.");
@@ -307,7 +424,7 @@ export default function MultiStepRegisterPage() {
         hearAboutSurf: formData.hearAboutSurf,
         firstName: formData.firstName,
         lastName: formData.lastName,
-        email: formData.email,
+        email: formData.email.toLowerCase().trim(), // Store email in lowercase
         phoneNumber: formData.phoneNumber,
         address: formData.address,
         city: formData.city,
@@ -347,6 +464,8 @@ export default function MultiStepRegisterPage() {
           errorMessage = "Please verify your email address before proceeding.";
         } else if (error.message.includes("VAT number")) {
           errorMessage = error.message;
+        } else if (error.message.includes("email is already registered")) {
+          errorMessage = error.message;
         }
       }
 
@@ -356,6 +475,7 @@ export default function MultiStepRegisterPage() {
     }
   };
 
+  // UPDATED: Step validation including email check completion
   const isStepValid = () => {
     switch (currentStep) {
       case 1:
@@ -381,7 +501,10 @@ export default function MultiStepRegisterPage() {
           formData.address.trim() &&
           formData.city.trim() &&
           formData.pincode.trim() &&
-          otpVerified
+          emailCheckComplete && // Email check must be complete
+          !emailExists && // Email should not already exist
+          !emailCheckLoading && // Email check should not be loading
+          otpVerified // OTP must be verified
         );
       case 3:
         return formData.shippingMethod;
@@ -664,7 +787,8 @@ export default function MultiStepRegisterPage() {
                         </h4>
                         <p className="text-yellow-700 text-sm mt-1">
                           Your email will be verified with a secure OTP for
-                          account security.
+                          account security and to prevent duplicate
+                          registrations.
                         </p>
                       </div>
                     </div>
@@ -853,7 +977,7 @@ export default function MultiStepRegisterPage() {
                       </div>
 
                       {/* Individual VAT Info */}
-                      {formData.vatType === "individual" &&
+                      {/* {formData.vatType === "individual" &&
                         VATService.validateMaltaVATFormat(
                           formData.vatNumber
                         ) && (
@@ -874,14 +998,10 @@ export default function MultiStepRegisterPage() {
                                 <h4 className="font-semibold text-blue-800">
                                   Individual VAT Format Accepted
                                 </h4>
-                                {/* <p className="text-blue-700 text-sm mt-1">
-                                  Your individual VAT number format is valid. No
-                                  verification required for individual sellers.
-                                </p> */}
                               </div>
                             </div>
                           </div>
-                        )}
+                        )} */}
 
                       {/* VAT Format Help - Show for both individual and business */}
                       {!VATService.validateMaltaVATFormat(formData.vatNumber) &&
@@ -1021,7 +1141,7 @@ export default function MultiStepRegisterPage() {
                 </div>
               )}
 
-              {/* Step 2 Form - Contact & Pickup Address with OTP */}
+              {/* Step 2 Form - Contact & Pickup Address with Enhanced Email Validation */}
               {currentStep === 2 && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -1055,28 +1175,102 @@ export default function MultiStepRegisterPage() {
                     </div>
                   </div>
 
-                  {/* Email with OTP Verification */}
+                  {/* UPDATED: Enhanced Email Field with Proper Validation Flow */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-3">
                       Email ID <span className="text-red-500">*</span>
                     </label>
                     <div className="space-y-3">
                       <div className="flex flex-col sm:flex-row gap-3">
-                        <input
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) =>
-                            updateFormData("email", e.target.value)
-                          }
-                          className="flex-1 px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
-                          placeholder="Enter your email"
-                          disabled={otpVerified}
-                        />
+                        <div className="flex-1 relative">
+                          <input
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) =>
+                              updateFormData("email", e.target.value)
+                            }
+                            className={`w-full px-4 py-3 lg:py-4 border-2 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 ${
+                              emailExists
+                                ? "border-red-300 bg-red-50"
+                                : emailCheckLoading
+                                ? "border-yellow-300 bg-yellow-50"
+                                : "border-gray-200"
+                            }`}
+                            placeholder="Enter your email"
+                            disabled={otpVerified}
+                          />
+
+                          {/* Email validation indicators */}
+                          {emailCheckLoading && (
+                            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                              <svg
+                                className="animate-spin h-5 w-5 text-yellow-500"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                />
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                />
+                              </svg>
+                            </div>
+                          )}
+
+                          {!emailCheckLoading &&
+                            formData.email &&
+                            !emailExists &&
+                            emailCheckComplete && (
+                              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                                <svg
+                                  className="h-5 w-5 text-green-500"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                              </div>
+                            )}
+
+                          {emailExists && (
+                            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                              <svg
+                                className="h-5 w-5 text-red-500"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* UPDATED: Send OTP Button with Enhanced Validation */}
                         <button
                           type="button"
                           onClick={handleSendOTP}
                           disabled={
                             !formData.email ||
+                            !formData.email.trim() ||
+                            emailCheckLoading ||
+                            !emailCheckComplete ||
+                            emailExists ||
                             otpSent ||
                             sendingOtp ||
                             otpVerified
@@ -1086,7 +1280,11 @@ export default function MultiStepRegisterPage() {
                               ? "bg-green-100 text-green-700 border-2 border-green-200"
                               : otpSent
                               ? "bg-purple-100 text-purple-700 border-2 border-purple-200"
-                              : "bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white hover:from-[#8001BF] hover:to-[#4D0186] disabled:opacity-50"
+                              : emailExists
+                              ? "bg-red-100 text-red-700 border-2 border-red-200 cursor-not-allowed"
+                              : emailCheckLoading || !emailCheckComplete
+                              ? "bg-gray-100 text-gray-500 border-2 border-gray-200 cursor-not-allowed"
+                              : "bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white hover:from-[#8001BF] hover:to-[#4D0186]"
                           }`}
                         >
                           {sendingOtp ? (
@@ -1116,11 +1314,55 @@ export default function MultiStepRegisterPage() {
                             "✓ Verified"
                           ) : otpSent ? (
                             "OTP Sent"
+                          ) : emailExists ? (
+                            "Email Exists"
+                          ) : emailCheckLoading ? (
+                            "Checking..."
+                          ) : !emailCheckComplete && formData.email.trim() ? (
+                            "Validating..."
                           ) : (
                             "Send OTP"
                           )}
                         </button>
                       </div>
+
+                      {/* Email Error Display */}
+                      {(emailCheckError || (emailExists && formData.email)) && (
+                        <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                          <div className="flex items-start">
+                            <svg
+                              className="w-5 h-5 text-red-600 mr-2 flex-shrink-0 mt-0.5"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            <div>
+                              <h4 className="font-semibold text-red-800">
+                                Email Already Registered
+                              </h4>
+                              <p className="text-red-700 text-sm mt-1">
+                                {emailCheckError ||
+                                  "This email is already registered. Please use a different email or login if you already have an account."}
+                              </p>
+                              <div className="mt-3 flex gap-2">
+                                <a
+                                  href="https://surf.mt/vendor.php?dispatch=auth.login_form&return_url=vendor.php"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-red-600 hover:text-red-800 text-sm font-medium underline"
+                                >
+                                  Login to Existing Account
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
 
                       {/* OTP Input Field */}
                       {otpSent && !otpVerified && (
@@ -1340,7 +1582,7 @@ export default function MultiStepRegisterPage() {
                 </div>
               )}
 
-              {/* Step 3 Form - Shipping Preferences (Improved Layout) */}
+              {/* Step 3 Form - Shipping Preferences */}
               {currentStep === 3 && (
                 <div className="space-y-6">
                   <div className="space-y-4">
@@ -1377,7 +1619,7 @@ export default function MultiStepRegisterPage() {
                         </div>
                       </div>
 
-                      {/* Shipping Type and Delivery Time - Inline with Own Shipping Selection */}
+                      {/* Shipping Type and Delivery Time */}
                       {formData.shippingMethod === "own" && (
                         <div className="mt-6 space-y-6 bg-white/50 p-4 lg:p-6 rounded-xl border border-purple-200">
                           <div>

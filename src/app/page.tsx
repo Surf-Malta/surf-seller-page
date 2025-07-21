@@ -1,6 +1,7 @@
 // src/app/page.tsx
 import { HeroSection } from "@/components/home/HeroSection";
 import FeaturesSection from "@/components/home/FeaturesSection";
+import FAQSection from "@/components/home/FAQSection";
 import CTASection from "@/components/home/CTASection";
 
 export default function HomePage() {
@@ -286,6 +287,10 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* FAQ Section - NEW */}
+        <FAQSection />
+
+        {/* CTA Section - Uncomment if you want to add it back */}
         {/* <CTASection /> */}
       </div>
     </div>

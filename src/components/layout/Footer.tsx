@@ -8,7 +8,7 @@ export default function Footer() {
     "Get Started": [
       { href: "/register", label: "Register now" },
       { href: "/login", label: "Seller Login", external: true },
-      { href: "/pricing", label: "Pricing & Commission" },
+      // { href: "/pricing", label: "Pricing & Commission" },
     ],
     "Seller Links": [
       { href: "/terms", label: "Terms & Conditions" },
