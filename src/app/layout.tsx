@@ -4,6 +4,7 @@ import { ReduxProvider } from "@/store/provider";
 import { Header } from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import BrevoChat from "@/components/ui/BrevoChat";
+import Analytics from "@/components/analytics/Analytics";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 
@@ -91,6 +92,14 @@ export default function RootLayout({
             }
           `,
           }}
+        />
+
+        {/* Analytics Scripts - Microsoft Clarity & Google Tag Manager */}
+        <Analytics
+          clarityProjectId="righ75m2x4"
+          gtmId="GTM-W9QLNPQC"
+          enableClarity={true}
+          enableGTM={true}
         />
       </head>
       <body className={`${inter.className} bg-gray-50`}>

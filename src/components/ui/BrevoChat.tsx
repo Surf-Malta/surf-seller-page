@@ -89,7 +89,7 @@ export default function BrevoChat() {
         dangerouslySetInnerHTML={{
           __html: `
             // Your actual Brevo Conversation ID
-            window.BrevoConversationsID = '687fb023f485fc5aa60f6712';
+            window.BrevoConversationsID = '6763328e5accb3cd70030caf';
             
             (function(d, w, c) {
               w.BrevoConversationsGlobal = c;
