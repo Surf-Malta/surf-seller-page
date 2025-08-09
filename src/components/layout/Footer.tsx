@@ -1,4 +1,4 @@
-// src/components/layout/Footer.tsx - UPDATED WITH DIRECT BLOG LINK
+// src/components/layout/Footer.tsx - UPDATED VERSION
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import Image from "next/image";
@@ -9,6 +9,11 @@ export default function Footer() {
     "Get Started": [
       { href: "/register", label: "Register now" },
       { href: "/login", label: "Seller Login", external: true },
+    ],
+    Platform: [
+      { href: "/pricing", label: "Pricing & Plans" },
+      { href: "/how-it-works", label: "How it Works" },
+      { href: "/shipping-returns", label: "Shipping" },
     ],
     "Seller Links": [
       { href: "/terms", label: "Terms & Conditions" },
@@ -24,7 +29,6 @@ export default function Footer() {
       },
     ],
     "Support & Resources": [
-      // { href: "/help", label: "Help Center" },
       {
         href: "https://wa.me/35677215267",
         label: "Contact Support",
@@ -121,34 +125,16 @@ export default function Footer() {
                   <span className="sm:hidden">🚀 Start FREE</span>
                 </button>
               </Link>
-              <a
-                href="https://www.youtube.com/@SurfSellerHub"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1"
-              >
+              <Link href="/pricing" className="flex-1">
                 <button className="w-full bg-purple-100 text-purple-700 py-2.5 sm:py-3 px-2 sm:px-2 lg:px-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-xs lg:text-sm hover:bg-purple-200 transform hover:-translate-y-1 transition-all duration-300 whitespace-nowrap flex items-center justify-center">
-                  Seller Guide
-                  <svg
-                    className="w-2.5 h-2.5 sm:w-3 sm:h-3 ml-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                    />
-                  </svg>
+                  💎 View Pricing
                 </button>
-              </a>
+              </Link>
             </div>
           </div>
 
           {/* Links grid - Single column on mobile, multiple on desktop */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8 mb-8 sm:mb-10 lg:mb-12 max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 sm:gap-8 mb-8 sm:mb-10 lg:mb-12 max-w-6xl mx-auto px-4">
             {Object.entries(footerLinks).map(([category, links]) => (
               <div key={category}>
                 <h4 className="font-bold text-sm sm:text-base lg:text-lg mb-3 sm:mb-4 lg:mb-6 text-gray-900">

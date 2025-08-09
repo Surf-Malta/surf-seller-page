@@ -147,6 +147,7 @@ export default function HomePage() {
         <FeaturesSection />
 
         {/* Pricing - Mobile optimized */}
+        {/* Pricing - Mobile optimized - UPDATED VERSION */}
         <section className="py-8 sm:py-12 lg:py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8 sm:mb-10 lg:mb-12">
@@ -212,25 +213,33 @@ export default function HomePage() {
                 </div>
 
                 <div className="mt-6 sm:mt-8 text-center">
-                  <a
-                    href="/pricing"
-                    className="inline-flex items-center bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base hover:bg-blue-700 transition-all duration-300"
-                  >
-                    Register Now
-                    <svg
-                      className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5 sm:ml-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                    <a
+                      href="/pricing"
+                      className="inline-flex items-center bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base hover:bg-blue-700 transition-all duration-300 justify-center"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 7l5 5m0 0l-5 5m5-5H6"
-                      />
-                    </svg>
-                  </a>
+                      💎 View All Plans
+                      <svg
+                        className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5 sm:ml-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 7l5 5m0 0l-5 5m5-5H6"
+                        />
+                      </svg>
+                    </a>
+                    <a
+                      href="/register"
+                      className="inline-flex items-center bg-white text-purple-600 border-2 border-purple-200 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base hover:bg-purple-50 transition-all duration-300 justify-center"
+                    >
+                      🚀 Start Free
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
