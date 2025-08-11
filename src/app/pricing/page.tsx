@@ -312,7 +312,7 @@ export default function PricingPage() {
                 {plan.id === "enterprise" && (
                   <a href="mailto:hello@surf.mt">
                     <button className="w-full bg-gradient-to-r from-gray-600 to-gray-700 text-white py-3 px-6 rounded-xl font-semibold hover:from-gray-700 hover:to-gray-800 transition-all duration-300">
-                      Contact to Discuss Custom Plan
+                      Contact us
                     </button>
                   </a>
                 )}
@@ -326,16 +326,13 @@ export default function PricingPage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-5xl font-bold mb-6">
               <span className="bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent">
-                What's Coming Soon
+                Exciting new features for your
               </span>
               <br />
               <span className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] bg-clip-text text-transparent">
-                to All Plans
+                E-Commerce growth
               </span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Exciting new features currently in development
-            </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
