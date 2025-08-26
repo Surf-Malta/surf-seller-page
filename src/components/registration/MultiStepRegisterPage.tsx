@@ -24,6 +24,7 @@ interface RegistrationData {
   businessName: string;
   vatType: "individual" | "business";
   vatNumber: string;
+  pricingPlan: "starter" | "growth" | "enterprise"; // NEW FIELD
 
   // Step 2 - Contact & Pickup Address
   firstName: string;
@@ -55,7 +56,7 @@ export default function MultiStepRegisterPage() {
   const [emailCheckLoading, setEmailCheckLoading] = useState(false);
   const [emailExists, setEmailExists] = useState(false);
   const [emailCheckError, setEmailCheckError] = useState("");
-  const [emailCheckComplete, setEmailCheckComplete] = useState(false); // NEW STATE
+  const [emailCheckComplete, setEmailCheckComplete] = useState(false);
 
   // OTP States
   const [otpSent, setOtpSent] = useState(false);
@@ -81,6 +82,7 @@ export default function MultiStepRegisterPage() {
     businessName: "",
     vatType: "individual",
     vatNumber: "",
+    pricingPlan: "starter", // NEW DEFAULT VALUE
     firstName: "",
     lastName: "",
     email: "",
@@ -98,6 +100,38 @@ export default function MultiStepRegisterPage() {
 
   const totalSteps = 4;
   const progressPercentage = (currentStep / totalSteps) * 100;
+
+  // Pricing plan options
+  const pricingPlans = [
+    {
+      id: "starter",
+      name: "Starter",
+      price: "Free",
+      description: "Perfect for testing the waters",
+      features: ["Up to 200 SKUs", "10% commission", "Email support"],
+      icon: "🚀",
+      color: "purple",
+    },
+    {
+      id: "growth",
+      name: "Growth",
+      price: "€49/month",
+      description: "Ideal for growing businesses",
+      features: ["Up to 2000 SKUs", "8% commission", "Priority support"],
+      icon: "⭐",
+      color: "orange",
+      popular: true,
+    },
+    {
+      id: "enterprise",
+      name: "Enterprise",
+      price: "Custom",
+      description: "For large brands",
+      features: ["Unlimited SKUs", "Custom commission", "Dedicated support"],
+      icon: "👑",
+      color: "blue",
+    },
+  ];
 
   // Countdown effect for resend button
   useEffect(() => {
@@ -118,7 +152,7 @@ export default function MultiStepRegisterPage() {
     };
   }, [resendCooldown]);
 
-  // UPDATED: Check if email already exists in database
+  // Check if email already exists in database
   const checkEmailExists = async (email: string): Promise<boolean> => {
     if (!realtimeDb || !email.trim()) {
       setEmailCheckComplete(false);
@@ -128,20 +162,14 @@ export default function MultiStepRegisterPage() {
     try {
       setEmailCheckLoading(true);
       setEmailCheckError("");
-      setEmailCheckComplete(false); // Reset completion state
+      setEmailCheckComplete(false);
 
-      // Query the sellers collection for existing email
-      // Note: Check both 'email' and 'address' fields for backward compatibility
       const sellersRef = ref(realtimeDb, "sellers");
-
-      // First check the new 'email' field
       const emailQuery = query(
         sellersRef,
         orderByChild("email"),
         equalTo(email.toLowerCase().trim())
       );
-
-      // Also check the legacy 'address' field
       const addressQuery = query(
         sellersRef,
         orderByChild("address"),
@@ -152,7 +180,7 @@ export default function MultiStepRegisterPage() {
 
       const exists = snapshot.exists() || addressSnapshot.exists();
       setEmailExists(exists);
-      setEmailCheckComplete(true); // Mark check as complete
+      setEmailCheckComplete(true);
 
       if (exists) {
         setEmailCheckError(
@@ -164,14 +192,14 @@ export default function MultiStepRegisterPage() {
     } catch (error) {
       console.error("Error checking email:", error);
       setEmailCheckError("Unable to verify email. Please try again.");
-      setEmailCheckComplete(false); // Mark as incomplete on error
+      setEmailCheckComplete(false);
       return false;
     } finally {
       setEmailCheckLoading(false);
     }
   };
 
-  // UPDATED: Form data update handler
+  // Form data update handler
   const updateFormData = (field: keyof RegistrationData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
@@ -186,7 +214,7 @@ export default function MultiStepRegisterPage() {
       setCanResend(true);
       setEmailExists(false);
       setEmailCheckError("");
-      setEmailCheckComplete(false); // Reset completion state
+      setEmailCheckComplete(false);
 
       // Check email after a short delay (debounce)
       if (value && value.trim()) {
@@ -194,7 +222,6 @@ export default function MultiStepRegisterPage() {
           checkEmailExists(value.trim());
         }, 500);
 
-        // Clear previous timeout
         return () => clearTimeout(timeoutId);
       }
     }
@@ -256,10 +283,19 @@ export default function MultiStepRegisterPage() {
 
       if (result.success && result.valid) {
         setVatVerified(true);
-        setVatCompanyInfo({
-          name: result.companyName,
-          address: result.companyAddress,
-        });
+
+        // Create clean company info object with only defined values
+        const cleanCompanyInfo: { name?: string; address?: string } = {};
+
+        if (result.companyName && result.companyName.trim()) {
+          cleanCompanyInfo.name = result.companyName;
+        }
+
+        if (result.companyAddress && result.companyAddress.trim()) {
+          cleanCompanyInfo.address = result.companyAddress;
+        }
+
+        setVatCompanyInfo(cleanCompanyInfo);
         setVatError("");
 
         // Auto-fill business name if available and not already filled
@@ -286,20 +322,18 @@ export default function MultiStepRegisterPage() {
     }
   };
 
-  // UPDATED: Enhanced OTP sending with proper email validation
+  // Send OTP with proper email validation
   const handleSendOTP = async () => {
     if (!formData.email.trim()) {
       setOtpError("Please enter your email address");
       return;
     }
 
-    // If email check is still loading, wait for it to complete
     if (emailCheckLoading) {
       setOtpError("Please wait for email validation to complete");
       return;
     }
 
-    // If email check hasn't been completed yet, trigger it and wait
     if (!emailCheckComplete) {
       setOtpError("Please wait while we validate your email");
       const emailAlreadyExists = await checkEmailExists(formData.email.trim());
@@ -311,7 +345,6 @@ export default function MultiStepRegisterPage() {
       }
     }
 
-    // Double-check email existence before proceeding
     if (emailExists) {
       setOtpError(
         "This email is already registered. Please use a different email."
@@ -412,29 +445,21 @@ export default function MultiStepRegisterPage() {
       const sellersRef = ref(realtimeDb, "sellers");
       const newSellerRef = push(sellersRef);
 
-      const sellerData = {
+      // Create base seller data
+      const sellerData: any = {
         businessName: formData.businessName,
         vatType: formData.vatType,
         vatNumber: formData.vatNumber,
-        ...(formData.vatType === "business" &&
-          vatVerified && {
-            vatVerified: true,
-            vatCompanyInfo: vatCompanyInfo,
-          }),
         hearAboutSurf: formData.hearAboutSurf,
         firstName: formData.firstName,
         lastName: formData.lastName,
-        email: formData.email.toLowerCase().trim(), // Store email in lowercase
+        email: formData.email.toLowerCase().trim(),
         phoneNumber: formData.phoneNumber,
         address: formData.address,
         city: formData.city,
         pincode: formData.pincode,
         country: formData.country,
         shippingMethod: formData.shippingMethod,
-        ...(formData.shippingMethod === "own" && {
-          shippingType: formData.shippingType,
-          deliveryTime: formData.deliveryTime,
-        }),
         showAdsOnWebsite: formData.showAdsOnWebsite,
         id: newSellerRef.key,
         status: "pending",
@@ -442,6 +467,37 @@ export default function MultiStepRegisterPage() {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
+
+      // Only add VAT verification data if it exists and business type
+      if (formData.vatType === "business" && vatVerified) {
+        sellerData.vatVerified = true;
+
+        // Create clean VAT company info object, only including defined values
+        const cleanVatCompanyInfo: any = {};
+
+        if (vatCompanyInfo.name && vatCompanyInfo.name.trim()) {
+          cleanVatCompanyInfo.name = vatCompanyInfo.name;
+        }
+
+        if (vatCompanyInfo.address && vatCompanyInfo.address.trim()) {
+          cleanVatCompanyInfo.address = vatCompanyInfo.address;
+        }
+
+        // Only add vatCompanyInfo if it has at least one property
+        if (Object.keys(cleanVatCompanyInfo).length > 0) {
+          sellerData.vatCompanyInfo = cleanVatCompanyInfo;
+        }
+      }
+
+      // Only add shipping type and delivery time if using own shipping
+      if (formData.shippingMethod === "own") {
+        if (formData.shippingType) {
+          sellerData.shippingType = formData.shippingType;
+        }
+        if (formData.deliveryTime) {
+          sellerData.deliveryTime = formData.deliveryTime;
+        }
+      }
 
       await set(newSellerRef, sellerData);
 
@@ -475,7 +531,7 @@ export default function MultiStepRegisterPage() {
     }
   };
 
-  // UPDATED: Step validation including email check completion
+  // Step validation
   const isStepValid = () => {
     switch (currentStep) {
       case 1:
@@ -483,14 +539,13 @@ export default function MultiStepRegisterPage() {
           formData.businessName.trim() &&
           formData.vatNumber.trim() &&
           VATService.validateMaltaVATFormat(formData.vatNumber) &&
-          formData.hearAboutSurf;
+          formData.hearAboutSurf &&
+          formData.pricingPlan; // Add pricing plan validation
 
-        // For business VAT, require verification
         if (formData.vatType === "business") {
           return basicValidation && vatVerified;
         }
 
-        // For individual VAT, only require format validation
         return basicValidation;
       case 2:
         return (
@@ -501,10 +556,10 @@ export default function MultiStepRegisterPage() {
           formData.address.trim() &&
           formData.city.trim() &&
           formData.pincode.trim() &&
-          emailCheckComplete && // Email check must be complete
-          !emailExists && // Email should not already exist
-          !emailCheckLoading && // Email check should not be loading
-          otpVerified // OTP must be verified
+          emailCheckComplete &&
+          !emailExists &&
+          !emailCheckLoading &&
+          otpVerified
         );
       case 3:
         return formData.shippingMethod;
@@ -526,7 +581,6 @@ export default function MultiStepRegisterPage() {
   if (registrationComplete) {
     return (
       <div className="min-h-screen bg-white pt-32 lg:pt-24 relative overflow-hidden">
-        {/* Subtle floating shapes for background */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-[#9101CF] to-[#5D0196] rounded-full"></div>
           <div className="absolute bottom-32 right-32 w-24 h-24 bg-gradient-to-br from-[#9101CF] to-[#5D0196] rounded-full"></div>
@@ -549,7 +603,15 @@ export default function MultiStepRegisterPage() {
 
                 <p className="text-lg lg:text-xl text-gray-700 mb-6 lg:mb-8 max-w-2xl mx-auto leading-relaxed">
                   Thank you for joining Surf! Your business "
-                  {formData.businessName}" has been submitted for review.
+                  {formData.businessName}" has been submitted for review with
+                  the{" "}
+                  <span className="font-semibold">
+                    {
+                      pricingPlans.find((p) => p.id === formData.pricingPlan)
+                        ?.name
+                    }
+                  </span>{" "}
+                  plan.
                 </p>
 
                 <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-xl p-4 lg:p-6 mb-6 lg:mb-8">
@@ -633,7 +695,6 @@ export default function MultiStepRegisterPage() {
 
   return (
     <div className="min-h-screen bg-white pt-32 lg:pt-24 relative overflow-hidden">
-      {/* Subtle floating shapes for background */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-[#9101CF] to-[#5D0196] rounded-full"></div>
         <div className="absolute bottom-32 right-32 w-24 h-24 bg-gradient-to-br from-[#9101CF] to-[#5D0196] rounded-full"></div>
@@ -642,7 +703,7 @@ export default function MultiStepRegisterPage() {
 
       <Container className="relative z-10">
         <div className="max-w-7xl mx-auto py-4 lg:py-8 px-4">
-          {/* Hero Section - Mobile Optimized following landing page style */}
+          {/* Hero Section */}
           <div className="text-center mb-8 lg:mb-12">
             <div className="inline-flex items-center bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-full px-4 lg:px-6 py-2 lg:py-3 shadow-lg mb-4 lg:mb-6">
               <span className="bg-green-400 w-2 h-2 lg:w-3 lg:h-3 rounded-full mr-2 lg:mr-3 animate-pulse"></span>
@@ -666,12 +727,13 @@ export default function MultiStepRegisterPage() {
             </p>
           </div>
 
-          {/* Progress Header - Mobile Optimized */}
+          {/* Progress Header */}
           <div className="mb-6 lg:mb-8">
             <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 border-2 border-purple-100 rounded-2xl shadow-xl p-4 lg:p-6">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
                 <h2 className="text-lg lg:text-xl font-bold text-gray-900 mb-2 lg:mb-0">
-                  Step {currentStep}: {stepTitles[currentStep]}
+                  Step {currentStep}:{" "}
+                  {stepTitles[currentStep as keyof typeof stepTitles]}
                 </h2>
                 <div className="text-sm font-medium text-gray-600">
                   {Math.round(progressPercentage)}% Complete
@@ -696,7 +758,7 @@ export default function MultiStepRegisterPage() {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-6 lg:gap-12">
-            {/* Left Section - Info Cards - Following landing page style */}
+            {/* Left Section - Info Cards */}
             <div className="space-y-4 lg:space-y-6 order-2 lg:order-1">
               {currentStep === 1 && (
                 <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 border-2 border-purple-100 rounded-2xl shadow-xl p-6 lg:p-8">
@@ -840,9 +902,9 @@ export default function MultiStepRegisterPage() {
               )}
             </div>
 
-            {/* Right Section - Form with FIXED mobile padding */}
+            {/* Right Section - Form */}
             <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 border-2 border-purple-100 rounded-2xl shadow-xl p-4 sm:p-6 lg:p-10 order-1 lg:order-2">
-              {/* Step 1 Form - Business Information with VAT Verification */}
+              {/* Step 1 Form - Business Information with VAT Verification and Pricing Plan */}
               {currentStep === 1 && (
                 <div className="space-y-6">
                   <div>
@@ -858,6 +920,97 @@ export default function MultiStepRegisterPage() {
                       className="w-full px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
                       placeholder="Enter your business name"
                     />
+                  </div>
+
+                  {/* PRICING PLAN DROPDOWN - NEW ADDITION */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                      Select Your Plan <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={formData.pricingPlan}
+                        onChange={(e) =>
+                          updateFormData("pricingPlan", e.target.value)
+                        }
+                        className="w-full px-4 py-3 lg:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 appearance-none pr-10"
+                      >
+                        {pricingPlans.map((plan) => (
+                          <option key={plan.id} value={plan.id}>
+                            {plan.name} - {plan.price}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                        <svg
+                          className="w-5 h-5 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* Show selected plan details */}
+                    {formData.pricingPlan && (
+                      <div className="mt-3 p-4 bg-white rounded-xl border border-gray-200">
+                        {(() => {
+                          const selectedPlan = pricingPlans.find(
+                            (p) => p.id === formData.pricingPlan
+                          );
+                          return selectedPlan ? (
+                            <div className="flex items-start space-x-3">
+                              <div className="text-2xl">
+                                {selectedPlan.icon}
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center justify-between">
+                                  <h4 className="font-semibold text-gray-900">
+                                    {selectedPlan.name}
+                                  </h4>
+                                  {selectedPlan.popular && (
+                                    <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full font-medium">
+                                      Most Popular
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-sm text-gray-600 mt-1">
+                                  {selectedPlan.description}
+                                </p>
+                                <ul className="mt-2 space-y-1">
+                                  {selectedPlan.features.map((feature, idx) => (
+                                    <li
+                                      key={idx}
+                                      className="text-xs text-gray-600 flex items-center"
+                                    >
+                                      <svg
+                                        className="w-3 h-3 text-green-500 mr-1"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                      >
+                                        <path
+                                          fillRule="evenodd"
+                                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                          clipRule="evenodd"
+                                        />
+                                      </svg>
+                                      {feature}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+                          ) : null;
+                        })()}
+                      </div>
+                    )}
                   </div>
 
                   <div>
@@ -900,7 +1053,7 @@ export default function MultiStepRegisterPage() {
                     </div>
                   </div>
 
-                  {/* Enhanced VAT Number Section with Verification */}
+                  {/* VAT Number Section with Verification */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-3">
                       VAT Number <span className="text-red-500">*</span>
@@ -976,34 +1129,7 @@ export default function MultiStepRegisterPage() {
                         )}
                       </div>
 
-                      {/* Individual VAT Info */}
-                      {/* {formData.vatType === "individual" &&
-                        VATService.validateMaltaVATFormat(
-                          formData.vatNumber
-                        ) && (
-                          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-                            <div className="flex items-start">
-                              <svg
-                                className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                              <div>
-                                <h4 className="font-semibold text-blue-800">
-                                  Individual VAT Format Accepted
-                                </h4>
-                              </div>
-                            </div>
-                          </div>
-                        )} */}
-
-                      {/* VAT Format Help - Show for both individual and business */}
+                      {/* VAT Format Help */}
                       {!VATService.validateMaltaVATFormat(formData.vatNumber) &&
                         formData.vatNumber && (
                           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
@@ -1141,7 +1267,7 @@ export default function MultiStepRegisterPage() {
                 </div>
               )}
 
-              {/* Step 2 Form - Contact & Pickup Address with Enhanced Email Validation */}
+              {/* Other steps remain unchanged... */}
               {currentStep === 2 && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -1175,7 +1301,7 @@ export default function MultiStepRegisterPage() {
                     </div>
                   </div>
 
-                  {/* UPDATED: Enhanced Email Field with Proper Validation Flow */}
+                  {/* Email Field with Validation */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-3">
                       Email ID <span className="text-red-500">*</span>
@@ -1261,7 +1387,7 @@ export default function MultiStepRegisterPage() {
                           )}
                         </div>
 
-                        {/* UPDATED: Send OTP Button with Enhanced Validation */}
+                        {/* Send OTP Button */}
                         <button
                           type="button"
                           onClick={handleSendOTP}
@@ -1831,7 +1957,7 @@ export default function MultiStepRegisterPage() {
                 </div>
               )}
 
-              {/* Navigation Buttons - Mobile Optimized */}
+              {/* Navigation Buttons */}
               <div className="flex flex-col sm:flex-row sm:justify-between pt-6 lg:pt-8 mt-6 lg:mt-8 border-t border-gray-200 gap-4">
                 {currentStep > 1 ? (
                   <button
