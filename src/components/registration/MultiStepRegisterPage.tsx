@@ -450,6 +450,7 @@ export default function MultiStepRegisterPage() {
         businessName: formData.businessName,
         vatType: formData.vatType,
         vatNumber: formData.vatNumber,
+        pricingPlan: formData.pricingPlan, // ADD THIS LINE
         hearAboutSurf: formData.hearAboutSurf,
         firstName: formData.firstName,
         lastName: formData.lastName,
