@@ -1,4 +1,4 @@
-// src/app/page.tsx
+// src/app/page.tsx - Updated with Testimonials Section
 import { HeroSection } from "@/components/home/HeroSection";
 import FeaturesSection from "@/components/home/FeaturesSection";
 import FAQSection from "@/components/home/FAQSection";
@@ -146,7 +146,6 @@ export default function HomePage() {
 
         <FeaturesSection />
 
-        {/* Pricing - Mobile optimized */}
         {/* Pricing - Mobile optimized - UPDATED VERSION */}
         <section className="py-8 sm:py-12 lg:py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -246,8 +245,185 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* NEW TESTIMONIALS SECTION */}
+        <section className="py-8 sm:py-12 lg:py-20 bg-gradient-to-br from-blue-50 to-indigo-100 relative overflow-hidden">
+          {/* Background decoration */}
+          <div className="absolute inset-0 opacity-30">
+            <div className="absolute top-20 left-20 w-48 sm:w-64 h-48 sm:h-64 bg-gradient-to-br from-blue-200/20 to-indigo-200/20 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-20 right-20 w-48 sm:w-64 h-48 sm:h-64 bg-gradient-to-br from-purple-200/20 to-pink-200/20 rounded-full blur-3xl"></div>
+          </div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            {/* Section Header */}
+            <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+              <div className="inline-flex items-center bg-white/80 backdrop-blur-sm border border-white/30 rounded-full px-4 sm:px-6 py-2 sm:py-3 shadow-lg mb-4 sm:mb-6">
+                <span className="w-2 h-2 bg-yellow-500 rounded-full mr-2 sm:mr-3 animate-pulse"></span>
+                <span className="text-xs sm:text-sm font-semibold text-gray-700">
+                  ⭐ What Our Sellers Say
+                </span>
+              </div>
+
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 px-2">
+                <span className="bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent">
+                  Success Stories
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] bg-clip-text text-transparent">
+                  From Real Malta Sellers
+                </span>
+              </h2>
+
+              <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-2">
+                Hear from our amazing sellers who've transformed their
+                businesses with Malta's leading e-commerce platform
+              </p>
+            </div>
+
+            {/* Testimonials Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {/* Testimonial 1 - Josephine Camilleri */}
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-white/20 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 animate-scale-in">
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-lg">
+                    JC
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                    Josephine Camilleri
+                  </h3>
+                  <div className="inline-flex items-center bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
+                    Lifestyle Products Seller
+                  </div>
+                </div>
+
+                <blockquote className="text-gray-600 italic text-sm sm:text-base leading-relaxed mb-6">
+                  "What impressed me most about Surf is how connected they are
+                  locally. From payment solutions to delivery partners. I didn't
+                  have to search for couriers, marketing agencies, or payment
+                  providers, the platform has the right tools to run an online
+                  business smoothly."
+                </blockquote>
+
+                <div className="flex justify-center">
+                  {[...Array(5)].map((_, i) => (
+                    <svg
+                      key={i}
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+              </div>
+
+              {/* Testimonial 2 - Elaine */}
+              <div
+                className="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-white/20 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 animate-scale-in"
+                style={{ animationDelay: "0.1s" }}
+              >
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-lg">
+                    E
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                    Elaine
+                  </h3>
+                  <div className="inline-flex items-center bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
+                    Healthcare Products Seller
+                  </div>
+                </div>
+
+                <blockquote className="text-gray-600 italic text-sm sm:text-base leading-relaxed mb-6">
+                  "As a business owner outside Valletta, reaching new customers
+                  was always a challenge. Having a Malta-focused marketplace
+                  makes it possible to sell beyond my locality. I truly wish the
+                  team the best of luck in growing this platform."
+                </blockquote>
+
+                <div className="flex justify-center">
+                  {[...Array(5)].map((_, i) => (
+                    <svg
+                      key={i}
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+              </div>
+
+              {/* Testimonial 3 - Daniel */}
+              <div
+                className="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-white/20 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 animate-scale-in md:col-span-2 lg:col-span-1"
+                style={{ animationDelay: "0.2s" }}
+              >
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-lg">
+                    D
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                    Daniel
+                  </h3>
+                  <div className="inline-flex items-center bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
+                    FMCG Seller
+                  </div>
+                </div>
+
+                <blockquote className="text-gray-600 italic text-sm sm:text-base leading-relaxed mb-6">
+                  "The onboarding was simple and straightforward, even for
+                  someone like me with little technical experience. It's also a
+                  very cost-effective way to sell online locally."
+                </blockquote>
+
+                <div className="flex justify-center">
+                  {[...Array(5)].map((_, i) => (
+                    <svg
+                      key={i}
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom CTA for Testimonials */}
+            <div className="text-center mt-12 sm:mt-16">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-white/30 shadow-xl max-w-3xl mx-auto">
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
+                  Ready to Join Our Success Stories?
+                </h3>
+                <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8">
+                  Start your journey with Malta's most trusted e-commerce
+                  platform today
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <a
+                    href="/register"
+                    className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:from-[#8001BF] hover:to-[#4D0186] transition-all duration-300 shadow-lg hover:-translate-y-1"
+                  >
+                    🚀 Start Your Success Story
+                  </a>
+                  <a
+                    href="/about"
+                    className="bg-white/80 text-gray-700 border-2 border-gray-200 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-white transition-all duration-300"
+                  >
+                    Learn More About Us
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Social Proof - Mobile optimized */}
-        <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-br from-[#9101CF] to-[#5D0196]">
+        {/* <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-br from-[#9101CF] to-[#5D0196]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center text-white">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 px-2">
@@ -294,7 +470,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* FAQ Section - NEW */}
         <FAQSection />
