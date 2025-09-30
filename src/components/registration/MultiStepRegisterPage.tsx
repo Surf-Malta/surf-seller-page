@@ -717,14 +717,17 @@ export default function MultiStepRegisterPage() {
               <span className="text-gray-800">Join</span>
               <br />
               <span className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] bg-clip-text text-transparent">
-                Surf Seller
+                Surf
               </span>
-              <span className="text-gray-800"> Today</span>
+              <span className="text-gray-800"> as a</span>
+              <span className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] bg-clip-text text-transparent">
+                 Seller
+              </span>
             </h1>
 
             <p className="text-lg lg:text-xl max-w-3xl mx-auto mb-6 lg:mb-8 text-gray-600 leading-relaxed">
-              Connect with thousands of customers in Malta and beyond. No setup
-              fees, just simple commission-based pricing.
+              Reach thousands of local customers instantly, with no setup fees
+              and a transparent, fixed commission model.
             </p>
           </div>
 

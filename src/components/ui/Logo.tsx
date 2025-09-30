@@ -15,7 +15,7 @@ export function Logo({ className, size = "md" }: LogoProps) {
   };
 
   return (
-    <Link href="/" className={cn("flex items-center", className)}>
+    <Link href="https://surf.mt" className={cn("flex items-center", className)}>
       <Image
         src="/mainSurf.png"
         alt="Surf Logo"
