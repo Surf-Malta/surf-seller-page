@@ -1,6 +1,7 @@
 "use client";
 
 // src/components/home/HeroSection.tsx
+import { useState, useEffect } from "react";
 import { Container } from "@/components/ui/Container";
 import Link from "next/link";
 
@@ -17,7 +18,46 @@ interface HeroSectionProps {
   hero: ContentHeading;
 }
 
+// Banner images for the carousel
+const bannerImages = [
+  {
+    id: 1,
+    src: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80",
+    alt: "E-commerce Success",
+    gradient: "from-blue-500/20 to-purple-500/20",
+  },
+  {
+    id: 2,
+    src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+    alt: "Business Growth",
+    gradient: "from-green-500/20 to-teal-500/20",
+  },
+  {
+    id: 3,
+    src: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80",
+    alt: "Online Store",
+    gradient: "from-orange-500/20 to-red-500/20",
+  },
+  {
+    id: 4,
+    src: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=800&q=80",
+    alt: "Digital Commerce",
+    gradient: "from-purple-500/20 to-pink-500/20",
+  },
+];
+
 export function HeroSection({ hero }: HeroSectionProps) {
+  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+
+  // Auto-rotate banners every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentBannerIndex((prev) => (prev + 1) % bannerImages.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="relative bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/50 overflow-hidden pt-16 sm:pt-20 lg:pt-30">
       {/* Modern geometric background */}
@@ -39,8 +79,8 @@ export function HeroSection({ hero }: HeroSectionProps) {
       ></div>
 
       <Container className="relative z-10">
-        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 xl:gap-20 items-center min-h-[75vh] sm:min-h-[80vh] lg:min-h-[65vh] py-8 sm:py-12 lg:py-10">
-          {/* Left Content */}
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center min-h-[75vh] sm:min-h-[80vh] lg:min-h-[65vh] py-8 sm:py-12 lg:py-10">
+          {/* Left Content - Title and CTA */}
           <div className="space-y-6 sm:space-y-8 text-center lg:text-left">
             {/* Badge */}
             <div className="inline-flex items-center bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full px-3 sm:px-4 lg:px-6 py-2 sm:py-3 shadow-lg">
@@ -125,136 +165,82 @@ export function HeroSection({ hero }: HeroSectionProps) {
             </div>
           </div>
 
-          {/* Right Visual - Mobile optimized */}
+          {/* Right - Floating Banner Carousel */}
           <div className="relative mt-6 lg:mt-0">
-            {/* Main dashboard mockup */}
-            <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-200 overflow-hidden transform rotate-1 sm:rotate-2 hover:rotate-0 transition-transform duration-500">
-              {/* Header */}
-              <div className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] p-2.5 sm:p-4">
-                <div className="flex items-center space-x-1.5 sm:space-x-2">
-                  <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white/30 rounded-full"></div>
-                  <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white/30 rounded-full"></div>
-                  <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white/30 rounded-full"></div>
-                  <div className="flex-1 text-center">
-                    <div className="text-white font-medium text-xs sm:text-sm">
-                      Surf Seller Dashboard
+            {/* Carousel Container */}
+            <div className="relative h-auto overflow-hidden rounded-3xl">
+              {/* Floating banners */}
+              <div className="relative">
+                {bannerImages.map((banner, index) => {
+                  const position =
+                    (index - currentBannerIndex + bannerImages.length) %
+                    bannerImages.length;
+                  const isCurrent = position === 0;
+
+                  return (
+                    <div
+                      key={banner.id}
+                      className={`transition-all duration-1000 ease-in-out ${
+                        isCurrent
+                          ? "opacity-100 translate-y-0 relative"
+                          : "opacity-0 translate-y-full absolute inset-0"
+                      }`}
+                    >
+                      {isCurrent && (
+                        <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white group hover:scale-105 transition-transform duration-500">
+                          {/* Image - Full height */}
+                          <img
+                            src={banner.src}
+                            alt={banner.alt}
+                            className="w-full h-96 sm:h-[450px] lg:h-[500px] object-cover"
+                          />
+
+                          {/* Gradient overlay */}
+                          <div
+                            className={`absolute inset-0 bg-gradient-to-br ${banner.gradient} mix-blend-overlay`}
+                          ></div>
+
+                          {/* Content overlay */}
+                          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
+                            <h3 className="text-white font-bold text-2xl sm:text-3xl mb-2">
+                              {banner.alt}
+                            </h3>
+                            <p className="text-white/90 text-base sm:text-lg">
+                              Empowering Malta's e-commerce future
+                            </p>
+                          </div>
+
+                          {/* Shine effect on hover */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                </div>
+                  );
+                })}
               </div>
 
-              {/* Dashboard content */}
-              <div className="p-3 sm:p-4 lg:p-6 space-y-3 sm:space-y-4">
-                {/* Stats cards */}
-                <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                  <div className="bg-green-50 rounded-lg sm:rounded-xl p-2 sm:p-3 border border-green-200">
-                    <div className="text-green-800 text-xs font-medium">
-                      Sales Today
-                    </div>
-                    <div className="text-green-900 text-sm sm:text-lg font-bold">
-                      €2,450
-                    </div>
-                  </div>
-                  <div className="bg-blue-50 rounded-lg sm:rounded-xl p-2 sm:p-3 border border-blue-200">
-                    <div className="text-blue-800 text-xs font-medium">
-                      Orders
-                    </div>
-                    <div className="text-blue-900 text-sm sm:text-lg font-bold">
-                      47
-                    </div>
-                  </div>
-                  <div className="bg-purple-50 rounded-lg sm:rounded-xl p-2 sm:p-3 border border-purple-200">
-                    <div className="text-purple-800 text-xs font-medium">
-                      Products
-                    </div>
-                    <div className="text-purple-900 text-sm sm:text-lg font-bold">
-                      156
-                    </div>
-                  </div>
-                </div>
-
-                {/* Chart area */}
-                <div className="bg-gray-50 rounded-lg sm:rounded-xl h-20 sm:h-28 lg:h-32 border border-gray-200 flex items-end justify-between p-2 sm:p-3 lg:p-4">
-                  <div
-                    className="w-2 sm:w-3 lg:w-4 bg-blue-500 rounded-t"
-                    style={{ height: "60%" }}
-                  ></div>
-                  <div
-                    className="w-2 sm:w-3 lg:w-4 bg-blue-500 rounded-t"
-                    style={{ height: "80%" }}
-                  ></div>
-                  <div
-                    className="w-2 sm:w-3 lg:w-4 bg-blue-500 rounded-t"
-                    style={{ height: "45%" }}
-                  ></div>
-                  <div
-                    className="w-2 sm:w-3 lg:w-4 bg-blue-500 rounded-t"
-                    style={{ height: "90%" }}
-                  ></div>
-                  <div
-                    className="w-2 sm:w-3 lg:w-4 bg-blue-500 rounded-t"
-                    style={{ height: "70%" }}
-                  ></div>
-                  <div
-                    className="w-2 sm:w-3 lg:w-4 bg-blue-500 rounded-t"
-                    style={{ height: "95%" }}
-                  ></div>
-                  <div
-                    className="w-2 sm:w-3 lg:w-4 bg-blue-500 rounded-t"
-                    style={{ height: "85%" }}
-                  ></div>
-                </div>
-
-                {/* Product list */}
-                <div className="space-y-1.5 sm:space-y-2">
-                  <div className="flex items-center space-x-2 sm:space-x-3 p-1.5 sm:p-2 bg-gray-50 rounded-lg">
-                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-orange-400 to-pink-400 rounded-md sm:rounded-lg"></div>
-                    <div className="flex-1">
-                      <div className="text-xs font-medium text-gray-900">
-                        Malta Honey Jar
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        €12.99 • 15 sold
-                      </div>
-                    </div>
-                    <div className="text-green-600 text-xs font-bold">
-                      +€194
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2 sm:space-x-3 p-1.5 sm:p-2 bg-gray-50 rounded-lg">
-                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-md sm:rounded-lg"></div>
-                    <div className="flex-1">
-                      <div className="text-xs font-medium text-gray-900">
-                        Handmade Crafts
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        €25.50 • 8 sold
-                      </div>
-                    </div>
-                    <div className="text-green-600 text-xs font-bold">
-                      +€204
-                    </div>
-                  </div>
-                </div>
+              {/* Carousel indicators */}
+              <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-40 flex space-x-2">
+                {bannerImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentBannerIndex(index)}
+                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                      currentBannerIndex === index
+                        ? "bg-white w-10"
+                        : "bg-white/50 hover:bg-white/75"
+                    }`}
+                  />
+                ))}
               </div>
             </div>
 
-            {/* Floating success indicators - Mobile optimized */}
-            <div className="absolute -top-2 sm:-top-4 -right-2 sm:-right-4 bg-green-500 text-white px-2 sm:px-3 py-1 sm:py-2 rounded-full text-xs font-bold shadow-lg animate-bounce">
-              ✅ Store Live
-            </div>
+            {/* Floating decorative elements */}
+            <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full blur-xl opacity-60 animate-pulse"></div>
             <div
-              className="absolute -bottom-2 sm:-bottom-4 -left-2 sm:-left-4 bg-blue-500 text-white px-2 sm:px-3 py-1 sm:py-2 rounded-full text-xs font-bold shadow-lg animate-pulse"
-              style={{ animationDelay: "1s" }}
-            >
-              📈 Sales Growing
-            </div>
-            <div
-              className="absolute top-1/2 -right-4 sm:-right-8 bg-purple-500 text-white px-2 sm:px-3 py-1 sm:py-2 rounded-full text-xs font-bold shadow-lg animate-bounce"
-              style={{ animationDelay: "2s" }}
-            >
-              🌍 Local Reach
-            </div>
+              className="absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-br from-orange-500 to-pink-500 rounded-full blur-xl opacity-60 animate-pulse"
+              style={{ animationDelay: "1.5s" }}
+            ></div>
           </div>
         </div>
       </Container>
