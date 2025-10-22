@@ -18,6 +18,7 @@ import {
 import { realtimeDb } from "@/lib/firebase";
 import { OTPService } from "@/lib/otpService";
 import { VATService, VATVerificationResult } from "@/lib/vatService";
+import { RegistrationEmailService } from "@/lib/registrationEmailService";
 
 interface RegistrationData {
   // Step 1 - Business Information
@@ -422,7 +423,6 @@ export default function MultiStepRegisterPage() {
         throw new Error("Firebase not initialized");
       }
 
-      // Final check for email duplication before submission
       const emailAlreadyExists = await checkEmailExists(formData.email.trim());
       if (emailAlreadyExists) {
         throw new Error(
@@ -435,7 +435,6 @@ export default function MultiStepRegisterPage() {
         throw new Error("Email not verified. Please verify your email first.");
       }
 
-      // Additional validation for business VAT
       if (formData.vatType === "business" && !vatVerified) {
         throw new Error(
           "Please verify your business VAT number before proceeding."
@@ -445,12 +444,11 @@ export default function MultiStepRegisterPage() {
       const sellersRef = ref(realtimeDb, "sellers");
       const newSellerRef = push(sellersRef);
 
-      // Create base seller data
       const sellerData: any = {
         businessName: formData.businessName,
         vatType: formData.vatType,
         vatNumber: formData.vatNumber,
-        pricingPlan: formData.pricingPlan, // ADD THIS LINE
+        pricingPlan: formData.pricingPlan,
         hearAboutSurf: formData.hearAboutSurf,
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -469,11 +467,9 @@ export default function MultiStepRegisterPage() {
         updatedAt: new Date().toISOString(),
       };
 
-      // Only add VAT verification data if it exists and business type
       if (formData.vatType === "business" && vatVerified) {
         sellerData.vatVerified = true;
 
-        // Create clean VAT company info object, only including defined values
         const cleanVatCompanyInfo: any = {};
 
         if (vatCompanyInfo.name && vatCompanyInfo.name.trim()) {
@@ -484,13 +480,11 @@ export default function MultiStepRegisterPage() {
           cleanVatCompanyInfo.address = vatCompanyInfo.address;
         }
 
-        // Only add vatCompanyInfo if it has at least one property
         if (Object.keys(cleanVatCompanyInfo).length > 0) {
           sellerData.vatCompanyInfo = cleanVatCompanyInfo;
         }
       }
 
-      // Only add shipping type and delivery time if using own shipping
       if (formData.shippingMethod === "own") {
         if (formData.shippingType) {
           sellerData.shippingType = formData.shippingType;
@@ -501,6 +495,34 @@ export default function MultiStepRegisterPage() {
       }
 
       await set(newSellerRef, sellerData);
+
+      try {
+        await RegistrationEmailService.sendRegistrationNotification({
+          businessName: formData.businessName,
+          vatType: formData.vatType,
+          vatNumber: formData.vatNumber,
+          pricingPlan: formData.pricingPlan,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phoneNumber: formData.phoneNumber,
+          address: formData.address,
+          city: formData.city,
+          pincode: formData.pincode,
+          country: formData.country,
+          shippingMethod: formData.shippingMethod,
+          shippingType: formData.shippingType,
+          deliveryTime: formData.deliveryTime,
+          showAdsOnWebsite: formData.showAdsOnWebsite,
+          hearAboutSurf: formData.hearAboutSurf,
+          registrationDate: new Date().toLocaleString(),
+        });
+      } catch (emailError) {
+        console.warn(
+          "Registration email notification failed but registration completed:",
+          emailError
+        );
+      }
 
       try {
         await OTPService.cleanupOTP(formData.email);
