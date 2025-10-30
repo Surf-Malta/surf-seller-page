@@ -18,30 +18,26 @@ interface HeroSectionProps {
   hero: ContentHeading;
 }
 
-// Banner images for the carousel
+// Banner images for the carousel - using local images from public folder
 const bannerImages = [
   {
     id: 1,
-    src: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80",
-    alt: "E-commerce Success",
+    src: "/Banner 1.png",
     gradient: "from-blue-500/20 to-purple-500/20",
   },
   {
     id: 2,
-    src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
-    alt: "Business Growth",
+    src: "/Banner 2.png",
     gradient: "from-green-500/20 to-teal-500/20",
   },
   {
     id: 3,
-    src: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80",
-    alt: "Online Store",
+    src: "/Banner 3.png",
     gradient: "from-orange-500/20 to-red-500/20",
   },
   {
     id: 4,
-    src: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=800&q=80",
-    alt: "Digital Commerce",
+    src: "/Banner 4.png",
     gradient: "from-purple-500/20 to-pink-500/20",
   },
 ];
@@ -201,13 +197,13 @@ export function HeroSection({ hero }: HeroSectionProps) {
                           ></div>
 
                           {/* Content overlay */}
-                          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
+                          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
                             <h3 className="text-white font-bold text-2xl sm:text-3xl mb-2">
                               {banner.alt}
                             </h3>
-                            <p className="text-white/90 text-base sm:text-lg">
+                            {/* <p className="text-white/90 text-base sm:text-lg">
                               Empowering Malta's e-commerce future
-                            </p>
+                            </p> */}
                           </div>
 
                           {/* Shine effect on hover */}
@@ -236,11 +232,11 @@ export function HeroSection({ hero }: HeroSectionProps) {
             </div>
 
             {/* Floating decorative elements */}
-            <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full blur-xl opacity-60 animate-pulse"></div>
+            {/* <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full blur-xl opacity-60 animate-pulse"></div>
             <div
               className="absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-br from-orange-500 to-pink-500 rounded-full blur-xl opacity-60 animate-pulse"
               style={{ animationDelay: "1.5s" }}
-            ></div>
+            ></div> */}
           </div>
         </div>
       </Container>
