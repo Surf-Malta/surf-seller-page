@@ -24,35 +24,48 @@ const bannerImages = [
     id: 1,
     src: "/Banner 1.png",
     gradient: "from-blue-500/20 to-purple-500/20",
+    alt: "Banner 1",
   },
   {
     id: 2,
     src: "/Banner 2.png",
     gradient: "from-green-500/20 to-teal-500/20",
+    alt: "Banner 2",
   },
   {
     id: 3,
     src: "/Banner 3.png",
     gradient: "from-orange-500/20 to-red-500/20",
+    alt: "Banner 3",
   },
   {
     id: 4,
     src: "/Banner 4.png",
     gradient: "from-purple-500/20 to-pink-500/20",
+    alt: "Banner 4",
   },
 ];
+
+// Google Play Store link
+const GOOGLE_PLAY_LINK =
+  "https://play.google.com/store/apps/details?id=com.surf.sellerhub&hl=en";
 
 export function HeroSection({ hero }: HeroSectionProps) {
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
-  // Auto-rotate banners every 3 seconds
+  // Auto-rotate banners every 5 seconds (changed from 3 seconds)
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentBannerIndex((prev) => (prev + 1) % bannerImages.length);
-    }, 3000);
+    }, 5000); // Changed from 3000ms to 5000ms
 
     return () => clearInterval(interval);
   }, []);
+
+  // Handle banner click - navigate to Google Play Store
+  const handleBannerClick = () => {
+    window.open(GOOGLE_PLAY_LINK, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <section className="relative bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/50 overflow-hidden pt-16 sm:pt-20 lg:pt-30">
@@ -183,31 +196,24 @@ export function HeroSection({ hero }: HeroSectionProps) {
                       }`}
                     >
                       {isCurrent && (
-                        <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white group hover:scale-105 transition-transform duration-500">
+                        <div
+                          className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white group hover:scale-105 transition-transform duration-500 cursor-pointer"
+                          onClick={handleBannerClick}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              handleBannerClick();
+                            }
+                          }}
+                          aria-label="Download Surf Seller Hub app from Google Play Store"
+                        >
                           {/* Image - Full height */}
                           <img
                             src={banner.src}
                             alt={banner.alt}
                             className="w-full h-96 sm:h-[450px] lg:h-[500px] object-cover"
                           />
-
-                          {/* Gradient overlay */}
-                          <div
-                            className={`absolute inset-0 bg-gradient-to-br ${banner.gradient} mix-blend-overlay`}
-                          ></div>
-
-                          {/* Content overlay */}
-                          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-                            <h3 className="text-white font-bold text-2xl sm:text-3xl mb-2">
-                              {banner.alt}
-                            </h3>
-                            {/* <p className="text-white/90 text-base sm:text-lg">
-                              Empowering Malta's e-commerce future
-                            </p> */}
-                          </div>
-
-                          {/* Shine effect on hover */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                         </div>
                       )}
                     </div>
@@ -226,6 +232,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
                         ? "bg-white w-10"
                         : "bg-white/50 hover:bg-white/75"
                     }`}
+                    aria-label={`Go to banner ${index + 1}`}
                   />
                 ))}
               </div>
