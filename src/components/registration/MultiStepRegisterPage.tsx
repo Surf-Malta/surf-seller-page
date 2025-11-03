@@ -1284,6 +1284,15 @@ export default function MultiStepRegisterPage() {
                           ? "Individual Malta VAT numbers follow the same MT + 8 digits format"
                           : "We'll verify your business VAT number with the EU VIES system"}
                       </p>
+
+                      <div className="mt-3 text-center">
+                        <Link
+                          href="/contact"
+                          className="text-sm text-purple-600 hover:text-purple-800 underline font-medium"
+                        >
+                          Don't have VAT? Click here
+                        </Link>
+                      </div>
                     </div>
                   </div>
 
