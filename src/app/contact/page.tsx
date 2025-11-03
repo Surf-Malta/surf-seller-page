@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import Link from "next/link";
 import { ref, push, set } from "firebase/database";
 import { realtimeDb } from "@/lib/firebase";
+import { ContactEmailService } from "@/lib/contactEmailService";
 
 interface ContactFormData {
   name: string;
@@ -97,6 +98,24 @@ export default function ContactPage() {
 
       await set(newContactRef, contactData);
 
+      // Send email notification
+      try {
+        await ContactEmailService.sendContactNotification({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          reason: formData.reason,
+          message: formData.message,
+          submittedAt: new Date().toLocaleString(),
+        });
+        console.log("Contact notification email sent successfully");
+      } catch (emailError) {
+        console.warn(
+          "Contact email notification failed but form submitted successfully:",
+          emailError
+        );
+      }
+
       setSubmitted(true);
     } catch (err) {
       console.error("Contact form submission error:", err);
@@ -136,13 +155,6 @@ export default function ContactPage() {
                 We've received your inquiry and our team will get back to you
                 within 24 hours.
               </p>
-
-              {/* <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 mb-8">
-                <p className="text-blue-800 font-medium">
-                  📧 A confirmation email will be sent to{" "}
-                  <strong>{formData.email}</strong>
-                </p>
-              </div> */}
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
