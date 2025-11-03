@@ -25,7 +25,7 @@ interface RegistrationData {
   businessName: string;
   vatType: "individual" | "business";
   vatNumber: string;
-  pricingPlan: "starter" | "growth" | "enterprise"; // NEW FIELD
+  pricingPlan: "starter" | "growth" | "enterprise";
 
   // Step 2 - Contact & Pickup Address
   firstName: string;
@@ -45,6 +45,7 @@ interface RegistrationData {
   // Step 4 - Visibility & Ads
   showAdsOnWebsite: boolean;
   hearAboutSurf: string;
+  referredBy?: string;
 }
 
 export default function MultiStepRegisterPage() {
@@ -83,7 +84,7 @@ export default function MultiStepRegisterPage() {
     businessName: "",
     vatType: "individual",
     vatNumber: "",
-    pricingPlan: "starter", // NEW DEFAULT VALUE
+    pricingPlan: "starter",
     firstName: "",
     lastName: "",
     email: "",
@@ -97,6 +98,7 @@ export default function MultiStepRegisterPage() {
     deliveryTime: "2-3_days",
     showAdsOnWebsite: true,
     hearAboutSurf: "",
+    referredBy: "",
   });
 
   const totalSteps = 4;
@@ -249,6 +251,11 @@ export default function MultiStepRegisterPage() {
         shippingType: undefined,
         deliveryTime: undefined,
       }));
+    }
+
+    // Clear referredBy when hearAboutSurf changes and is not referral
+    if (field === "hearAboutSurf" && value !== "referral") {
+      setFormData((prev) => ({ ...prev, referredBy: "" }));
     }
   };
 
@@ -467,6 +474,15 @@ export default function MultiStepRegisterPage() {
         updatedAt: new Date().toISOString(),
       };
 
+      // Add referredBy only if it exists and hearAboutSurf is referral
+      if (
+        formData.hearAboutSurf === "referral" &&
+        formData.referredBy &&
+        formData.referredBy.trim()
+      ) {
+        sellerData.referredBy = formData.referredBy.trim();
+      }
+
       if (formData.vatType === "business" && vatVerified) {
         sellerData.vatVerified = true;
 
@@ -515,6 +531,7 @@ export default function MultiStepRegisterPage() {
           deliveryTime: formData.deliveryTime,
           showAdsOnWebsite: formData.showAdsOnWebsite,
           hearAboutSurf: formData.hearAboutSurf,
+          referredBy: formData.referredBy,
           registrationDate: new Date().toLocaleString(),
         });
       } catch (emailError) {
@@ -563,7 +580,14 @@ export default function MultiStepRegisterPage() {
           formData.vatNumber.trim() &&
           VATService.validateMaltaVATFormat(formData.vatNumber) &&
           formData.hearAboutSurf &&
-          formData.pricingPlan; // Add pricing plan validation
+          formData.pricingPlan;
+
+        // Additional validation for referral
+        if (formData.hearAboutSurf === "referral") {
+          return (
+            basicValidation && formData.referredBy && formData.referredBy.trim()
+          );
+        }
 
         if (formData.vatType === "business") {
           return basicValidation && vatVerified;
@@ -743,13 +767,13 @@ export default function MultiStepRegisterPage() {
               </span>
               <span className="text-gray-800"> as a</span>
               <span className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] bg-clip-text text-transparent">
-                 Seller
+                Seller
               </span>
             </h1>
 
             <p className="text-lg lg:text-xl max-w-3xl mx-auto mb-6 lg:mb-8 text-gray-600 leading-relaxed">
               Reach thousands of local customers instantly, with no setup fees
-              and a transparent, fixed commission model.
+              and a transparent, fixed commission model.
             </p>
           </div>
 
@@ -930,7 +954,7 @@ export default function MultiStepRegisterPage() {
 
             {/* Right Section - Form */}
             <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 border-2 border-purple-100 rounded-2xl shadow-xl p-4 sm:p-6 lg:p-10 order-1 lg:order-2">
-              {/* Step 1 Form - Business Information with VAT Verification and Pricing Plan */}
+              {/* Step 1 Form */}
               {currentStep === 1 && (
                 <div className="space-y-6">
                   <div>
@@ -948,7 +972,7 @@ export default function MultiStepRegisterPage() {
                     />
                   </div>
 
-                  {/* PRICING PLAN DROPDOWN - NEW ADDITION */}
+                  {/* PRICING PLAN DROPDOWN */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-3">
                       Select Your Plan <span className="text-red-500">*</span>
@@ -984,7 +1008,6 @@ export default function MultiStepRegisterPage() {
                       </div>
                     </div>
 
-                    {/* Show selected plan details */}
                     {formData.pricingPlan && (
                       <div className="mt-3 p-4 bg-white rounded-xl border border-gray-200">
                         {(() => {
@@ -1100,7 +1123,6 @@ export default function MultiStepRegisterPage() {
                           }
                         />
 
-                        {/* Show Verify button only for business VAT */}
                         {formData.vatType === "business" && (
                           <button
                             type="button"
@@ -1155,7 +1177,6 @@ export default function MultiStepRegisterPage() {
                         )}
                       </div>
 
-                      {/* VAT Format Help */}
                       {!VATService.validateMaltaVATFormat(formData.vatNumber) &&
                         formData.vatNumber && (
                           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
@@ -1185,7 +1206,6 @@ export default function MultiStepRegisterPage() {
                           </div>
                         )}
 
-                      {/* VAT Verification Success */}
                       {vatVerified && formData.vatType === "business" && (
                         <div className="bg-green-50 border border-green-200 rounded-xl p-4">
                           <div className="flex items-start">
@@ -1223,7 +1243,6 @@ export default function MultiStepRegisterPage() {
                         </div>
                       )}
 
-                      {/* VAT Verification Error */}
                       {vatError && formData.vatType === "business" && (
                         <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                           <div className="flex items-start">
@@ -1283,17 +1302,42 @@ export default function MultiStepRegisterPage() {
                       <option value="">Select an option</option>
                       <option value="google_search">Google Search</option>
                       <option value="social_media">Social Media</option>
-                      <option value="friend_referral">Friend Referral</option>
+                      <option value="referral">Referral</option>
                       <option value="online_ad">Online Advertisement</option>
                       <option value="local_news">Local News/Media</option>
                       <option value="business_network">Business Network</option>
+                      <option value="black_friday_campaign">
+                        Black Friday Campaign
+                      </option>
                       <option value="other">Other</option>
                     </select>
                   </div>
+
+                  {/* Referred By Field - Shows when Referral is selected */}
+                  {formData.hearAboutSurf === "referral" && (
+                    <div className="bg-purple-50 border-2 border-purple-200 rounded-xl p-4 lg:p-6 animate-scale-in">
+                      <label className="block text-sm font-semibold text-gray-700 mb-3">
+                        Referred By <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.referredBy || ""}
+                        onChange={(e) =>
+                          updateFormData("referredBy", e.target.value)
+                        }
+                        className="w-full px-4 py-3 lg:py-4 border-2 border-purple-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                        placeholder="Enter the name of the person who referred you"
+                      />
+                      <p className="text-xs text-gray-500 mt-2">
+                        💡 Please enter the full name or business name of the
+                        person who referred you to Surf
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 
-              {/* Other steps remain unchanged... */}
+              {/* Step 2, 3, 4 remain the same - I'll include them but they're unchanged */}
               {currentStep === 2 && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -1327,7 +1371,7 @@ export default function MultiStepRegisterPage() {
                     </div>
                   </div>
 
-                  {/* Email Field with Validation */}
+                  {/* Email Field with Validation - continues with all the OTP logic... */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-3">
                       Email ID <span className="text-red-500">*</span>
@@ -1352,7 +1396,6 @@ export default function MultiStepRegisterPage() {
                             disabled={otpVerified}
                           />
 
-                          {/* Email validation indicators */}
                           {emailCheckLoading && (
                             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                               <svg
@@ -1413,7 +1456,6 @@ export default function MultiStepRegisterPage() {
                           )}
                         </div>
 
-                        {/* Send OTP Button */}
                         <button
                           type="button"
                           onClick={handleSendOTP}
@@ -1478,7 +1520,6 @@ export default function MultiStepRegisterPage() {
                         </button>
                       </div>
 
-                      {/* Email Error Display */}
                       {(emailCheckError || (emailExists && formData.email)) && (
                         <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                           <div className="flex items-start">
@@ -1516,7 +1557,6 @@ export default function MultiStepRegisterPage() {
                         </div>
                       )}
 
-                      {/* OTP Input Field */}
                       {otpSent && !otpVerified && (
                         <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
                           <div className="flex items-center mb-3">
@@ -1610,7 +1650,6 @@ export default function MultiStepRegisterPage() {
                         </div>
                       )}
 
-                      {/* Verification Success */}
                       {otpVerified && (
                         <div className="bg-green-50 border border-green-200 rounded-xl p-4">
                           <div className="flex items-center">
@@ -1632,7 +1671,6 @@ export default function MultiStepRegisterPage() {
                         </div>
                       )}
 
-                      {/* Error Display */}
                       {otpError && (
                         <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                           <div className="flex items-center">
@@ -1734,7 +1772,7 @@ export default function MultiStepRegisterPage() {
                 </div>
               )}
 
-              {/* Step 3 Form - Shipping Preferences */}
+              {/* Step 3 & 4 continue below... */}
               {currentStep === 3 && (
                 <div className="space-y-6">
                   <div className="space-y-4">
@@ -1771,7 +1809,6 @@ export default function MultiStepRegisterPage() {
                         </div>
                       </div>
 
-                      {/* Shipping Type and Delivery Time */}
                       {formData.shippingMethod === "own" && (
                         <div className="mt-6 space-y-6 bg-white/50 p-4 lg:p-6 rounded-xl border border-purple-200">
                           <div>
@@ -1884,7 +1921,6 @@ export default function MultiStepRegisterPage() {
                     </div>
                   </div>
 
-                  {/* Info message for integrated shipping */}
                   {formData.shippingMethod === "integrated" && (
                     <div className="bg-green-50 border border-green-200 rounded-xl p-4 lg:p-6">
                       <div className="flex items-start">
@@ -1917,7 +1953,6 @@ export default function MultiStepRegisterPage() {
                 </div>
               )}
 
-              {/* Step 4 Form - Visibility & Ads */}
               {currentStep === 4 && (
                 <div className="space-y-6">
                   <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-xl p-6 lg:p-8">

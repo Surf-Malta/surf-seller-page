@@ -24,6 +24,7 @@ interface RegistrationEmailData {
   deliveryTime?: string;
   showAdsOnWebsite: boolean;
   hearAboutSurf: string;
+  referredBy?: string;
   registrationDate: string;
 }
 
@@ -76,7 +77,8 @@ export class RegistrationEmailService {
           ? data.deliveryTime.replace(/_/g, " ")
           : "N/A",
         show_ads: data.showAdsOnWebsite ? "Yes" : "No",
-        hear_about_surf: data.hearAboutSurf,
+        hear_about_surf: this.formatHearAboutSurf(data.hearAboutSurf),
+        referred_by: data.referredBy || "N/A",
         registration_date: data.registrationDate,
       };
 
@@ -96,5 +98,21 @@ export class RegistrationEmailService {
       );
       return { success: true };
     }
+  }
+
+  // Helper method to format the hearAboutSurf value for better readability in emails
+  private static formatHearAboutSurf(value: string): string {
+    const formatMap: { [key: string]: string } = {
+      google_search: "Google Search",
+      social_media: "Social Media",
+      referral: "Referral",
+      online_ad: "Online Advertisement",
+      local_news: "Local News/Media",
+      business_network: "Business Network",
+      black_friday_campaign: "Black Friday Campaign",
+      other: "Other",
+    };
+
+    return formatMap[value] || value;
   }
 }
