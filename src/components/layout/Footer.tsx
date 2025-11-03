@@ -42,6 +42,15 @@ export default function Footer() {
         directLink: true,
       },
     ],
+    Support: [
+      { href: "/contact", label: "Contact Us" },
+      {
+        href: "mailto:sell@surf.mt",
+        label: "Email Support",
+        external: true,
+        directLink: true,
+      },
+    ],
   };
 
   const socialLinks = [
