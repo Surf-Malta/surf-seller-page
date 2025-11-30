@@ -19,6 +19,8 @@ import { realtimeDb } from "@/lib/firebase";
 import { OTPService } from "@/lib/otpService";
 import { VATService, VATVerificationResult } from "@/lib/vatService";
 import { RegistrationEmailService } from "@/lib/registrationEmailService";
+import { PayPalService } from "@/lib/paypalService";
+import { PlanPricing, PaymentTransaction } from "@/types/payment";
 
 interface RegistrationData {
   // Step 1 - Business Information
@@ -46,6 +48,11 @@ interface RegistrationData {
   showAdsOnWebsite: boolean;
   hearAboutSurf: string;
   referredBy?: string;
+
+  // Payment Information
+  paymentRequired?: boolean;
+  paymentStatus?: "pending" | "completed" | "failed";
+  paymentTransaction?: PaymentTransaction;
 }
 
 export default function MultiStepRegisterPage() {
@@ -80,6 +87,12 @@ export default function MultiStepRegisterPage() {
     address?: string;
   }>({});
 
+  // Payment States
+  const [paymentProcessing, setPaymentProcessing] = useState(false);
+  const [paymentError, setPaymentError] = useState("");
+  const [paymentOrderId, setPaymentOrderId] = useState("");
+  const [paymentComplete, setPaymentComplete] = useState(false);
+
   const [formData, setFormData] = useState<RegistrationData>({
     businessName: "",
     vatType: "individual",
@@ -101,15 +114,18 @@ export default function MultiStepRegisterPage() {
     referredBy: "",
   });
 
-  const totalSteps = 4;
+  const totalSteps = 5; // Added payment step
   const progressPercentage = (currentStep / totalSteps) * 100;
 
-  // Pricing plan options
-  const pricingPlans = [
+  // Pricing plan options with payment information
+  const pricingPlans: PlanPricing[] = [
     {
       id: "starter",
       name: "Starter",
       price: "Free",
+      amount: 0,
+      currency: "EUR",
+      requiresPayment: false,
       description: "Perfect for testing the waters",
       features: ["Up to 200 SKUs", "10% commission", "Email support"],
       icon: "🚀",
@@ -118,7 +134,10 @@ export default function MultiStepRegisterPage() {
     {
       id: "growth",
       name: "Growth",
-      price: "€49/month",
+      price: "€49",
+      amount: 49.0,
+      currency: "EUR",
+      requiresPayment: true,
       description: "Ideal for growing businesses",
       features: ["Up to 2000 SKUs", "8% commission", "Priority support"],
       icon: "⭐",
@@ -129,6 +148,9 @@ export default function MultiStepRegisterPage() {
       id: "enterprise",
       name: "Enterprise",
       price: "Custom",
+      amount: 0,
+      currency: "EUR",
+      requiresPayment: false, // Handled manually
       description: "For large brands",
       features: ["Unlimited SKUs", "Custom commission", "Dedicated support"],
       icon: "👑",
@@ -510,6 +532,28 @@ export default function MultiStepRegisterPage() {
         }
       }
 
+      // Add payment information
+      const selectedPlan = pricingPlans.find(
+        (p) => p.id === formData.pricingPlan
+      );
+      if (selectedPlan?.requiresPayment) {
+        sellerData.paymentRequired = true;
+        sellerData.paymentStatus = paymentComplete ? "completed" : "pending";
+        sellerData.paymentAmount = selectedPlan.amount;
+        sellerData.paymentCurrency = selectedPlan.currency;
+
+        if (paymentOrderId) {
+          sellerData.paymentOrderId = paymentOrderId;
+        }
+
+        if (paymentComplete) {
+          sellerData.paymentCompletedAt = new Date().toISOString();
+        }
+      } else {
+        sellerData.paymentRequired = false;
+        sellerData.paymentStatus = "not_required";
+      }
+
       await set(newSellerRef, sellerData);
 
       try {
@@ -571,6 +615,65 @@ export default function MultiStepRegisterPage() {
     }
   };
 
+  // Handle PayPal payment
+  const handlePayment = async () => {
+    console.log("🎯 handlePayment called!");
+    console.log("🎯 Current pricing plan:", formData.pricingPlan);
+
+    const selectedPlan = pricingPlans.find(
+      (p) => p.id === formData.pricingPlan
+    );
+
+    console.log("🎯 Selected plan:", selectedPlan);
+
+    if (!selectedPlan?.requiresPayment) {
+      // Skip payment for free plans
+      console.log("🎯 Free plan - skipping payment");
+      setPaymentComplete(true);
+      return;
+    }
+
+    console.log("🎯 Starting payment process...");
+    setPaymentProcessing(true);
+    setPaymentError("");
+
+    try {
+      const paymentData = {
+        amount: selectedPlan.amount,
+        currency: selectedPlan.currency,
+        description: `${selectedPlan.name} Plan Registration - ${formData.businessName}`,
+        userData: {
+          email: formData.email,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          phone: formData.phoneNumber,
+        },
+        returnUrl: `${window.location.origin}/register?payment=success`,
+        cancelUrl: `${window.location.origin}/register?payment=cancelled`,
+      };
+
+      const response = await PayPalService.createPaymentOrder(paymentData);
+
+      if (response.success && response.data?.approvalUrl) {
+        // Store order ID for later capture
+        setPaymentOrderId(response.data.orderId);
+
+        // Redirect to PayPal for payment
+        window.location.href = response.data.approvalUrl;
+      } else {
+        setPaymentError(
+          response.error?.message ||
+            "Failed to create payment. Please try again."
+        );
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      setPaymentError("An unexpected error occurred. Please try again.");
+    } finally {
+      setPaymentProcessing(false);
+    }
+  };
+
   // Step validation
   const isStepValid = () => {
     switch (currentStep) {
@@ -612,6 +715,15 @@ export default function MultiStepRegisterPage() {
         return formData.shippingMethod;
       case 4:
         return true;
+      case 5:
+        // Payment step - check if payment is required and completed
+        const selectedPlan = pricingPlans.find(
+          (p) => p.id === formData.pricingPlan
+        );
+        if (!selectedPlan?.requiresPayment) {
+          return true; // Skip payment for free plans
+        }
+        return paymentComplete;
       default:
         return false;
     }
@@ -622,6 +734,7 @@ export default function MultiStepRegisterPage() {
     2: "Contact & Pickup Address",
     3: "Shipping Preferences",
     4: "Visibility & Ads",
+    5: "Payment",
   };
 
   // Show success page after registration
@@ -2024,6 +2137,250 @@ export default function MultiStepRegisterPage() {
                       and start your selling journey with Surf.
                     </p>
                   </div>
+                </div>
+              )}
+
+              {/* Step 5: Payment */}
+              {currentStep === 5 && (
+                <div className="space-y-6">
+                  {(() => {
+                    const selectedPlan = pricingPlans.find(
+                      (p) => p.id === formData.pricingPlan
+                    );
+
+                    if (!selectedPlan) return null;
+
+                    // Free plan - no payment required
+                    if (!selectedPlan.requiresPayment) {
+                      return (
+                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-6 lg:p-8">
+                          <div className="text-center">
+                            <div className="w-16 h-16 bg-green-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl">
+                              ✓
+                            </div>
+                            <h3 className="text-2xl font-bold text-green-900 mb-2">
+                              No Payment Required!
+                            </h3>
+                            <p className="text-green-700 mb-4">
+                              You've selected the{" "}
+                              <span className="font-semibold">
+                                {selectedPlan.name}
+                              </span>{" "}
+                              plan which is completely free.
+                            </p>
+                            <p className="text-green-600 text-sm">
+                              Click "Complete Registration" below to finish your
+                              registration.
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    }
+
+                    // Paid plan - show payment UI
+                    return (
+                      <div className="space-y-6">
+                        <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-xl p-6 lg:p-8">
+                          <h3 className="text-xl lg:text-2xl font-bold text-purple-900 mb-6">
+                            Complete Your Payment
+                          </h3>
+
+                          {/* Plan Summary */}
+                          <div className="bg-white rounded-lg p-6 mb-6 border border-purple-200">
+                            <div className="flex items-center justify-between mb-4">
+                              <div>
+                                <h4 className="text-lg font-bold text-gray-900">
+                                  {selectedPlan.icon} {selectedPlan.name} Plan
+                                </h4>
+                                <p className="text-gray-600 text-sm">
+                                  {selectedPlan.description}
+                                </p>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-3xl font-bold text-purple-600">
+                                  €{selectedPlan.amount.toFixed(2)}
+                                </div>
+                                <div className="text-sm text-gray-500">
+                                  One-time fee
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="border-t border-gray-200 pt-4">
+                              <h5 className="font-semibold text-gray-900 mb-2">
+                                Plan Features:
+                              </h5>
+                              <ul className="space-y-2">
+                                {selectedPlan.features.map((feature, index) => (
+                                  <li
+                                    key={index}
+                                    className="flex items-center text-gray-700"
+                                  >
+                                    <svg
+                                      className="w-5 h-5 text-green-500 mr-2"
+                                      fill="currentColor"
+                                      viewBox="0 0 20 20"
+                                    >
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clipRule="evenodd"
+                                      />
+                                    </svg>
+                                    {feature}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+
+                          {/* Payment Button or Success Message */}
+                          {paymentComplete ? (
+                            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+                              <div className="flex items-center text-green-800">
+                                <svg
+                                  className="w-6 h-6 mr-3"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                                <div>
+                                  <h4 className="font-bold">
+                                    Payment Successful!
+                                  </h4>
+                                  <p className="text-sm">
+                                    Your payment has been processed. Click
+                                    "Complete Registration" to finish.
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              {paymentError && (
+                                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                                  <div className="flex items-start">
+                                    <svg
+                                      className="w-5 h-5 text-red-500 mt-0.5 mr-2"
+                                      fill="currentColor"
+                                      viewBox="0 0 20 20"
+                                    >
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                        clipRule="evenodd"
+                                      />
+                                    </svg>
+                                    <div className="flex-1">
+                                      <h4 className="font-semibold text-red-800">
+                                        Payment Error
+                                      </h4>
+                                      <p className="text-sm text-red-700">
+                                        {paymentError}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+
+                              <button
+                                onClick={handlePayment}
+                                disabled={paymentProcessing}
+                                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-blue-800 transform hover:-translate-y-1 transition-all duration-300 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                              >
+                                {paymentProcessing ? (
+                                  <span className="flex items-center justify-center">
+                                    <svg
+                                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <circle
+                                        className="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        strokeWidth="4"
+                                      ></circle>
+                                      <path
+                                        className="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                      ></path>
+                                    </svg>
+                                    Processing...
+                                  </span>
+                                ) : (
+                                  <span className="flex items-center justify-center">
+                                    <svg
+                                      className="w-6 h-6 mr-2"
+                                      fill="currentColor"
+                                      viewBox="0 0 20 20"
+                                    >
+                                      <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"
+                                        clipRule="evenodd"
+                                      />
+                                    </svg>
+                                    Pay with PayPal - €
+                                    {selectedPlan.amount.toFixed(2)}
+                                  </span>
+                                )}
+                              </button>
+
+                              <p className="text-center text-gray-500 text-sm mt-4">
+                                🔒 Secure payment powered by PayPal
+                              </p>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                          <div className="flex items-start">
+                            <svg
+                              className="w-5 h-5 text-blue-600 mt-0.5 mr-2"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            <div className="text-sm text-blue-800">
+                              <p className="font-semibold mb-1">
+                                What happens next?
+                              </p>
+                              <ul className="list-disc list-inside space-y-1 text-blue-700">
+                                <li>
+                                  You'll be redirected to PayPal to complete
+                                  your payment
+                                </li>
+                                <li>
+                                  After payment, you'll return here
+                                  automatically
+                                </li>
+                                <li>
+                                  Your registration will be completed once
+                                  payment is confirmed
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
 
