@@ -269,7 +269,7 @@ export default function HomePage() {
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] bg-clip-text text-transparent">
-                  From Real Malta Sellers
+                  From our Local Sellers
                 </span>
               </h2>
 
