@@ -106,12 +106,15 @@ export class PayPalService {
    */
   static async getOrderDetails(orderId: string): Promise<any> {
     try {
-      const response = await fetch(`${PAYPAL_API_URL}/payments/${orderId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${PAYPAL_API_URL}/payments/order/${orderId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const data = await response.json();
 

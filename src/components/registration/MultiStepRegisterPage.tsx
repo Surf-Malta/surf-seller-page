@@ -1,11 +1,11 @@
 // src/components/registration/MultiStepRegisterPage.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ref,
   push,
@@ -57,6 +57,7 @@ interface RegistrationData {
 
 export default function MultiStepRegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [registrationComplete, setRegistrationComplete] = useState(false);
@@ -93,6 +94,9 @@ export default function MultiStepRegisterPage() {
   const [paymentOrderId, setPaymentOrderId] = useState("");
   const [paymentComplete, setPaymentComplete] = useState(false);
 
+  // Ref to track processed tokens to prevent double capture
+  const processedTokenRef = useRef<string | null>(null);
+
   const [formData, setFormData] = useState<RegistrationData>({
     businessName: "",
     vatType: "individual",
@@ -114,6 +118,23 @@ export default function MultiStepRegisterPage() {
     referredBy: "",
   });
 
+  // Load saved state on mount if returning from payment
+  useEffect(() => {
+    const savedData = localStorage.getItem("registrationData");
+    const paymentStatus = searchParams.get("payment");
+
+    if (savedData && paymentStatus) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        setFormData(parsedData);
+        // Also restore the step to Payment (5)
+        setCurrentStep(5);
+      } catch (e) {
+        console.error("Failed to parse saved registration data");
+      }
+    }
+  }, [searchParams]);
+
   const totalSteps = 5; // Added payment step
   const progressPercentage = (currentStep / totalSteps) * 100;
 
@@ -134,8 +155,8 @@ export default function MultiStepRegisterPage() {
     {
       id: "growth",
       name: "Growth",
-      price: "€49",
-      amount: 49.0,
+      price: "€0.2",
+      amount: 0.2,
       currency: "EUR",
       requiresPayment: true,
       description: "Ideal for growing businesses",
@@ -658,6 +679,9 @@ export default function MultiStepRegisterPage() {
         // Store order ID for later capture
         setPaymentOrderId(response.data.orderId);
 
+        // Save state before redirecting
+        localStorage.setItem("registrationData", JSON.stringify(formData));
+
         // Redirect to PayPal for payment
         window.location.href = response.data.approvalUrl;
       } else {
@@ -673,6 +697,66 @@ export default function MultiStepRegisterPage() {
       setPaymentProcessing(false);
     }
   };
+
+  // Handle PayPal return
+  useEffect(() => {
+    const checkPaymentStatus = async () => {
+      const paymentStatus = searchParams.get("payment");
+      const token = searchParams.get("token"); // PayPal returns order ID as 'token'
+
+      if (
+        paymentStatus === "success" &&
+        token &&
+        !paymentComplete &&
+        !paymentProcessing
+      ) {
+        console.log("🎯 Payment success detected! Capturing order:", token);
+        setPaymentProcessing(true);
+        setPaymentOrderId(token);
+
+        // Move to payment step if not already there
+        if (currentStep !== 5) {
+          setCurrentStep(5);
+        }
+
+        try {
+          const response = await PayPalService.capturePayment(token);
+
+          if (response.success) {
+            console.log("✅ Payment captured successfully:", response.data);
+            setPaymentComplete(true);
+            setPaymentError("");
+
+            // Optional: Auto-submit registration or show success message
+            // handleSubmit();
+          } else {
+            console.error("❌ Payment capture failed:", response.error);
+            setPaymentError(
+              response.error?.message ||
+                "Payment capture failed. Please try again or contact support."
+            );
+          }
+        } catch (error) {
+          console.error("❌ Payment capture error:", error);
+          setPaymentError("An error occurred while verifying your payment.");
+        } finally {
+          setPaymentProcessing(false);
+          // Clear URL parameters to prevent re-capture on refresh
+          window.history.replaceState({}, "", "/register");
+        }
+      } else if (paymentStatus === "cancelled") {
+        console.log("⚠️ Payment cancelled by user");
+        setPaymentError(
+          "Payment was cancelled. You can try again when you're ready."
+        );
+        if (currentStep !== 5) {
+          setCurrentStep(5);
+        }
+      }
+    };
+
+    checkPaymentStatus();
+  }, [searchParams, paymentComplete, paymentProcessing, currentStep]);
 
   // Step validation
   const isStepValid = () => {
