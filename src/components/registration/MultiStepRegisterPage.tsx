@@ -155,8 +155,8 @@ export default function MultiStepRegisterPage() {
     {
       id: "growth",
       name: "Growth",
-      price: "€0.2",
-      amount: 0.2,
+      price: "€49",
+      amount: 49.0,
       currency: "EUR",
       requiresPayment: true,
       description: "Ideal for growing businesses",
