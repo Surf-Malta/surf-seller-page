@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { realtimeDb as getRealtimeDb } from "@/lib/firebase";
+import { realtimeDb } from "@/lib/firebase";
 
 interface ContentHeading {
   id: string;
@@ -41,7 +41,7 @@ export const fetchContent = createAsyncThunk(
   async () => {
     return new Promise<NavItemContent>(async (resolve, reject) => {
       try {
-        const db = await getRealtimeDb();
+        const db = await realtimeDb();
         if (!db) {
           reject(new Error("Firebase not initialized"));
           return;
@@ -72,7 +72,7 @@ export const fetchContent = createAsyncThunk(
 export const saveContent = createAsyncThunk(
   "content/saveContent",
   async (content: NavItemContent) => {
-    const db = await getRealtimeDb();
+    const db = await realtimeDb();
     if (!db) {
       throw new Error("Firebase not initialized");
     }

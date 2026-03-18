@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { realtimeDb as getRealtimeDb } from "@/lib/firebase";
+import { realtimeDb } from "@/lib/firebase";
 
 interface User {
   id: string;
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (parsedUser.id) {
           (async () => {
             try {
-              const db = await getRealtimeDb();
+              const db = await realtimeDb();
               if (!db) return;
               
               const { ref, onValue } = await import("firebase/database");

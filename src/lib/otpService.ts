@@ -1,5 +1,5 @@
 // src/lib/otpService.ts
-import { realtimeDb as getRealtimeDb } from "@/lib/firebase";
+import { realtimeDb } from "@/lib/firebase";
 import emailjs from "@emailjs/browser";
 
 const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
@@ -49,7 +49,7 @@ export class OTPService {
     email: string
   ): Promise<{ success: boolean; sessionId?: string; error?: string }> {
     try {
-      const db = await getRealtimeDb();
+      const db = await realtimeDb();
       if (!db) {
         throw new Error("Database not initialized");
       }
@@ -175,7 +175,7 @@ export class OTPService {
       throw lastError || new Error("All email configurations failed");
     } catch (error: any) {
       // Clean up stored OTP on email failure
-      const db = await getRealtimeDb();
+      const db = await realtimeDb();
       if (db) {
         try {
           const { ref, remove } = await import("firebase/database");
@@ -209,7 +209,7 @@ export class OTPService {
     inputOTP: string
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const db = await getRealtimeDb();
+      const db = await realtimeDb();
       if (!db) {
         throw new Error("Database not initialized");
       }
@@ -285,7 +285,7 @@ export class OTPService {
   // Check if email is verified
   static async isEmailVerified(email: string): Promise<boolean> {
     try {
-      const db = await getRealtimeDb();
+      const db = await realtimeDb();
       if (!db) {
         return false;
       }
@@ -309,7 +309,7 @@ export class OTPService {
   // Clean up verified OTP
   static async cleanupOTP(email: string): Promise<void> {
     try {
-      const db = await getRealtimeDb();
+      const db = await realtimeDb();
       if (!db) {
         return;
       }
