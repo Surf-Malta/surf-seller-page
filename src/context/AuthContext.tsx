@@ -1,8 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { ref, onValue } from "firebase/database";
-import { realtimeDb } from "@/lib/firebase";
+import { realtimeDb as getRealtimeDb } from "@/lib/firebase";
 
 interface User {
   id: string;
@@ -35,22 +34,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(parsedUser);
 
         // Optionally sync with Firebase to get latest user data
-        if (realtimeDb && parsedUser.id) {
-          const userRef = ref(realtimeDb, `sellers/${parsedUser.id}`);
-          onValue(userRef, (snapshot) => {
-            if (snapshot.exists()) {
-              const firebaseUser = snapshot.val();
-              const updatedUser = {
-                id: parsedUser.id,
-                name: `${firebaseUser.firstName} ${firebaseUser.lastName}`,
-                email: firebaseUser.email || "",
-                boothTitle: firebaseUser.boothTitle,
-                status: firebaseUser.status,
-              };
-              setUser(updatedUser);
-              localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+        if (parsedUser.id) {
+          (async () => {
+            try {
+              const db = await getRealtimeDb();
+              if (!db) return;
+              
+              const { ref, onValue } = await import("firebase/database");
+              const userRef = ref(db, `sellers/${parsedUser.id}`);
+              onValue(userRef, (snapshot) => {
+                if (snapshot.exists()) {
+                  const firebaseUser = snapshot.val();
+                  const updatedUser = {
+                    id: parsedUser.id,
+                    name: `${firebaseUser.firstName} ${firebaseUser.lastName}`,
+                    email: firebaseUser.email || "",
+                    boothTitle: firebaseUser.boothTitle,
+                    status: firebaseUser.status,
+                  };
+                  setUser(updatedUser);
+                  localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+                }
+              });
+            } catch (error) {
+              // Firebase sync failed - keep local user data
+              console.error("Firebase sync error:", error);
             }
-          });
+          })();
         }
       } catch (error) {
         console.error("Error parsing user data:", error);

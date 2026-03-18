@@ -1,6 +1,5 @@
 // src/lib/otpService.ts
-import { ref, set, get, remove } from "firebase/database";
-import { realtimeDb } from "@/lib/firebase";
+import { realtimeDb as getRealtimeDb } from "@/lib/firebase";
 import emailjs from "@emailjs/browser";
 
 const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
@@ -50,7 +49,8 @@ export class OTPService {
     email: string
   ): Promise<{ success: boolean; sessionId?: string; error?: string }> {
     try {
-      if (!realtimeDb) {
+      const db = await getRealtimeDb();
+      if (!db) {
         throw new Error("Database not initialized");
       }
 
@@ -66,9 +66,12 @@ export class OTPService {
         return { success: false, error: "Invalid email format" };
       }
 
+      // Lazy import Firebase functions
+      const { ref, get, set } = await import("firebase/database");
+
       // Check if there's an existing OTP that's still in cooldown
       const existingOTPRef = ref(
-        realtimeDb,
+        db,
         `otps/${email.replace(/[.@]/g, "_")}`
       );
       const existingSnapshot = await get(existingOTPRef);
@@ -105,7 +108,7 @@ export class OTPService {
       };
 
       await set(
-        ref(realtimeDb, `otps/${email.replace(/[.@]/g, "_")}`),
+        ref(db, `otps/${email.replace(/[.@]/g, "_")}`),
         otpRecord
       );
 
@@ -172,9 +175,11 @@ export class OTPService {
       throw lastError || new Error("All email configurations failed");
     } catch (error: any) {
       // Clean up stored OTP on email failure
-      if (realtimeDb) {
+      const db = await getRealtimeDb();
+      if (db) {
         try {
-          await remove(ref(realtimeDb, `otps/${email.replace(/[.@]/g, "_")}`));
+          const { ref, remove } = await import("firebase/database");
+          await remove(ref(db, `otps/${email.replace(/[.@]/g, "_")}`));
         } catch (cleanupError) {
           // Silent cleanup failure
         }
@@ -204,11 +209,14 @@ export class OTPService {
     inputOTP: string
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      if (!realtimeDb) {
+      const db = await getRealtimeDb();
+      if (!db) {
         throw new Error("Database not initialized");
       }
 
-      const otpRef = ref(realtimeDb, `otps/${email.replace(/[.@]/g, "_")}`);
+      const { ref, get, set, remove } = await import("firebase/database");
+
+      const otpRef = ref(db, `otps/${email.replace(/[.@]/g, "_")}`);
       const snapshot = await get(otpRef);
 
       if (!snapshot.exists()) {
@@ -277,11 +285,14 @@ export class OTPService {
   // Check if email is verified
   static async isEmailVerified(email: string): Promise<boolean> {
     try {
-      if (!realtimeDb) {
+      const db = await getRealtimeDb();
+      if (!db) {
         return false;
       }
 
-      const otpRef = ref(realtimeDb, `otps/${email.replace(/[.@]/g, "_")}`);
+      const { ref, get } = await import("firebase/database");
+
+      const otpRef = ref(db, `otps/${email.replace(/[.@]/g, "_")}`);
       const snapshot = await get(otpRef);
 
       if (!snapshot.exists()) {
@@ -298,11 +309,14 @@ export class OTPService {
   // Clean up verified OTP
   static async cleanupOTP(email: string): Promise<void> {
     try {
-      if (!realtimeDb) {
+      const db = await getRealtimeDb();
+      if (!db) {
         return;
       }
 
-      const otpRef = ref(realtimeDb, `otps/${email.replace(/[.@]/g, "_")}`);
+      const { ref, remove } = await import("firebase/database");
+
+      const otpRef = ref(db, `otps/${email.replace(/[.@]/g, "_")}`);
       await remove(otpRef);
     } catch (error) {
       // Silent cleanup failure

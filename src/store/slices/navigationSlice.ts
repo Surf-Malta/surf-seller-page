@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { ref, onValue, set, remove, push } from "firebase/database";
-import { realtimeDb } from "@/lib/firebase";
+import { realtimeDb as getRealtimeDb } from "@/lib/firebase";
 
 interface NavigationItem {
   id: string;
@@ -30,32 +29,38 @@ const initialState: NavigationState = {
 export const fetchNavigationItems = createAsyncThunk(
   "navigation/fetchItems",
   async () => {
-    return new Promise<NavigationItem[]>((resolve, reject) => {
-      if (!realtimeDb) {
-        reject(new Error("Firebase not initialized"));
-        return;
-      }
-
-      const navRef = ref(realtimeDb, "navigation_items");
-      onValue(
-        navRef,
-        (snapshot) => {
-          const items: NavigationItem[] = [];
-          if (snapshot.exists()) {
-            snapshot.forEach((childSnapshot) => {
-              items.push({
-                id: childSnapshot.key!,
-                ...childSnapshot.val(),
-              } as NavigationItem);
-            });
-          }
-          items.sort((a, b) => a.order - b.order);
-          resolve(items);
-        },
-        (error) => {
-          reject(error);
+    return new Promise<NavigationItem[]>(async (resolve, reject) => {
+      try {
+        const db = await getRealtimeDb();
+        if (!db) {
+          reject(new Error("Firebase not initialized"));
+          return;
         }
-      );
+
+        const { ref, onValue } = await import("firebase/database");
+        const navRef = ref(db, "navigation_items");
+        onValue(
+          navRef,
+          (snapshot) => {
+            const items: NavigationItem[] = [];
+            if (snapshot.exists()) {
+              snapshot.forEach((childSnapshot) => {
+                items.push({
+                  id: childSnapshot.key!,
+                  ...childSnapshot.val(),
+                } as NavigationItem);
+              });
+            }
+            items.sort((a, b) => a.order - b.order);
+            resolve(items);
+          },
+          (error) => {
+            reject(error);
+          }
+        );
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 );
@@ -63,40 +68,53 @@ export const fetchNavigationItems = createAsyncThunk(
 export const saveNavigationItem = createAsyncThunk(
   "navigation/saveItem",
   async (item: NavigationItem) => {
-    if (!realtimeDb) {
+    const db = await getRealtimeDb();
+    if (!db) {
       throw new Error("Firebase not initialized");
     }
 
-    if (item.id && item.id !== "new") {
-      await set(ref(realtimeDb, `navigation_items/${item.id}`), {
-        label: item.label,
-        href: item.href,
-        description: item.description,
-        order: item.order,
-      });
-    } else {
-      const newItemRef = push(ref(realtimeDb, "navigation_items"));
-      await set(newItemRef, {
-        label: item.label,
-        href: item.href,
-        description: item.description,
-        order: item.order,
-      });
-      return { ...item, id: newItemRef.key! };
+    try {
+      const { ref, set, push } = await import("firebase/database");
+
+      if (item.id && item.id !== "new") {
+        await set(ref(db, `navigation_items/${item.id}`), {
+          label: item.label,
+          href: item.href,
+          description: item.description,
+          order: item.order,
+        });
+      } else {
+        const newItemRef = push(ref(db, "navigation_items"));
+        await set(newItemRef, {
+          label: item.label,
+          href: item.href,
+          description: item.description,
+          order: item.order,
+        });
+        return { ...item, id: newItemRef.key! };
+      }
+      return item;
+    } catch (error) {
+      throw error;
     }
-    return item;
   }
 );
 
 export const deleteNavigationItem = createAsyncThunk(
   "navigation/deleteItem",
   async (itemId: string) => {
-    if (!realtimeDb) {
+    const db = await getRealtimeDb();
+    if (!db) {
       throw new Error("Firebase not initialized");
     }
 
-    await remove(ref(realtimeDb, `navigation_items/${itemId}`));
-    return itemId;
+    try {
+      const { ref, remove } = await import("firebase/database");
+      await remove(ref(db, `navigation_items/${itemId}`));
+      return itemId;
+    } catch (error) {
+      throw error;
+    }
   }
 );
 

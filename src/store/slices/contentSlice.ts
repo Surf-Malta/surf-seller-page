@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { ref, onValue, set } from "firebase/database";
-import { realtimeDb } from "@/lib/firebase";
+import { realtimeDb as getRealtimeDb } from "@/lib/firebase";
 
 interface ContentHeading {
   id: string;
@@ -40,26 +39,32 @@ const initialState: ContentState = {
 export const fetchContent = createAsyncThunk(
   "content/fetchContent",
   async () => {
-    return new Promise<NavItemContent>((resolve, reject) => {
-      if (!realtimeDb) {
-        reject(new Error("Firebase not initialized"));
-        return;
-      }
-
-      const contentRef = ref(realtimeDb, "nav_items_content");
-      onValue(
-        contentRef,
-        (snapshot) => {
-          if (snapshot.exists()) {
-            resolve(snapshot.val());
-          } else {
-            resolve({});
-          }
-        },
-        (error) => {
-          reject(error);
+    return new Promise<NavItemContent>(async (resolve, reject) => {
+      try {
+        const db = await getRealtimeDb();
+        if (!db) {
+          reject(new Error("Firebase not initialized"));
+          return;
         }
-      );
+
+        const { ref, onValue } = await import("firebase/database");
+        const contentRef = ref(db, "nav_items_content");
+        onValue(
+          contentRef,
+          (snapshot) => {
+            if (snapshot.exists()) {
+              resolve(snapshot.val());
+            } else {
+              resolve({});
+            }
+          },
+          (error) => {
+            reject(error);
+          }
+        );
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 );
@@ -67,12 +72,18 @@ export const fetchContent = createAsyncThunk(
 export const saveContent = createAsyncThunk(
   "content/saveContent",
   async (content: NavItemContent) => {
-    if (!realtimeDb) {
+    const db = await getRealtimeDb();
+    if (!db) {
       throw new Error("Firebase not initialized");
     }
 
-    await set(ref(realtimeDb, "nav_items_content"), content);
-    return content;
+    try {
+      const { ref, set } = await import("firebase/database");
+      await set(ref(db, "nav_items_content"), content);
+      return content;
+    } catch (error) {
+      throw error;
+    }
   }
 );
 
