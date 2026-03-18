@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import { ref, onValue } from "firebase/database";
 import { realtimeDb } from "@/lib/firebase";
@@ -27,43 +28,72 @@ interface NavItemContent {
   };
 }
 
-const premiumFeatures = [
-  {
-    icon: "🛒",
-    color: "from-blue-500 to-blue-600",
-    bgColor: "from-blue-50 to-blue-100",
-    iconBg: "bg-blue-500",
+const sectionVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
   },
-  {
-    icon: "💳",
-    color: "from-green-500 to-green-600",
-    bgColor: "from-green-50 to-green-100",
-    iconBg: "bg-green-500",
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 },
   },
-  {
-    icon: "📱",
-    color: "from-purple-500 to-purple-600",
-    bgColor: "from-purple-50 to-purple-100",
-    iconBg: "bg-purple-500",
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5 },
   },
-  {
-    icon: "🚚",
-    color: "from-orange-500 to-orange-600",
-    bgColor: "from-orange-50 to-orange-100",
-    iconBg: "bg-orange-500",
-  },
-  {
-    icon: "📊",
-    color: "from-indigo-500 to-indigo-600",
-    bgColor: "from-indigo-50 to-indigo-100",
-    iconBg: "bg-indigo-500",
-  },
-  {
-    icon: "🔐",
-    color: "from-gray-500 to-gray-600",
-    bgColor: "from-gray-50 to-gray-100",
-    iconBg: "bg-gray-500",
-  },
+};
+
+const featureIcons = {
+  onboarding: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  ),
+  payments: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+    </svg>
+  ),
+  mobile: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+    </svg>
+  ),
+  shipping: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+    </svg>
+  ),
+  reports: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+    </svg>
+  ),
+  support: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+    </svg>
+  ),
+};
+
+const iconColors = [
+  { bg: "bg-violet-100", text: "text-violet-600" },
+  { bg: "bg-emerald-100", text: "text-emerald-600" },
+  { bg: "bg-blue-100", text: "text-blue-600" },
+  { bg: "bg-orange-100", text: "text-orange-600" },
+  { bg: "bg-pink-100", text: "text-pink-600" },
+  { bg: "bg-cyan-100", text: "text-cyan-600" },
 ];
 
 export default function FeaturesSection() {
@@ -89,7 +119,6 @@ export default function FeaturesSection() {
                 (heading) =>
                   heading.type === "feature" &&
                   heading.isVisible &&
-                  // Filter out placeholder content
                   !heading.title.toLowerCase().includes("feature") &&
                   !heading.content
                     .toLowerCase()
@@ -103,7 +132,6 @@ export default function FeaturesSection() {
 
           features.sort((a, b) => a.order - b.order);
 
-          // Only use Firebase features if we have valid, non-placeholder content
           if (features.length > 0) {
             setFeatureContent(features);
           } else {
@@ -122,242 +150,169 @@ export default function FeaturesSection() {
     }
   }, []);
 
-  // Premium default features
+  // Default features matching Figma design
   const defaultFeatures = [
     {
       id: "1",
       title: "Easy Seller Onboarding",
-      content:
-        "Start selling online with simple tools made for local businesses.",
+      content: "Start selling online with simple tools made for local businesses.",
+      iconKey: "onboarding",
       features: [
-        "Quick seller registration",
-        "Access to a dedicated seller dashboard",
-        "List products manually, via bulk CSV upload, or through integrations",
-        "Connect your existing store from Shopify, WooCommerce, or PrestaShop",
+        "Quick registration & verification",
+        "Dedicated seller dashboard",
+        "Bulk CSV upload or integrations",
+        "Shopify, WooCommerce & PrestaShop sync",
       ],
     },
     {
       id: "2",
-      title: "Secure Payment Integration",
+      title: "Secure Payments",
       content: "Accept payments smoothly with trusted gateways.",
+      iconKey: "payments",
       features: [
-        "PayPal and local payment options",
-        "Secure checkout with PCI compliance",
-        "Fraud protection",
-        "Easy seller payout setup",
+        "PayPal & local payment options",
+        "PCI-compliant checkout",
+        "Built-in fraud protection",
+        "Easy payout setup",
       ],
     },
     {
       id: "3",
-      title: "Mobile Commerce Excellence",
-      content: "Deliver a smooth shopping experience across all devices.",
+      title: "Mobile Excellence",
+      content: "Deliver a smooth shopping experience on every device.",
+      iconKey: "mobile",
       features: [
-        "Mobile-responsive shopping experience",
-        "Easy navigation and product displays",
-        "Fast and secure mobile checkout",
-        "Optimized for speed and usability",
+        "Fully responsive storefront",
+        "Intuitive product navigation",
+        "Fast mobile checkout",
+        "Speed-optimized pages",
       ],
     },
     {
       id: "4",
-      title: "Smart Shipping & Delivery",
-      content:
-        "Flexible shipping tools to serve local and international customers.",
+      title: "Smart Shipping",
+      content: "Flexible delivery tools for local & international customers.",
+      iconKey: "shipping",
       features: [
         "Real-time shipping rates",
-        "Real-time tracking",
-        "Flexible delivery with local partners including MaltaPost and DHL",
-        "Seller-specific shipping methods",
+        "Live order tracking",
+        "MaltaPost & DHL integration",
+        "Custom shipping methods",
       ],
     },
     {
       id: "5",
-      title: "Built-in Reports & Insights",
-      content: "Make informed decisions with marketplace analytics.",
+      title: "Reports & Insights",
+      content: "Make data-driven decisions with built-in analytics.",
+      iconKey: "reports",
       features: [
-        "Order, product & inventory stats",
-        "Sales reports per seller",
+        "Order & inventory stats",
+        "Per-seller sales reports",
         "Customer insights",
         "Performance optimization",
       ],
     },
     {
       id: "6",
-      title: "Dedicated Seller Support",
-      content: "Get help when you need it — always.",
+      title: "Dedicated Support",
+      content: "Get help when you need it - always.",
+      iconKey: "support",
       features: [
-        "Onboarding assistance for sellers",
-        "Knowledge base and tutorials",
-        "Priority seller support via email & chat",
-        "Community support group",
+        "Personal onboarding assistance",
+        "Knowledge base & tutorials",
+        "Priority email & chat support",
+        "Seller community group",
       ],
     },
   ];
 
   const displayFeatures =
-    featureContent.length > 0 ? featureContent : defaultFeatures;
+    featureContent.length > 0
+      ? featureContent.map((f, i) => ({
+          ...f,
+          iconKey: Object.keys(featureIcons)[i % 6],
+        }))
+      : defaultFeatures;
 
   return (
-    <section className="relative py-8 sm:py-12 lg:py-20 bg-gradient-to-br from-gray-50 via-white to-blue-50/30 overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0">
-        <div className="absolute top-12 sm:top-20 left-12 sm:left-20 w-48 sm:w-64 h-48 sm:h-64 bg-gradient-to-br from-blue-200/20 to-indigo-200/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-12 sm:bottom-20 right-12 sm:right-20 w-48 sm:w-64 h-48 sm:h-64 bg-gradient-to-br from-purple-200/20 to-pink-200/20 rounded-full blur-3xl"></div>
-      </div>
-
-      <Container className="relative z-10">
+    <section className="py-16 lg:py-24 bg-gray-50">
+      <Container>
         {/* Section Header */}
-        <div className="text-center mb-10 sm:mb-12 lg:mb-16">
-          <div className="inline-flex items-center bg-gradient-to-r from-[#FF6900] to-[#FB2C36] text-white px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6 shadow-lg">
-            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full mr-2 sm:mr-3 animate-pulse"></span>
-            Advanced Features
-          </div>
-
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 px-2">
-            <span className="bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent">
-              Everything You Need
-            </span>
-            <br />
-            <span className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] bg-clip-text text-transparent">
-              To Grow Your Online Presence in Malta
-            </span>
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={sectionVariants}
+          className="text-center mb-12 lg:mb-16"
+        >
+          <span className="inline-flex items-center bg-violet-100 text-violet-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
+            FEATURES
+          </span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            Everything you need to sell in Malta
           </h2>
-
-          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-2">
-            Professional e-commerce tools designed specifically for Malta
-            businesses
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            Professional e-commerce tools designed specifically for Maltese businesses.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Features Grid - Mobile optimized */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-10 sm:mb-12 lg:mb-16">
+        {/* Features Grid */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={staggerContainer}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+        >
           {displayFeatures.slice(0, 6).map((feature, index) => {
-            const featureStyle =
-              premiumFeatures[index % premiumFeatures.length];
+            const colorStyle = iconColors[index % iconColors.length];
+            const iconKey = (feature as any).iconKey || Object.keys(featureIcons)[index % 6];
 
             return (
-              <div
+              <motion.div
                 key={feature.id}
-                className={`group relative bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-gray-200 hover:border-gray-300 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl ${
-                  index === 1 ? "sm:scale-105 border-blue-200 shadow-lg" : ""
-                }`}
+                variants={cardVariants}
+                whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                className="bg-white rounded-2xl p-6 lg:p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300"
               >
-                {/* Background gradient on hover */}
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${featureStyle.bgColor} rounded-2xl sm:rounded-3xl opacity-0 group-hover:opacity-30 transition-opacity duration-500`}
-                ></div>
-
-                <div className="relative z-10">
-                  {/* Icon */}
-                  <div
-                    className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 ${featureStyle.iconBg} rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-5 lg:mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
-                  >
-                    {feature.imageUrl ? (
-                      <img
-                        src={feature.imageUrl}
-                        alt={feature.title}
-                        className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 object-contain"
-                      />
-                    ) : (
-                      <span className="text-xl sm:text-2xl lg:text-3xl text-white">
-                        {featureStyle.icon}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 group-hover:text-blue-600 transition-colors">
-                    {feature.title}
-                  </h3>
-
-                  <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 leading-relaxed">
-                    {feature.content}
-                  </p>
-
-                  {/* Feature list */}
-                  {(feature.features || []).length > 0 && (
-                    <ul className="space-y-2 sm:space-y-3">
-                      {(feature.features || []).slice(0, 4).map((item, idx) => (
-                        <li
-                          key={idx}
-                          className="flex items-start text-gray-700"
-                        >
-                          <div
-                            className={`w-4 h-4 sm:w-5 sm:h-5 ${featureStyle.iconBg} rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 mt-0.5`}
-                          >
-                            <svg
-                              className="w-2 h-2 sm:w-3 sm:h-3 text-white"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </div>
-                          <span className="font-medium text-xs sm:text-sm leading-relaxed">
-                            {item}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-
-                  {/* CTA Button */}
-                  {feature.buttonText && (
-                    <div className="mt-4 sm:mt-6">
-                      <Link href={feature.buttonLink || "#"}>
-                        <button
-                          className={`w-full bg-gradient-to-r ${featureStyle.color} text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}
-                        >
-                          {feature.buttonText}
-                        </button>
-                      </Link>
-                    </div>
-                  )}
+                {/* Icon */}
+                <div className={`w-14 h-14 ${colorStyle.bg} ${colorStyle.text} rounded-2xl flex items-center justify-center mb-5`}>
+                  {featureIcons[iconKey as keyof typeof featureIcons] || featureIcons.onboarding}
                 </div>
-              </div>
+
+                {/* Content */}
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 mb-5 leading-relaxed">
+                  {feature.content}
+                </p>
+
+                {/* Feature list */}
+                {(feature.features || []).length > 0 && (
+                  <ul className="space-y-2.5">
+                    {(feature.features || []).slice(0, 4).map((item, idx) => (
+                      <li key={idx} className="flex items-start text-sm text-gray-600">
+                        <svg
+                          className={`w-5 h-5 ${colorStyle.text} mr-2 flex-shrink-0 mt-0.5`}
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </motion.div>
             );
           })}
-        </div>
-
-        {/* Bottom CTA - Mobile optimized */}
-        <div className="text-center">
-          <div className="bg-gradient-to-br from-[#9101CF] to-[#5D0196] rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 text-white relative overflow-hidden">
-            {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-48 sm:w-64 h-48 sm:h-64 bg-white/10 rounded-full -translate-y-24 sm:-translate-y-32 translate-x-24 sm:translate-x-32"></div>
-            <div className="absolute bottom-0 left-0 w-48 sm:w-64 h-48 sm:h-64 bg-white/10 rounded-full translate-y-24 sm:translate-y-32 -translate-x-24 sm:-translate-x-32"></div>
-
-            <div className="relative z-10">
-              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">
-                Ready to <span className="text-yellow-300">Transform</span> Your
-                Business?
-              </h3>
-              <p className="text-base sm:text-lg lg:text-xl text-blue-100 mb-6 sm:mb-8 max-w-2xl mx-auto">
-                Join Malta's most successful e-commerce marketplace platform and
-                start scaling your business today.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-md mx-auto">
-                <Link href="/register" className="flex-1">
-                  <button className="w-full bg-white text-purple-600 py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                    Create Free Account
-                  </button>
-                </Link>
-                <a
-                  href="https://surf.mt/vendor.php?dispatch=auth.login_form&return_url=vendor.php"
-                  className="flex-1"
-                >
-                  <button className="w-full bg-white/10 backdrop-blur-sm text-white border border-white/30 py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base hover:bg-white/20 transition-all duration-300">
-                    Seller Login
-                  </button>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+        </motion.div>
       </Container>
     </section>
   );

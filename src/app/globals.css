@@ -4,6 +4,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* New Figma Design Color System */
+:root {
+  --violet-deep: #2D0A6B;
+  --violet-dark: #1A0A3E;
+  --purple-cta: #7C3AED;
+  --purple-hover: #6D28D9;
+  --white: #FFFFFF;
+  --text-dark: #1A1A2E;
+  --text-muted: #6B7280;
+  --gray-light: #F9FAFB;
+  --border-light: #E5E7EB;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -47,6 +60,41 @@
 
   .animate-slide-in-right {
     animation: slideInRight 0.8s ease-out;
+  }
+
+  /* New design system cards */
+  .card-new {
+    @apply bg-white rounded-2xl border border-gray-100 shadow-sm transition-all duration-300;
+  }
+
+  .card-new:hover {
+    @apply shadow-xl -translate-y-1;
+  }
+
+  /* Deep violet section backgrounds */
+  .bg-violet-deep {
+    background-color: var(--violet-deep);
+  }
+
+  .bg-violet-gradient {
+    background: linear-gradient(135deg, var(--violet-deep) 0%, var(--violet-dark) 100%);
+  }
+
+  /* Purple CTA buttons */
+  .btn-purple {
+    @apply bg-purple-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300;
+  }
+
+  .btn-purple:hover {
+    @apply bg-purple-700 shadow-lg -translate-y-0.5;
+  }
+
+  .btn-purple-outline {
+    @apply bg-transparent text-white border-2 border-white/30 px-6 py-3 rounded-full font-semibold transition-all duration-300;
+  }
+
+  .btn-purple-outline:hover {
+    @apply bg-white/10;
   }
 
   /* E-commerce specific styles */
