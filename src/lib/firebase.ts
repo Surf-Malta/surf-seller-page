@@ -1,9 +1,9 @@
 // src/lib/firebase.ts
-import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getAnalytics, isSupported } from "firebase/analytics";
+import { initializeApp, type FirebaseApp } from "firebase/app";
+import { getDatabase, type Database } from "firebase/database";
+import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
+import { getAnalytics, isSupported, type Analytics } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -16,58 +16,42 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-const requiredEnvVars = [
-  "NEXT_PUBLIC_FIREBASE_API_KEY",
-  "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN",
-  "NEXT_PUBLIC_FIREBASE_DATABASE_URL",
-  "NEXT_PUBLIC_FIREBASE_PROJECT_ID",
-  "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET",
-  "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID",
-  "NEXT_PUBLIC_FIREBASE_APP_ID",
-];
+// Check if Firebase can be initialized (has minimum required config)
+const hasRequiredConfig = Boolean(
+  firebaseConfig.apiKey && firebaseConfig.projectId
+);
 
-const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
+let app: FirebaseApp | null = null;
+let realtimeDb: Database | null = null;
+let auth: Auth | null = null;
+let db: Firestore | null = null;
+let analytics: Analytics | null = null;
 
-let app;
-let realtimeDb;
-let auth;
-let db;
-let analytics;
+if (hasRequiredConfig) {
+  try {
+    app = initializeApp(firebaseConfig);
 
-try {
-  app = initializeApp(firebaseConfig);
-  realtimeDb = getDatabase(app);
-  auth = getAuth(app);
-  db = getFirestore(app);
-
-  // Initialize Analytics only in browser environment
-  if (typeof window !== "undefined") {
-    isSupported().then((supported) => {
-      if (supported) {
-        analytics = getAnalytics(app);
-        console.log("✅ Firebase Analytics initialized");
-      }
-    });
-  }
-
-  // Only log in development
-  if (process.env.NODE_ENV === "development") {
-    if (missingEnvVars.length > 0) {
-      console.warn(
-        "⚠️ Missing Firebase environment variables:",
-        missingEnvVars
-      );
-    } else {
-      console.log("✅ Firebase initialized successfully");
-      console.log(
-        "📊 Project ID:",
-        process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
-      );
+    // Only initialize realtime database if URL is provided
+    if (firebaseConfig.databaseURL) {
+      realtimeDb = getDatabase(app);
     }
-  }
-} catch (error) {
-  if (process.env.NODE_ENV === "development") {
-    console.error("❌ Firebase initialization error:", error);
+
+    auth = getAuth(app);
+    db = getFirestore(app);
+
+    // Initialize Analytics only in browser environment
+    if (typeof window !== "undefined") {
+      isSupported().then((supported) => {
+        if (supported && app) {
+          analytics = getAnalytics(app);
+        }
+      });
+    }
+  } catch (error) {
+    // Silently fail - Firebase is optional for preview
+    if (process.env.NODE_ENV === "development") {
+      console.warn("Firebase initialization skipped:", error);
+    }
   }
 }
 
