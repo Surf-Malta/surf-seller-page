@@ -4,11 +4,14 @@ import { cn } from "@/lib/utils";
 
 interface LogoProps {
   className?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
+  textColor?: string
 }
 
-export function Logo({ className, size = "md" }: LogoProps) {
+export function Logo({ className, size = "md", textColor = "var(--text-black)",
+}: LogoProps) {
   const sizes = {
+    xs: "h-7",
     sm: "h-8",
     md: "h-10",
     lg: "h-12",
@@ -24,15 +27,15 @@ export function Logo({ className, size = "md" }: LogoProps) {
         className={cn("w-auto", sizes[size])}
       />
       {/* Divider */}
-      <div className="w-[3px] h-6 bg-[#606060] mx-3 rounded-3xl"></div>
+      <div className="w-[1px] h-4 bg-[#606060] mx-2.5 rounded-3xl"></div>
       {/* Seller Hub Text */}
       <span
         className="text-center italic font-semibold"
         style={{
-          color: "#333",
+          color: textColor,
           fontFamily: "Poppins, sans-serif",
-          fontSize: "16px",
-          fontWeight: "600",
+          fontSize: "13px",
+          fontWeight: "700",
           letterSpacing: "0.64px",
           fontStyle: "italic",
         }}
