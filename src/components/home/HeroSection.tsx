@@ -1,252 +1,198 @@
 "use client";
 
-// src/components/home/HeroSection.tsx
-import { useState, useEffect } from "react";
-import { Container } from "@/components/ui/Container";
 import Link from "next/link";
+import { Container } from "@/components/ui/Container";
+import { ArrowRight, CheckCircle2, Package, Play, ShoppingCart, Sparkles, TrendingUp } from "lucide-react";
+import { fade, stagger } from "@/utils/animations";
+import { motion } from "motion/react";
 
-interface ContentHeading {
-  id: string;
-  title: string;
-  content: string;
-  imageUrl?: string;
-  buttonText?: string;
-  buttonLink?: string;
-}
-
-interface HeroSectionProps {
-  hero: ContentHeading;
-}
-
-// Banner images for the carousel - using local images from public folder
-const bannerImages = [
-  {
-    id: 1,
-    src: "/Banner 1.png",
-    gradient: "from-blue-500/20 to-purple-500/20",
-    alt: "Banner 1",
-  },
-  {
-    id: 2,
-    src: "/Banner 2.png",
-    gradient: "from-green-500/20 to-teal-500/20",
-    alt: "Banner 2",
-  },
-  {
-    id: 3,
-    src: "/Banner 3.png",
-    gradient: "from-orange-500/20 to-red-500/20",
-    alt: "Banner 3",
-  },
-  {
-    id: 4,
-    src: "/Banner 4.png",
-    gradient: "from-purple-500/20 to-pink-500/20",
-    alt: "Banner 4",
-  },
-];
-
-// Google Play Store link
-const GOOGLE_PLAY_LINK =
-  "https://play.google.com/store/apps/details?id=com.surf.sellerhub&hl=en";
-
-export function HeroSection({ hero }: HeroSectionProps) {
-  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
-
-  // Auto-rotate banners every 5 seconds (changed from 3 seconds)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentBannerIndex((prev) => (prev + 1) % bannerImages.length);
-    }, 5000); // Changed from 3000ms to 5000ms
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Handle banner click - navigate to Google Play Store
-  const handleBannerClick = () => {
-    window.open(GOOGLE_PLAY_LINK, "_blank", "noopener,noreferrer");
-  };
-
+export function HeroSection() {
   return (
-    <section className="relative bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/50 overflow-hidden pt-16 sm:pt-20 lg:pt-30">
-      {/* Modern geometric background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-60 sm:w-80 h-60 sm:h-80 bg-gradient-to-br from-blue-400/20 to-indigo-400/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-60 sm:w-80 h-60 sm:h-80 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 sm:w-96 h-72 sm:h-96 bg-gradient-to-br from-cyan-400/10 to-blue-400/10 rounded-full blur-3xl"></div>
+    <section className="relative overflow-hidden bg-[linear-gradient(165deg,var(--hero-bg-1)_0%,var(--hero-bg-2)_35%,var(--hero-bg-3)_65%,var(--hero-bg-4)_100%)] text-white pt-24 pb-16">
+      {/* Background Glow */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-purple-600/30 blur-[120px] opacity-40"></div>
       </div>
 
-      {/* Floating elements - smaller on mobile */}
-      <div className="absolute top-16 sm:top-20 left-6 sm:left-10 w-2 h-2 sm:w-4 sm:h-4 bg-blue-500 rounded-full animate-pulse opacity-60"></div>
-      <div
-        className="absolute top-24 sm:top-32 right-12 sm:right-20 w-3 h-3 sm:w-6 sm:h-6 bg-purple-500 rounded-full animate-pulse opacity-40"
-        style={{ animationDelay: "1s" }}
-      ></div>
-      <div
-        className="absolute bottom-16 sm:bottom-20 left-12 sm:left-20 w-2 h-2 sm:w-3 sm:h-3 bg-indigo-500 rounded-full animate-pulse opacity-50"
-        style={{ animationDelay: "2s" }}
-      ></div>
-
       <Container className="relative z-10">
-        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center min-h-[75vh] sm:min-h-[80vh] lg:min-h-[65vh] py-8 sm:py-12 lg:py-10">
-          {/* Left Content - Title and CTA */}
-          <div className="space-y-6 sm:space-y-8 text-center lg:text-left">
-            {/* Badge */}
-            <div className="inline-flex items-center bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full px-3 sm:px-4 lg:px-6 py-2 sm:py-3 shadow-lg">
-              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full mr-2 sm:mr-3 animate-pulse"></div>
-              <span className="text-xs sm:text-sm font-medium text-gray-700">
-                🚀 Join our pool of local businesses
-              </span>
-            </div>
+        <motion.div initial="hidden"
+          animate="visible"
+          variants={stagger}
+          className="text-center max-w-3xl mx-auto">
 
-            {/* Main Headline */}
-            <div className="space-y-3 sm:space-y-4">
-              <h1 className="text-3xl sm:text-4xl lg:text-4xl xl:text-5xl font-bold leading-tight">
-                <span className="bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent block">
-                  Grow Your Online Store
-                </span>
-                <span className="bg-gradient-to-r from-[#FF6900] to-[#FB2C36] bg-clip-text text-transparent block">
-                  The Smarter Way
-                </span>
-              </h1>
+          {/* Badge */}
+          <motion.div
+            variants={fade}
+            className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 mb-7 border border-white/10 bg-white/[0.06]"
+          >
+            <Sparkles className="size-3.5 text-amber-400" />
+            <span className="text-white/70 text-xs tracking-wide" style={{ fontWeight: 600 }}>
+              Malta's #1 Seller Platform
+            </span>
+          </motion.div>
 
-              <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                {hero.content}
-              </p>
-            </div>
+          {/* Heading */}
+          <motion.h1
+            variants={fade} className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-[-0.02em]">
+            Sell online in Malta,
+            <br />
+            <span className="text-[var(--secondary-light)]">
+              without the hassle
+            </span>
+          </motion.h1>
 
-            {/* CTA Buttons - Mobile optimized */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <Link href={hero.buttonLink || "/register"}>
-                <button className="group relative bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg sm:rounded-xl lg:rounded-2xl font-semibold text-sm sm:text-base shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden w-full sm:w-auto">
-                  <span className="relative z-10 flex items-center justify-center">
-                    <span>
-                      <span className="hidden sm:inline">
-                        Get Started For Free
-                      </span>
-                      <span className="sm:hidden">Get Started For Free</span>
-                      <span className="text-xs opacity-80 ml-1">
-                        (T&C Apply)
-                      </span>
-                    </span>
-                    <svg
-                      className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5 sm:ml-2 group-hover:translate-x-1 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 7l5 5m0 0l-5 5m5-5H6"
-                      />
-                    </svg>
-                  </span>
-                  {/* Shine effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                </button>
-              </Link>
+          {/* Subtext */}
+          <motion.p
+            variants={fade} className="mt-6 text-lg text-[var(--text-secondary)] leading-relaxed max-w-[520px] mx-auto "
+            style={{ fontWeight: 400 }}
+          >
+            Join hundreds of local businesses already growing on Surf.
+            Set up in minutes, reach thousands of customers, pay nothing upfront.
+          </motion.p>
 
-              <button
-                className="group bg-white/80 backdrop-blur-sm text-gray-700 border border-gray-300 px-4 sm:px-6 py-3 sm:py-4 rounded-lg sm:rounded-xl lg:rounded-2xl font-semibold text-sm sm:text-base hover:bg-white hover:shadow-lg transition-all duration-300 w-full sm:w-auto"
-                onClick={() =>
-                  window.open("https://youtube.com/@surfsellerhub", "_blank")
-                }
-              >
-                <span className="flex items-center justify-center">
-                  <svg
-                    className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 group-hover:scale-110 transition-transform"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V9a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                  Seller Guide
-                </span>
+          {/* CTA */}
+          <motion.div variants={fade} className="mt-8 flex flex-row flex-wrap justify-center gap-3">
+            <Link href="/register">
+              <button className="text-[15px] group inline-flex items-center gap-2.5 px-8 py-4 rounded-xl 
+bg-[var(--primary)] hover:bg-[var(--primary-hover)]  
+transition font-semibold text-white
+shadow-[0_0_0_1px_rgba(255,255,255,0.1),0_4px_20px_rgba(var(--primary-rgb),0.3)]
+hover:shadow-[0_0_0_1px_rgba(255,255,255,0.15),0_8px_30px_rgba(var(--primary-rgb),0.4)]">
+                Start Selling Free
+                <ArrowRight className="size-4 group-hover:translate-x-0.5 transition-transform" />
               </button>
+            </Link>
+
+            <button className="inline-flex items-center gap-2 text-white/80 hover:text-white text-[15px] px-6 py-4 rounded-xl border border-white/10 hover:border-white/20 bg-white/[0.04] hover:bg-white/[0.06] transition-all">
+              <Play className="size-3.5" />
+              How it works
+            </button>
+          </motion.div>
+
+          {/* Features */}
+          <motion.div variants={fade} className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 justify-center text-white/40 text-[13px]" style={{ fontWeight: 400 }}>
+            {["Free to start", "No setup fees", "Go live in minutes"].map((item) => (
+              <div key={item} className="flex items-center gap-1.5">
+                <CheckCircle2 className="size-3.5 text-emerald-400" />
+                <span>{item}</span>
+              </div>
+            ))}
+          </motion.div>
+        </motion.div>
+
+        {/* Bottom Cards */}
+        <motion.div
+          className="pb-0 relative mt-16 md:mx-12"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
+        >
+          <div className="grid grid-cols-12 gap-3 md:gap-4">
+            {/* Main large card — seller working */}
+            <div className="col-span-12 md:col-span-7 relative rounded-2xl overflow-hidden h-[280px] md:h-[340px]">
+              <img
+                src="https://images.unsplash.com/photo-1687422808248-f807f4ea2a2e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzbWFsbCUyMGJ1c2luZXNzJTIwb3duZXIlMjBtYW4lMjBwYWNraW5nJTIwb3JkZXJzJTIwc21pbGV8ZW58MXx8fHwxNzcyNzE2NTUwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                alt="Seller packing orders"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-2xl" />
+              <div className="absolute bottom-5 left-5 right-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/15 backdrop-blur-md">
+                    <Package className="size-5 text-white" />
+                  </div>
+                  <div>
+                    <div className="text-white text-[14px]" style={{ fontWeight: 600 }}>Manage & Ship</div>
+                    <div className="text-white/60 text-[12px]" style={{ fontWeight: 400 }}>Handle orders with integrated logistics</div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Right - Floating Banner Carousel */}
-          <div className="relative mt-6 lg:mt-0">
-            {/* Carousel Container */}
-            <div className="relative h-auto overflow-hidden rounded-3xl">
-              {/* Floating banners */}
-              <div className="relative">
-                {bannerImages.map((banner, index) => {
-                  const position =
-                    (index - currentBannerIndex + bannerImages.length) %
-                    bannerImages.length;
-                  const isCurrent = position === 0;
-
-                  return (
-                    <div
-                      key={banner.id}
-                      className={`transition-all duration-1000 ease-in-out ${
-                        isCurrent
-                          ? "opacity-100 translate-y-0 relative"
-                          : "opacity-0 translate-y-full absolute inset-0"
-                      }`}
-                    >
-                      {isCurrent && (
-                        <div
-                          className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white group hover:scale-105 transition-transform duration-500 cursor-pointer"
-                          onClick={handleBannerClick}
-                          role="button"
-                          tabIndex={0}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              handleBannerClick();
-                            }
-                          }}
-                          aria-label="Download Surf Seller Hub app from Google Play Store"
-                        >
-                          {/* Image - Full height */}
-                          <img
-                            src={banner.src}
-                            alt={banner.alt}
-                            className="w-full h-96 sm:h-[450px] lg:h-[500px] object-cover"
-                          />
-                        </div>
-                      )}
+            {/* Right column — stacked */}
+            <div className="col-span-12 md:col-span-5 grid grid-cols-2 md:grid-cols-1 gap-3 md:gap-4">
+              {/* Stats overlay card */}
+              <div className="relative rounded-2xl md:rounded-tr-2xl overflow-hidden h-[160px] md:h-[160px]" style={{ background: "linear-gradient(135deg, #2d1052 0%, #4c1d95 50%, #581c87 100%)" }}>
+                <div className="absolute inset-0 p-5 flex flex-col justify-between">
+                  <div className="flex items-center justify-between">
+                    <span className="text-white/50 text-[12px]" style={{ fontWeight: 500 }}>Monthly Revenue</span>
+                    <div className="flex items-center gap-1 text-emerald-400 text-[12px]" style={{ fontWeight: 600 }}>
+                      <TrendingUp className="size-3.5" />
+                      +32%
                     </div>
-                  );
-                })}
+                  </div>
+                  <div>
+                    <div className="text-white text-[32px] tracking-tight" style={{ fontWeight: 800 }}>€12,450</div>
+                    <div className="flex gap-4 mt-2">
+                      {[{ l: "Orders", v: "148" }, { l: "Customers", v: "89" }].map((s) => (
+                        <div key={s.l}>
+                          <div className="text-white/40 text-[11px]" style={{ fontWeight: 500 }}>{s.l}</div>
+                          <div className="text-white text-[15px]" style={{ fontWeight: 700 }}>{s.v}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* Carousel indicators */}
-              <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-40 flex space-x-2">
-                {bannerImages.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentBannerIndex(index)}
-                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                      currentBannerIndex === index
-                        ? "bg-white w-10"
-                        : "bg-white/50 hover:bg-white/75"
-                    }`}
-                    aria-label={`Go to banner ${index + 1}`}
-                  />
-                ))}
+              {/* Malta scenery card */}
+              <div className="relative rounded-2xl overflow-hidden h-[160px] md:h-[164px]">
+                <img
+                  src="https://images.unsplash.com/photo-1675773680276-7e544248a111?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxNYWx0YSUyMFZhbGxldHRhJTIwY29sb3JmdWwlMjBidWlsZGluZ3MlMjBhZXJpYWwlMjB2aWV3fGVufDF8fHx8MTc3MjcxNjU0Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                  alt="Malta Valletta"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                <div className="absolute bottom-4 left-4">
+                  <div className="text-white text-[13px]" style={{ fontWeight: 600 }}>Built for Malta</div>
+                  <div className="text-white/60 text-[11px]" style={{ fontWeight: 400 }}>Local commerce, local solutions</div>
+                </div>
               </div>
             </div>
-
-            {/* Floating decorative elements */}
-            {/* <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full blur-xl opacity-60 animate-pulse"></div>
-            <div
-              className="absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-br from-orange-500 to-pink-500 rounded-full blur-xl opacity-60 animate-pulse"
-              style={{ animationDelay: "1.5s" }}
-            ></div> */}
           </div>
-        </div>
+
+          {/* Floating notification cards on top of grid */}
+          {/* new seller joined */}
+          <motion.div
+            className="hidden md:block absolute left-8 top-6"
+            initial={{ opacity: 0, x: -20, y: 10 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.9 }}
+          >
+            <div className="bg-white rounded-xl shadow-[0_12px_40px_-8px_rgba(0,0,0,0.25)] px-4 py-3 flex items-center gap-3">
+              <img
+                src="https://images.unsplash.com/photo-1573495628363-7114730a4a11?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYXBweSUyMGVudHJlcHJlbmV1ciUyMHdvbWFuJTIwdGFibGV0JTIwc3RvcmUlMjBpbnZlbnRvcnl8ZW58MXx8fHwxNzcyNzE2NTQ3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                alt="Seller"
+                className="w-9 h-9 rounded-lg object-cover"
+              />
+              <div>
+                <div className="text-[#0f172a] text-[12px]" style={{ fontWeight: 600 }}>New seller joined!</div>
+                <div className="text-[#94a3b8] text-[11px]" style={{ fontWeight: 400 }}>Valletta Crafts · just now</div>
+              </div>
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse ml-1" />
+            </div>
+          </motion.div>
+
+
+          {/* new order received */}
+          <motion.div
+            className="hidden md:block absolute right-12 top-16"
+            initial={{ opacity: 0, x: 20, y: 10 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ duration: 0.5, delay: 1.05 }}
+          >
+            <div className="bg-white rounded-xl shadow-[0_12px_40px_-8px_rgba(0,0,0,0.25)] px-4 py-3 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-[var(--primary-light)]">
+                <ShoppingCart className="size-4" color="var(--primary)" />
+              </div>
+              <div>
+                <div className="text-[#0f172a] text-xs" style={{ fontWeight: 600 }}>New order received</div>
+                <div className="text-[#94a3b8] text-[11px]" style={{ fontWeight: 400 }}>€47.50 · Sliema delivery</div>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
       </Container>
-    </section>
+    </section >
   );
 }
