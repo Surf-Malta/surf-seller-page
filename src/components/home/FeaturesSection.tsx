@@ -5,7 +5,10 @@ import { useState, useEffect } from "react";
 import { Container } from "@/components/ui/Container";
 import { ref, onValue } from "firebase/database";
 import { realtimeDb } from "@/lib/firebase";
-import Link from "next/link";
+import { SectionHeader } from "./SectionHeader";
+import { BarChart3, CreditCard, Shield, ShoppingCart, Smartphone, Truck } from "lucide-react";
+import { motion } from "motion/react";
+import { fade, stagger } from "@/utils/animations";
 
 interface ContentHeading {
   id: string;
@@ -29,39 +32,39 @@ interface NavItemContent {
 
 const premiumFeatures = [
   {
-    icon: "🛒",
-    color: "from-blue-500 to-blue-600",
-    bgColor: "from-blue-50 to-blue-100",
+    icon: ShoppingCart,
+    color: "var(--blue)",
+    bgColor: "var(--blue-light)",
     iconBg: "bg-blue-500",
   },
   {
-    icon: "💳",
-    color: "from-green-500 to-green-600",
-    bgColor: "from-green-50 to-green-100",
+    icon: CreditCard,
+    color: "var(--green)",
+    bgColor: "var(--green-light)",
     iconBg: "bg-green-500",
   },
   {
-    icon: "📱",
-    color: "from-purple-500 to-purple-600",
-    bgColor: "from-purple-50 to-purple-100",
+    icon: Smartphone,
+    color: "var(--primary)",
+    bgColor: "var(--primary-light)",
     iconBg: "bg-purple-500",
   },
   {
-    icon: "🚚",
-    color: "from-orange-500 to-orange-600",
-    bgColor: "from-orange-50 to-orange-100",
+    icon: Truck,
+    color: "var(--orange)",
+    bgColor: "var(--orange-light)",
     iconBg: "bg-orange-500",
   },
   {
-    icon: "📊",
-    color: "from-indigo-500 to-indigo-600",
-    bgColor: "from-indigo-50 to-indigo-100",
+    icon: BarChart3,
+    color: "var(--indigo)",
+    bgColor: "var(--indigo-light)",
     iconBg: "bg-indigo-500",
   },
   {
-    icon: "🔐",
-    color: "from-gray-500 to-gray-600",
-    bgColor: "from-gray-50 to-gray-100",
+    icon: Shield,
+    color: "var(--gray)",
+    bgColor: "var(--gray-light)",
     iconBg: "bg-gray-500",
   },
 ];
@@ -71,6 +74,7 @@ export default function FeaturesSection() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+
     if (!realtimeDb) {
       setLoading(false);
       return;
@@ -79,23 +83,18 @@ export default function FeaturesSection() {
     try {
       const contentRef = ref(realtimeDb, "nav_items_content");
       const unsubscribe = onValue(contentRef, (snapshot) => {
+
         if (snapshot.exists()) {
+
           const data: NavItemContent = snapshot.val();
+
           const features: ContentHeading[] = [];
 
           Object.values(data).forEach((pageContent) => {
+
             if (pageContent.headings) {
               const pageFeatures = pageContent.headings.filter(
-                (heading) =>
-                  heading.type === "feature" &&
-                  heading.isVisible &&
-                  // Filter out placeholder content
-                  !heading.title.toLowerCase().includes("feature") &&
-                  !heading.content
-                    .toLowerCase()
-                    .includes("describe your feature") &&
-                  heading.title.trim() !== "" &&
-                  heading.content.trim() !== ""
+                (heading) => heading.type === "feature"
               );
               features.push(...pageFeatures);
             }
@@ -117,6 +116,7 @@ export default function FeaturesSection() {
 
       return () => unsubscribe();
     } catch (error) {
+
       setFeatureContent([]);
       setLoading(false);
     }
@@ -127,69 +127,67 @@ export default function FeaturesSection() {
     {
       id: "1",
       title: "Easy Seller Onboarding",
-      content:
-        "Start selling online with simple tools made for local businesses.",
+      content: "Start selling with simple tools built for local businesses.",
       features: [
-        "Quick seller registration",
-        "Access to a dedicated seller dashboard",
-        "List products manually, via bulk CSV upload, or through integrations",
-        "Connect your existing store from Shopify, WooCommerce, or PrestaShop",
+        "Quick registration & verification",
+        "Dedicated seller dashboard",
+        "Bulk CSV upload or integrations",
+        "Shopify, WooCommerce & PrestaShop sync",
       ],
     },
     {
       id: "2",
-      title: "Secure Payment Integration",
+      title: "Secure Payments",
       content: "Accept payments smoothly with trusted gateways.",
       features: [
-        "PayPal and local payment options",
-        "Secure checkout with PCI compliance",
-        "Fraud protection",
-        "Easy seller payout setup",
+        "PayPal & local payment options",
+        "PCI-compliant checkout",
+        "Built-in fraud protection",
+        "Easy payout setup",
       ],
     },
     {
       id: "3",
-      title: "Mobile Commerce Excellence",
-      content: "Deliver a smooth shopping experience across all devices.",
+      title: "Mobile Excellence",
+      content: "Deliver a smooth shopping experience on every device.",
       features: [
-        "Mobile-responsive shopping experience",
-        "Easy navigation and product displays",
-        "Fast and secure mobile checkout",
-        "Optimized for speed and usability",
+        "Fully responsive storefront",
+        "Intuitive product navigation",
+        "Fast mobile checkout",
+        "Speed-optimized pages",
       ],
     },
     {
       id: "4",
-      title: "Smart Shipping & Delivery",
-      content:
-        "Flexible shipping tools to serve local and international customers.",
+      title: "Smart Shipping",
+      content: "Flexible delivery tools for local & international customers.",
       features: [
         "Real-time shipping rates",
-        "Real-time tracking",
-        "Flexible delivery with local partners including MaltaPost and DHL",
-        "Seller-specific shipping methods",
+        "Live order tracking",
+        "MaltaPost & DHL integration",
+        "Custom shipping methods",
       ],
     },
     {
       id: "5",
-      title: "Built-in Reports & Insights",
-      content: "Make informed decisions with marketplace analytics.",
+      title: "Reports & Insights",
+      content: "Make data-driven decisions with built-in analytics.",
       features: [
-        "Order, product & inventory stats",
-        "Sales reports per seller",
+        "Order & inventory stats",
+        "Per-seller sales reports",
         "Customer insights",
         "Performance optimization",
       ],
     },
     {
       id: "6",
-      title: "Dedicated Seller Support",
+      title: "Dedicated Support",
       content: "Get help when you need it — always.",
       features: [
-        "Onboarding assistance for sellers",
-        "Knowledge base and tutorials",
-        "Priority seller support via email & chat",
-        "Community support group",
+        "Personal onboarding assistance",
+        "Knowledge base & tutorials",
+        "Priority email & chat support",
+        "Seller community group",
       ],
     },
   ];
@@ -198,166 +196,87 @@ export default function FeaturesSection() {
     featureContent.length > 0 ? featureContent : defaultFeatures;
 
   return (
-    <section className="relative py-8 sm:py-12 lg:py-20 bg-gradient-to-br from-gray-50 via-white to-blue-50/30 overflow-hidden">
+    <section className="relative py-8 sm:py-12 bg-[var(--bg-light)] via-white to-blue-50/30 overflow-hidden">
       {/* Background decoration */}
-      <div className="absolute inset-0">
+      {/* <div className="absolute inset-0">
         <div className="absolute top-12 sm:top-20 left-12 sm:left-20 w-48 sm:w-64 h-48 sm:h-64 bg-gradient-to-br from-blue-200/20 to-indigo-200/20 rounded-full blur-3xl"></div>
         <div className="absolute bottom-12 sm:bottom-20 right-12 sm:right-20 w-48 sm:w-64 h-48 sm:h-64 bg-gradient-to-br from-purple-200/20 to-pink-200/20 rounded-full blur-3xl"></div>
-      </div>
+      </div> */}
 
       <Container className="relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-10 sm:mb-12 lg:mb-16">
-          <div className="inline-flex items-center bg-gradient-to-r from-[#FF6900] to-[#FB2C36] text-white px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6 shadow-lg">
-            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full mr-2 sm:mr-3 animate-pulse"></span>
-            Advanced Features
-          </div>
+        <SectionHeader
+          badge="Features"
+          title="Everything you need to sell in Malta"
+          subtitle="Professional e-commerce tools designed specifically for Maltese businesses."
+        />
 
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 px-2">
-            <span className="bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent">
-              Everything You Need
-            </span>
-            <br />
-            <span className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] bg-clip-text text-transparent">
-              To Grow Your Online Presence in Malta
-            </span>
-          </h2>
-
-          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-2">
-            Professional e-commerce tools designed specifically for Malta
-            businesses
-          </p>
-        </div>
 
         {/* Features Grid - Mobile optimized */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-10 sm:mb-12 lg:mb-16">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={stagger}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10 md:mx-12">
           {displayFeatures.slice(0, 6).map((feature, index) => {
-            const featureStyle =
-              premiumFeatures[index % premiumFeatures.length];
+            const featureStyle = premiumFeatures[index % premiumFeatures.length];
 
             return (
-              <div
+              <motion.div
+                variants={fade}
+                custom={index}
                 key={feature.id}
-                className={`group relative bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-gray-200 hover:border-gray-300 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl ${
-                  index === 1 ? "sm:scale-105 border-blue-200 shadow-lg" : ""
-                }`}
+                className="bg-white border border-black/[0.04] rounded-2xl p-7 hover:shadow-[0_4px_24px_-6px_rgba(0,0,0,0.06)] transition-all"
               >
-                {/* Background gradient on hover */}
+                {/* Icon inside colored square */}
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${featureStyle.bgColor} rounded-2xl sm:rounded-3xl opacity-0 group-hover:opacity-30 transition-opacity duration-500`}
-                ></div>
-
-                <div className="relative z-10">
-                  {/* Icon */}
-                  <div
-                    className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 ${featureStyle.iconBg} rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-5 lg:mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
-                  >
-                    {feature.imageUrl ? (
-                      <img
-                        src={feature.imageUrl}
-                        alt={feature.title}
-                        className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 object-contain"
-                      />
-                    ) : (
-                      <span className="text-xl sm:text-2xl lg:text-3xl text-white">
-                        {featureStyle.icon}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 group-hover:text-blue-600 transition-colors">
-                    {feature.title}
-                  </h3>
-
-                  <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 leading-relaxed">
-                    {feature.content}
-                  </p>
-
-                  {/* Feature list */}
-                  {(feature.features || []).length > 0 && (
-                    <ul className="space-y-2 sm:space-y-3">
-                      {(feature.features || []).slice(0, 4).map((item, idx) => (
-                        <li
-                          key={idx}
-                          className="flex items-start text-gray-700"
-                        >
-                          <div
-                            className={`w-4 h-4 sm:w-5 sm:h-5 ${featureStyle.iconBg} rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 mt-0.5`}
-                          >
-                            <svg
-                              className="w-2 h-2 sm:w-3 sm:h-3 text-white"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </div>
-                          <span className="font-medium text-xs sm:text-sm leading-relaxed">
-                            {item}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-
-                  {/* CTA Button */}
-                  {feature.buttonText && (
-                    <div className="mt-4 sm:mt-6">
-                      <Link href={feature.buttonLink || "#"}>
-                        <button
-                          className={`w-full bg-gradient-to-r ${featureStyle.color} text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}
-                        >
-                          {feature.buttonText}
-                        </button>
-                      </Link>
-                    </div>
+                  className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  style={{ backgroundColor: featureStyle.bgColor }}
+                >
+                  {feature.imageUrl ? (
+                    <img
+                      src={feature.imageUrl}
+                      alt={feature.title}
+                      className="w-6 h-6 object-contain"
+                    />
+                  ) : (
+                    <featureStyle.icon className="w-5 h-5" style={{ color: featureStyle.color }} />
                   )}
                 </div>
-              </div>
+
+                {/* Title & Content */}
+                <h3 className="mt-5 text-[#0f172a] text-[16px] font-bold">
+                  {feature.title}
+                </h3>
+                <p className="mt-1.5 text-[#64748b] text-[14px] leading-relaxed font-normal">
+                  {feature.content}
+                </p>
+
+                {/* Feature list */}
+                {feature.features && feature.features.length > 0 && (
+                  <ul className="mt-5 space-y-2.5">
+                    {feature.features.slice(0, 4).map((item, idx) => (
+                      <li key={idx} className="flex items-center gap-2.5">
+                        <svg
+                          className="w-3.5 h-3.5 shrink-0"
+                          fill="none"
+                          viewBox="0 0 12 12"
+                        >
+                          <path
+                            d="M10.28 3.22a.75.75 0 0 0-1.06-1.06L4.5 6.88 2.78 5.16a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l5-5z"
+                            fill={featureStyle.color}
+                          />
+                        </svg>
+                        <span className="text-[#334155] text-[13px] font-medium">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </motion.div>
             );
           })}
-        </div>
-
-        {/* Bottom CTA - Mobile optimized */}
-        <div className="text-center">
-          <div className="bg-gradient-to-br from-[#9101CF] to-[#5D0196] rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 text-white relative overflow-hidden">
-            {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-48 sm:w-64 h-48 sm:h-64 bg-white/10 rounded-full -translate-y-24 sm:-translate-y-32 translate-x-24 sm:translate-x-32"></div>
-            <div className="absolute bottom-0 left-0 w-48 sm:w-64 h-48 sm:h-64 bg-white/10 rounded-full translate-y-24 sm:translate-y-32 -translate-x-24 sm:-translate-x-32"></div>
-
-            <div className="relative z-10">
-              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">
-                Ready to <span className="text-yellow-300">Transform</span> Your
-                Business?
-              </h3>
-              <p className="text-base sm:text-lg lg:text-xl text-blue-100 mb-6 sm:mb-8 max-w-2xl mx-auto">
-                Join Malta's most successful e-commerce marketplace platform and
-                start scaling your business today.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-md mx-auto">
-                <Link href="/register" className="flex-1">
-                  <button className="w-full bg-white text-purple-600 py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                    Create Free Account
-                  </button>
-                </Link>
-                <a
-                  href="https://surf.mt/vendor.php?dispatch=auth.login_form&return_url=vendor.php"
-                  className="flex-1"
-                >
-                  <button className="w-full bg-white/10 backdrop-blur-sm text-white border border-white/30 py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base hover:bg-white/20 transition-all duration-300">
-                    Seller Login
-                  </button>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+        </motion.div>
       </Container>
     </section>
   );
