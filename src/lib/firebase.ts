@@ -28,47 +28,53 @@ const requiredEnvVars = [
 
 const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
 
-let app;
-let realtimeDb;
-let auth;
-let db;
-let analytics;
+let app: ReturnType<typeof initializeApp> | null = null;
+let realtimeDb: ReturnType<typeof getDatabase> | null = null;
+let auth: ReturnType<typeof getAuth> | null = null;
+let db: ReturnType<typeof getFirestore> | null = null;
+let analytics: ReturnType<typeof getAnalytics> | null = null;
 
-try {
-  app = initializeApp(firebaseConfig);
-  realtimeDb = getDatabase(app);
-  auth = getAuth(app);
-  db = getFirestore(app);
+// Only initialize Firebase if required environment variables are present
+const isFirebaseConfigured =
+  firebaseConfig.apiKey &&
+  firebaseConfig.projectId &&
+  firebaseConfig.databaseURL;
 
-  // Initialize Analytics only in browser environment
-  if (typeof window !== "undefined") {
-    isSupported().then((supported) => {
-      if (supported) {
-        analytics = getAnalytics(app);
-        console.log("✅ Firebase Analytics initialized");
-      }
-    });
-  }
+if (isFirebaseConfigured) {
+  try {
+    app = initializeApp(firebaseConfig);
+    realtimeDb = getDatabase(app);
+    auth = getAuth(app);
+    db = getFirestore(app);
 
-  // Only log in development
-  if (process.env.NODE_ENV === "development") {
-    if (missingEnvVars.length > 0) {
-      console.warn(
-        "⚠️ Missing Firebase environment variables:",
-        missingEnvVars
-      );
-    } else {
+    // Initialize Analytics only in browser environment
+    if (typeof window !== "undefined") {
+      isSupported().then((supported) => {
+        if (supported && app) {
+          analytics = getAnalytics(app);
+          console.log("✅ Firebase Analytics initialized");
+        }
+      });
+    }
+
+    // Only log in development
+    if (process.env.NODE_ENV === "development") {
       console.log("✅ Firebase initialized successfully");
       console.log(
         "📊 Project ID:",
         process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
       );
     }
+  } catch (error) {
+    if (process.env.NODE_ENV === "development") {
+      console.error("❌ Firebase initialization error:", error);
+    }
   }
-} catch (error) {
-  if (process.env.NODE_ENV === "development") {
-    console.error("❌ Firebase initialization error:", error);
-  }
+} else if (process.env.NODE_ENV === "development") {
+  console.warn(
+    "⚠️ Firebase not initialized. Missing environment variables:",
+    missingEnvVars
+  );
 }
 
 export { realtimeDb, auth, db, analytics };
