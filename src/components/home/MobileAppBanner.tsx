@@ -15,7 +15,37 @@ export default function MobileAppBanner({ content }: { content?: any }) {
             { iconName: "Bell", text: "Instant order notifications" },
             { iconName: "BarChart3", text: "Real-time sales dashboard" },
             { iconName: "Zap", text: "Quick product management" },
-        ]
+        ],
+        mockup: {
+            greeting: "Good morning",
+            title: "Seller Dashboard",
+            revenueTitle: "Today's Revenue",
+            revenueValue: "€247.50",
+            revenueChange: "+18% vs yesterday",
+            notificationTitle: "New order #1084",
+            notificationSubtitle: "€47.50 - 2 items",
+            appBgImage: "https://images.unsplash.com/photo-1609162554108-6490759499ef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg"
+        },
+        floatingNotification: {
+            title: "Order shipped!",
+            subtitle: "#1083 - Sliema"
+        }
+    };
+
+    const mockup = data.mockup || {
+        greeting: "Good morning",
+        title: "Seller Dashboard",
+        revenueTitle: "Today's Revenue",
+        revenueValue: "€247.50",
+        revenueChange: "+18% vs yesterday",
+        notificationTitle: "New order #1084",
+        notificationSubtitle: "€47.50 - 2 items",
+        appBgImage: "https://images.unsplash.com/photo-1609162554108-6490759499ef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg"
+    };
+
+    const floatingNotification = data.floatingNotification || {
+        title: "Order shipped!",
+        subtitle: "#1083 - Sliema"
     };
 
     return (
@@ -57,14 +87,13 @@ export default function MobileAppBanner({ content }: { content?: any }) {
 
                             {/* Features list */}
                             <motion.div variants={fade} className="mt-6 flex flex-col gap-2.5">
-                                {data.features.map((item: any) => {
-                                    // Handle strings or objects
+                                {data.features.map((item: any, idx: number) => {
                                     const text = typeof item === 'string' ? item : item.text;
                                     const iconName = typeof item === 'string' ? 'Zap' : item.iconName;
                                     const Icon = iconMap[iconName] || Zap;
                                     
                                     return (
-                                        <div key={text} className="flex items-center gap-2.5">
+                                        <div key={idx} className="flex items-center gap-2.5">
                                             <div className="w-7 h-7 rounded-lg bg-white/8 flex items-center justify-center">
                                                 <Icon className="text-fuchsia-300 w-3.5 h-3.5" />
                                             </div>
@@ -73,16 +102,10 @@ export default function MobileAppBanner({ content }: { content?: any }) {
                                     );
                                 })}
                             </motion.div>
-                            ...
 
                             {/* Store buttons */}
                             <motion.div variants={fade} className="mt-8 flex flex-wrap gap-3">
-                                {/* Google Play */}
-                                <a
-                                    href="#"
-                                    className="group inline-flex items-center gap-3 bg-white hover:bg-gray-50 rounded-xl px-5 py-3 transition-shadow hover:shadow-lg"
-                                >
-                                    {/* SVG Play Store */}
+                                <a href="#" className="group inline-flex items-center gap-3 bg-white hover:bg-gray-50 rounded-xl px-5 py-3 transition-shadow hover:shadow-lg">
                                     <svg className="w-7 h-7 shrink-0" viewBox="0 0 24 24" fill="none">
                                         <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92z" fill="#4285F4" />
                                         <path d="M17.727 8.27L5.547.63a1 1 0 0 0-.504-.18L15.176 10.58l2.55-2.31z" fill="#EA4335" />
@@ -95,7 +118,6 @@ export default function MobileAppBanner({ content }: { content?: any }) {
                                     </div>
                                 </a>
 
-                                {/* Apple — Coming Soon */}
                                 <div className="relative inline-flex items-center gap-3 bg-white/8 border border-white/10 rounded-xl px-5 py-3 cursor-default">
                                     <svg className="w-7 h-7 shrink-0" viewBox="0 0 24 24" fill="white" fillOpacity="0.6">
                                         <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
@@ -104,99 +126,68 @@ export default function MobileAppBanner({ content }: { content?: any }) {
                                         <div className="text-white/40 text-[10px] font-medium leading-none">COMING SOON ON</div>
                                         <div className="text-white/70 text-sm font-bold leading-tight">App Store</div>
                                     </div>
-                                    <div className="absolute -top-2.5 -right-2 bg-amber-400 text-gray-900 text-[10px] px-2 py-0.5 rounded-full font-bold">
-                                        SOON
-                                    </div>
+                                    <div className="absolute -top-2.5 -right-2 bg-amber-400 text-gray-900 text-[10px] px-2 py-0.5 rounded-full font-bold">SOON</div>
                                 </div>
                             </motion.div>
                         </div>
 
                         {/* Right: Phone mockup */}
-                        <motion.div
-                            variants={fade} className="relative flex justify-center md:justify-end items-end">
+                        <motion.div variants={fade} className="relative flex justify-center md:justify-end items-end">
                             <div className="relative w-67 md:w-75 mx-auto md:mr-14">
                                 <div className="relative bg-gray-900 rounded-[2.5rem] p-2.5 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] my-6 scale-90 origin-center">
-                                    {/* Notch */}
                                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-30 h-6 bg-gray-900 rounded-b-2xl z-10" />
-                                    {/* Screen */}
-                                    {/* Screen */}
                                     <div className="relative rounded-[2rem] overflow-hidden">
-
-                                        {/* Background Image */}
-                                        <img
-                                            src="https://images.unsplash.com/photo-1609162554108-6490759499ef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg"
-                                            alt="Surf Seller App"
-                                            className="w-full aspect-[9/18] object-cover"
-                                        />
-
-                                        {/* Dark Gradient Overlay */}
+                                        <img src={mockup.appBgImage} alt="Surf Seller App" className="w-full aspect-[9/18] object-cover" />
                                         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,#1E1B4BCC,#00000000,#1E1B4BE5)]" />
-                                        {/* Content */}
                                         <div className="absolute inset-0 px-5 py-7 flex flex-col text-white">
-
                                             <div className="flex items-center justify-between text-xs opacity-80">
-                                                {/* Time */}
                                                 <div>9:41</div>
-
-                                                {/* Right dots */}
                                                 <div className="flex items-center gap-1">
                                                     <div className="w-3.5 h-2 bg-white/50 rounded-full"></div>
                                                     <div className="w-2 h-2 bg-white/40 rounded-full"></div>
                                                 </div>
                                             </div>
-
                                             <div>
-                                                <p className="text-xs opacity-70 mt-5">Good morning</p>
-                                                <h2 className="text-lg font-semibold">Seller Dashboard</h2>
+                                                <p className="text-xs opacity-70 mt-5">{mockup.greeting}</p>
+                                                <h2 className="text-lg font-semibold">{mockup.title}</h2>
                                             </div>
-
-                                            {/* Revenue Card */}
                                             <div className="mt-3 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10 space-y-0.4">
-                                                <p className="text-[10px] text-white/50">Today's Revenue</p>
-                                                <h3 className="text-2xl font-bold">€247.50</h3>
-                                                <p className="text-xs text-emerald-400">+18% vs yesterday</p>
+                                                <p className="text-[10px] text-white/50">{mockup.revenueTitle}</p>
+                                                <h3 className="text-2xl font-bold">{mockup.revenueValue}</h3>
+                                                <p className="text-xs text-emerald-400">{mockup.revenueChange}</p>
                                             </div>
                                             <div className="mt-3 bg-white/10 rounded-xl p-3 border border-white/10 flex items-center justify-between">
-
                                                 <div className="flex items-center gap-3">
-
                                                     <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-emerald-400/20">
                                                         <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                                                     </div>
-
                                                     <div>
-                                                        <p className="text-xs font-medium text-white">New order #1084</p>
-                                                        <p className="text-[10px] text-white/60">€47.50 - 2 items</p>
+                                                        <p className="text-xs font-medium text-white">{mockup.notificationTitle}</p>
+                                                        <p className="text-[10px] text-white/60">{mockup.notificationSubtitle}</p>
                                                     </div>
                                                 </div>
-
                                                 <p className="text-[10px] text-white/40">2m ago</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Floating notification */}
-                                <motion.div initial={{ opacity: 0, x: -20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.5, delay: 0.5 }} className="absolute -left-6 md:-left-16 top-1/3">
+                                <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.5 }} className="absolute -left-6 md:-left-16 top-1/3">
                                     <div className="bg-white rounded-xl shadow-lg px-3.5 py-2.5 flex items-center gap-2.5">
                                         <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-emerald-100">
                                             <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                                         </div>
                                         <div>
-                                            <div className="text-gray-900 text-[11px] font-semibold">Order shipped!</div>
-                                            <div className="text-gray-400 text-[10px] font-normal">#1083 - Sliema</div>
+                                            <div className="text-gray-900 text-[11px] font-semibold">{floatingNotification.title}</div>
+                                            <div className="text-gray-400 text-[10px] font-normal">{floatingNotification.subtitle}</div>
                                         </div>
                                     </div>
                                 </motion.div>
                             </div>
                         </motion.div>
-
                     </div>
                 </motion.div>
-            </div >
-        </section >
+            </div>
+        </section>
     );
 }
