@@ -9,6 +9,7 @@ import StatsStrip from "@/components/home/StatsStripSection";
 import GetStarted from "@/components/home/GetStartedSection";
 import Testimonials from "@/components/home/TestimonialsSection";
 import Footer from "@/components/layout/Footer";
+import CustomLayoutSection from "@/components/home/CustomLayoutSection";
 import { useState, useEffect } from "react";
 
 export interface steps {
@@ -153,6 +154,8 @@ export default function HomePage() {
         return <GetStarted key={section.id} content={section.content} />;
       case "footer":
         return <Footer key={section.id} content={section.content} />;
+      case "custom-layout":
+        return <CustomLayoutSection key={section.id} content={section.content} />;
       default:
         return null;
     }
