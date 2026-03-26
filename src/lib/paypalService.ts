@@ -9,7 +9,7 @@ import {
 
 const PAYPAL_API_URL =
   process.env.NEXT_PUBLIC_PAYPAL_API_URL ||
-  "https://paypalserver-y0sb.onrender.com/api";
+  "https://paypalserver-5q06.onrender.com/api";
 
 export class PayPalService {
   /**
