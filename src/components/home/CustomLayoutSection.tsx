@@ -4,7 +4,7 @@ import React from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Bell, Share2, Star, Zap, CheckCircle2, ChevronRight } from "lucide-react";
+import { Bell, Zap, CheckCircle2, ChevronRight } from "lucide-react";
 
 interface Block {
   id: string;
@@ -42,6 +42,7 @@ interface CustomLayoutProps {
   };
 }
 
+export default function CustomLayoutSection({ content }: CustomLayoutProps) {
   const [containerWidth, setContainerWidth] = React.useState(1280);
   const containerRef = React.useRef<HTMLDivElement>(null);
   
@@ -224,7 +225,7 @@ interface CustomLayoutProps {
                     initial={{ opacity: 0, scale: 0.9 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     style={style}
-                    className={`p-12 border shadow-2xl flex flex-col items-center text-center gap-6 justify-center ${
+                    className={`p-12 border shadow-2xl flex flex-col items-center text-center gap-6 rounded-[3rem] justify-center ${
                       isDark ? "bg-white/5 border-white/5" : "bg-white border-gray-100"
                     }`}
                   >
