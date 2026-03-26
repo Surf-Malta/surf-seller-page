@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { Container } from "@/components/ui/Container";
-import { ref, onValue } from "firebase/database";
+import { ref, onValue, Database } from "firebase/database";
 import { realtimeDb } from "@/lib/firebase";
 import { SectionHeader } from "./SectionHeader";
 import { BarChart3, CreditCard, Shield, ShoppingCart, Smartphone, Truck } from "lucide-react";
@@ -85,11 +85,86 @@ export default function FeaturesSection({ content }: { content?: any }) {
       setLoading(false);
       return;
     }
-    // ... rest of useEffect
+
+    const featuresRef = ref(realtimeDb, "navItems/features/headings");
+    const unsubscribe = onValue(featuresRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setFeatureContent(Object.values(data));
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const defaultFeatures = [
-    // ... same default features
+    {
+      id: "1",
+      title: "Easy Seller Onboarding",
+      content: "Start selling with simple tools built for local businesses.",
+      features: [
+        "Quick registration & verification",
+        "Dedicated seller dashboard",
+        "Bulk CSV upload or integrations",
+        "Shopify, WooCommerce & PrestaShop sync"
+      ]
+    },
+    {
+      id: "2",
+      title: "Secure Payments",
+      content: "Accept payments smoothly with trusted gateways.",
+      features: [
+        "PayPal & local payment options",
+        "PCI-compliant checkout",
+        "Built-in fraud protection",
+        "Easy payout setup"
+      ]
+    },
+    {
+      id: "3",
+      title: "Mobile Excellence",
+      content: "Deliver a smooth shopping experience on every device.",
+      features: [
+        "Fully responsive storefront",
+        "Intuitive product navigation",
+        "Fast mobile checkout",
+        "Speed-optimized pages"
+      ]
+    },
+    {
+      id: "4",
+      title: "Smart Shipping",
+      content: "Flexible delivery tools for local & international customers.",
+      features: [
+        "Real-time shipping rates",
+        "Live order tracking",
+        "MaltaPost & DHL integration",
+        "Custom shipping methods"
+      ]
+    },
+    {
+      id: "5",
+      title: "Reports & Insights",
+      content: "Make data-driven decisions with built-in analytics.",
+      features: [
+        "Order & inventory stats",
+        "Per-seller sales reports",
+        "Customer insights",
+        "Performance optimization"
+      ]
+    },
+    {
+      id: "6",
+      title: "Dedicated Support",
+      content: "Get help when you need it — always.",
+      features: [
+        "Personal onboarding assistance",
+        "Knowledge base & tutorials",
+        "Priority email & chat support",
+        "Seller community group"
+      ]
+    }
   ];
 
   const displayFeatures =

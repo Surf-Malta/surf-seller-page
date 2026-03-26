@@ -1,9 +1,8 @@
-// src/lib/firebase.ts
-import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getAnalytics, isSupported } from "firebase/analytics";
+import { FirebaseApp, initializeApp } from "firebase/app";
+import { Database, getDatabase } from "firebase/database";
+import { Auth, getAuth } from "firebase/auth";
+import { Firestore, getFirestore } from "firebase/firestore";
+import { Analytics, getAnalytics, isSupported } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -28,11 +27,11 @@ const requiredEnvVars = [
 
 const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
 
-let app;
-let realtimeDb;
-let auth;
-let db;
-let analytics;
+let app: FirebaseApp | undefined;
+let realtimeDb: Database | undefined;
+let auth: Auth | undefined;
+let db: Firestore | undefined;
+let analytics: Analytics | undefined;
 
 try {
   app = initializeApp(firebaseConfig);

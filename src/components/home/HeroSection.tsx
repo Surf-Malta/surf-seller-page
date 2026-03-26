@@ -83,7 +83,6 @@ hover:shadow-[0_0_0_1px_rgba(255,255,255,0.15),0_8px_30px_rgba(var(--primary-rgb
             ))}
           </motion.div>
         </motion.div>
-        ...
 
         {/* Bottom Cards */}
         <motion.div
