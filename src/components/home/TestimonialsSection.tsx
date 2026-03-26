@@ -12,7 +12,7 @@ interface TestimonialsProps {
 
 const Testimonials = ({ testimonials }: TestimonialsProps) => {
     return (
-        <section className="py-8 sm:py-12 lg:py-14 bg-[var(--bg-light)] relative overflow-hidden">
+        <section id="testimonials" className="py-8 sm:py-12 lg:py-14 bg-[var(--bg-light)] relative overflow-hidden">
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section Header */}

@@ -12,7 +12,7 @@ interface HowItWorksSectionProps {
 
 export function HowItWorksSection({ steps }: HowItWorksSectionProps) {
     return (
-        <section className="py-8 sm:py-12 lg:py-15.5">
+        <section id="how-it-works" className="py-8 sm:py-12 lg:py-15.5">
             <div className="max-w-6xl mx-auto px-4">
 
                 <SectionHeader

@@ -37,7 +37,7 @@ export default function FAQSection({ faqData }: FAQSectionProps) {
   const isOpen = (id: number) => openItems.includes(id);
 
   return (
-    <section className="py-8 sm:py-12 lg:py-14">
+    <section id="faq" className="py-8 sm:py-12 lg:py-14">
       <Container>
         {/* Section Header */}
         <SectionHeader

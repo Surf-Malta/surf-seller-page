@@ -196,7 +196,7 @@ export default function FeaturesSection() {
     featureContent.length > 0 ? featureContent : defaultFeatures;
 
   return (
-    <section className="relative py-8 sm:py-12 bg-[var(--bg-light)] via-white to-blue-50/30 overflow-hidden">
+    <section id="features" className="relative py-8 sm:py-12 bg-[var(--bg-light)] via-white to-blue-50/30 overflow-hidden">
       {/* Background decoration */}
       {/* <div className="absolute inset-0">
         <div className="absolute top-12 sm:top-20 left-12 sm:left-20 w-48 sm:w-64 h-48 sm:h-64 bg-gradient-to-br from-blue-200/20 to-indigo-200/20 rounded-full blur-3xl"></div>
