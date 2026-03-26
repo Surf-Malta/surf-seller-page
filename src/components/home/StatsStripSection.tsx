@@ -11,7 +11,23 @@ const stats = [
     { icon: Shield, value: "24/7", label: "Support" },
 ];
 
-export default function StatsStrip() {
+export default function StatsStrip({ content }: { content?: any }) {
+    const iconMap: { [key: string]: any } = {
+        Users,
+        Package,
+        Star,
+        Shield
+    };
+
+    const data = content || {
+        stats: [
+            { iconName: "Users", value: "500+", label: "Active Sellers" },
+            { iconName: "Package", value: "50K+", label: "Products Listed" },
+            { iconName: "Star", value: "98%", label: "Satisfaction" },
+            { iconName: "Shield", value: "24/7", label: "Support" },
+        ]
+    };
+
     return (
         <section className="border-y border-black/[0.05]">
             <div className="max-w-[1200px] mx-auto px-5 md:px-10 py-10">
@@ -23,49 +39,52 @@ export default function StatsStrip() {
                     viewport={{ once: true, amount: 0.5 }}
                     variants={stagger}
                 >
-                    {stats.map((s) => (
-                        <motion.div key={s.label} variants={fade}
-                            className="flex items-center gap-4"
-                        >
-
-                            {/* Icon Box */}
-                            <div
-                                className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
-                                style={{ backgroundColor: "var(--primary-light)" }}
+                    {data.stats.map((s: any) => {
+                        const Icon = iconMap[s.iconName] || Users;
+                        return (
+                            <motion.div key={s.label} variants={fade}
+                                className="flex items-center gap-4"
                             >
-                                <s.icon
-                                    className="size-5"
-                                    style={{ color: "var(--primary)" }}
-                                />
-                            </div>
 
-                            {/* Text */}
-                            <div>
+                                {/* Icon Box */}
                                 <div
-                                    className="text-[22px] leading-none"
-                                    style={{
-                                        color: "var(--heading-color)",
-                                        fontWeight: 800,
-                                    }}
+                                    className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+                                    style={{ backgroundColor: "var(--primary-light)" }}
                                 >
-                                    {s.value}
+                                    <Icon
+                                        className="size-5"
+                                        style={{ color: "var(--primary)" }}
+                                    />
                                 </div>
 
-                                <div
-                                    className="text-[13px] mt-0.5"
-                                    style={{
-                                        color: "var(--text-secondary)",
-                                        fontWeight: 500,
-                                    }}
-                                >
-                                    {s.label}
-                                </div>
-                            </div>
+                                {/* Text */}
+                                <div>
+                                    <div
+                                        className="text-[22px] leading-none"
+                                        style={{
+                                            color: "var(--heading-color)",
+                                            fontWeight: 800,
+                                        }}
+                                    >
+                                        {s.value}
+                                    </div>
 
-                        </motion.div>
-                    ))}
+                                    <div
+                                        className="text-[13px] mt-0.5"
+                                        style={{
+                                            color: "var(--text-secondary)",
+                                            fontWeight: 500,
+                                        }}
+                                    >
+                                        {s.label}
+                                    </div>
+                                </div>
+
+                            </motion.div>
+                        );
+                    })}
                 </motion.div>
             </div>
         </section>
     );
-}
+}

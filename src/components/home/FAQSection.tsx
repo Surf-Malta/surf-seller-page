@@ -19,14 +19,21 @@ import { fade, stagger } from "@/utils/animations";
 type FAQSectionProps = {
   faqData: FAQItem[];
 };
-export default function FAQSection({ faqData }: FAQSectionProps) {
+export default function FAQSection({ content, faqData: legacyFaqData }: { content?: any, faqData: FAQItem[] }) {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [openItems, setOpenItems] = useState<number[]>([]);
 
+  const data = content || {
+    badge: "FAQ",
+    title: "Common questions, answered",
+    subtitle: "Everything you need to know about selling on Surf.",
+    questions: legacyFaqData || []
+  };
+
   const filteredFAQs =
     selectedCategory === "all"
-      ? faqData
-      : faqData.filter((faq) => faq.category === selectedCategory);
+      ? data.questions
+      : data.questions.filter((faq: any) => faq.category === selectedCategory);
 
   const toggleFAQ = (id: number) => {
     setOpenItems((prev) =>
@@ -41,9 +48,9 @@ export default function FAQSection({ faqData }: FAQSectionProps) {
       <Container>
         {/* Section Header */}
         <SectionHeader
-          badge="FAQ"
-          title="Common questions, answered"
-          subtitle="Everything you need to know about selling on Surf."
+          badge={data.badge}
+          title={data.title}
+          subtitle={data.subtitle}
         />
 
         {/* Category Filter */}
@@ -69,7 +76,7 @@ export default function FAQSection({ faqData }: FAQSectionProps) {
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
           variants={stagger} className="mt-10 max-w-3xl mx-auto space-y-2">
-          {filteredFAQs.map((faq, index) => (
+          {filteredFAQs.map((faq: any, index: number) => (
             <motion.div
               key={faq.id}
               variants={fade}

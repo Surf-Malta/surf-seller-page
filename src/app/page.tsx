@@ -1,13 +1,14 @@
-// src/app/page.tsx - Updated with Testimonials Section
+"use client";
+
 import { HeroSection } from "@/components/home/HeroSection";
 import FeaturesSection from "@/components/home/FeaturesSection";
 import FAQSection from "@/components/home/FAQSection";
 import { HowItWorksSection } from "@/components/home/HowItWorksSection";
-import { Star } from "lucide-react";
 import MobileAppBanner from "@/components/home/MobileAppBanner";
 import StatsStrip from "@/components/home/StatsStripSection";
 import GetStarted from "@/components/home/GetStartedSection";
 import Testimonials from "@/components/home/TestimonialsSection";
+import { useState, useEffect } from "react";
 
 export interface steps {
   num: string;
@@ -108,117 +109,77 @@ const faqData: FAQItem[] = [
 ];
 
 export default function HomePage() {
+  const [sections, setSections] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSections = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_PAYPAL_API_URL}/sections/active`);
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success) {
+            setSections(result.data);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch sections:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSections();
+  }, []);
+
+  const renderSection = (section: any) => {
+    switch (section.type) {
+      case "hero":
+        return <HeroSection key={section.id} content={section.content} />;
+      case "stats":
+        return <StatsStrip key={section.id} content={section.content} />;
+      case "how-it-works":
+        return <HowItWorksSection key={section.id} content={section.content} steps={stepsData} />;
+      case "features":
+        return <FeaturesSection key={section.id} content={section.content} />;
+      case "mobile-app":
+        return <MobileAppBanner key={section.id} content={section.content} />;
+      case "testimonials":
+        return <Testimonials key={section.id} content={section.content} testimonials={testimonialsData} />;
+      case "faq":
+        return <FAQSection key={section.id} content={section.content} faqData={faqData} />;
+      case "get-started":
+        return <GetStarted key={section.id} content={section.content} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <div className="pt-16 lg:pt-3">
-        <HeroSection />
-        <StatsStrip />
-        <HowItWorksSection steps={stepsData} />
-        <FeaturesSection />
-        <MobileAppBanner />
-        <Testimonials testimonials={testimonialsData} />
-        <FAQSection faqData={faqData} />
-        <GetStarted />
-
-        {/* Pricing - Mobile optimized - UPDATED VERSION - removed instead add mobile app download section*/}
-        {/* <section className="py-8 sm:py-12 lg:py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-8 sm:mb-10 lg:mb-12">
-              <div className="inline-flex items-center bg-gradient-to-r from-[#FF6900] to-[#FB2C36] px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4 text-white">
-                💎 Transparent Pricing
-              </div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 px-2">
-                <span className="bg-gradient-to-r from-[#9101CF] to-[#5D0196] bg-clip-text text-transparent">
-                  When You Succeed
-                </span>
-                , We Succeed
-              </h2>
-              <p className="text-base sm:text-lg text-gray-600 px-2">
-                Start for free and pay only a small commission on successful
-                sale.
-              </p>
-            </div>
-
-            <div className="max-w-4xl mx-auto">
-              <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-gray-200 mt-6 sm:mt-8">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center">
-                  <div>
-                    <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#9810FA] mb-2">
-                      €0
-                    </div>
-                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
-                      Setup Cost
-                    </h3>
-                    <p className="text-sm sm:text-base text-gray-600">
-                      Everything you need to start is completely free
-                    </p>
-                  </div>
-
-                  <div className="sm:border-l sm:border-r border-gray-300 border-t border-b sm:border-t-0 sm:border-b-0 pt-6 pb-6 sm:pt-0 sm:pb-0 relative">
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 sm:-top-12">
-                      <div className="bg-[#9810FA] text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold inline-block">
-                        Most Popular
-                      </div>
-                    </div>
-                    <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-blue-600 mb-2 mt-4 sm:mt-0">
-                      Low
-                    </div>
-                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
-                      commission
-                    </h3>
-                    <p className="text-sm sm:text-base text-gray-600">
-                      Pay only when you make a sale
-                    </p>
-                  </div>
-
-                  <div>
-                    <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-purple-600 mb-2">
-                      0%
-                    </div>
-                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
-                      Commission
-                    </h3>
-                    <p className="text-sm sm:text-base text-gray-600">
-                      Enjoy our 0% commission offer to support your growth
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-6 sm:mt-8 text-center">
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-                    <a
-                      href="/pricing"
-                      className="inline-flex items-center bg-gradient-to-r from-[#9101CF] to-[#5D0196] text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base hover:bg-blue-700 transition-all duration-300 justify-center"
-                    >
-                      💎 View All Plans
-                      <svg
-                        className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5 sm:ml-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 7l5 5m0 0l-5 5m5-5H6"
-                        />
-                      </svg>
-                    </a>
-                    <a
-                      href="/register"
-                      className="inline-flex items-center bg-white text-purple-600 border-2 border-purple-200 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base hover:bg-purple-50 transition-all duration-300 justify-center"
-                    >
-                      🚀 Start Free
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
+        {loading ? (
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--primary)]"></div>
           </div>
-        </section> */}
-        {/* CTA Section - Uncomment if you want to add it back */}
-        {/* <CTASection /> */}
+        ) : (
+          <>
+            {sections.length > 0 ? (
+              sections.map((section) => renderSection(section))
+            ) : (
+              <>
+                <HeroSection />
+                <StatsStrip />
+                <HowItWorksSection steps={stepsData} />
+                <FeaturesSection />
+                <MobileAppBanner />
+                <Testimonials testimonials={testimonialsData} />
+                <FAQSection faqData={faqData} />
+                <GetStarted />
+              </>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

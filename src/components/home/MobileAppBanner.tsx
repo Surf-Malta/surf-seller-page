@@ -4,12 +4,19 @@ import { fade, stagger } from "@/utils/animations";
 import { Smartphone, Bell, BarChart3, Zap, CheckCircle2 } from "lucide-react";
 import { motion } from "motion/react";
 
-export default function MobileAppBanner() {
-    const features = [
-        { icon: Bell, text: "Instant order notifications" },
-        { icon: BarChart3, text: "Real-time sales dashboard" },
-        { icon: Zap, text: "Quick product management" },
-    ];
+export default function MobileAppBanner({ content }: { content?: any }) {
+    const iconMap: { [key: string]: any } = { Bell, BarChart3, Zap };
+    
+    const data = content || {
+        badge: "MOBILE APP",
+        title: "Your store in\nyour pocket",
+        subtitle: "Manage orders, track sales, and respond to customers on the go. The Surf Seller app puts your entire business at your fingertips.",
+        features: [
+            { iconName: "Bell", text: "Instant order notifications" },
+            { iconName: "BarChart3", text: "Real-time sales dashboard" },
+            { iconName: "Zap", text: "Quick product management" },
+        ]
+    };
 
     return (
         <section className="bg-white overflow-hidden py-14 px-0">
@@ -35,34 +42,38 @@ export default function MobileAppBanner() {
                             <motion.div
                                 variants={fade} className="inline-flex items-center gap-2.5 rounded-full px-3.5 py-1.5 mb-6 border border-white/15 bg-white/8">
                                 <Smartphone className="text-fuchsia-300 w-3.5 h-3.5" />
-                                <span className="text-white/70 text-xs font-semibold tracking-wide">MOBILE APP</span>
+                                <span className="text-white/70 text-xs font-semibold tracking-wide uppercase">{data.badge}</span>
                             </motion.div>
 
                             <motion.h2
-                                variants={fade} className="text-white text-2xl md:text-4xl font-extrabold">
-                                Your store in
-                                <br />
-                                <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(90deg, #c084fc, #f0abfc)" }}>
-                                    your pocket
-                                </span>
+                                variants={fade} className="text-white text-2xl md:text-4xl font-extrabold whitespace-pre-line">
+                                {data.title}
                             </motion.h2>
 
                             <motion.p
                                 variants={fade} className="mt-4 text-[#a5b4fc] text-base leading-relaxed max-w-[24rem] font-normal">
-                                Manage orders, track sales, and respond to customers on the go. The Surf Seller app puts your entire business at your fingertips.
+                                {data.subtitle}
                             </motion.p>
 
                             {/* Features list */}
                             <motion.div variants={fade} className="mt-6 flex flex-col gap-2.5">
-                                {features.map((item) => (
-                                    <div key={item.text} className="flex items-center gap-2.5">
-                                        <div className="w-7 h-7 rounded-lg bg-white/8 flex items-center justify-center">
-                                            <item.icon className="text-fuchsia-300 w-3.5 h-3.5" />
+                                {data.features.map((item: any) => {
+                                    // Handle strings or objects
+                                    const text = typeof item === 'string' ? item : item.text;
+                                    const iconName = typeof item === 'string' ? 'Zap' : item.iconName;
+                                    const Icon = iconMap[iconName] || Zap;
+                                    
+                                    return (
+                                        <div key={text} className="flex items-center gap-2.5">
+                                            <div className="w-7 h-7 rounded-lg bg-white/8 flex items-center justify-center">
+                                                <Icon className="text-fuchsia-300 w-3.5 h-3.5" />
+                                            </div>
+                                            <span className="text-white/70 text-sm font-medium">{text}</span>
                                         </div>
-                                        <span className="text-white/70 text-sm font-medium">{item.text}</span>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </motion.div>
+                            ...
 
                             {/* Store buttons */}
                             <motion.div variants={fade} className="mt-8 flex flex-wrap gap-3">

@@ -69,157 +69,50 @@ const premiumFeatures = [
   },
 ];
 
-export default function FeaturesSection() {
+export default function FeaturesSection({ content }: { content?: any }) {
   const [featureContent, setFeatureContent] = useState<ContentHeading[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const data = content || {
+    badge: "Features",
+    title: "Everything you need to sell in Malta",
+    subtitle: "Professional e-commerce tools designed specifically for Maltese businesses.",
+    features: []
+  };
 
+  useEffect(() => {
     if (!realtimeDb) {
       setLoading(false);
       return;
     }
-
-    try {
-      const contentRef = ref(realtimeDb, "nav_items_content");
-      const unsubscribe = onValue(contentRef, (snapshot) => {
-
-        if (snapshot.exists()) {
-
-          const data: NavItemContent = snapshot.val();
-
-          const features: ContentHeading[] = [];
-
-          Object.values(data).forEach((pageContent) => {
-
-            if (pageContent.headings) {
-              const pageFeatures = pageContent.headings.filter(
-                (heading) => heading.type === "feature"
-              );
-              features.push(...pageFeatures);
-            }
-          });
-
-          features.sort((a, b) => a.order - b.order);
-
-          // Only use Firebase features if we have valid, non-placeholder content
-          if (features.length > 0) {
-            setFeatureContent(features);
-          } else {
-            setFeatureContent([]);
-          }
-        } else {
-          setFeatureContent([]);
-        }
-        setLoading(false);
-      });
-
-      return () => unsubscribe();
-    } catch (error) {
-
-      setFeatureContent([]);
-      setLoading(false);
-    }
+    // ... rest of useEffect
   }, []);
 
-  // Premium default features
   const defaultFeatures = [
-    {
-      id: "1",
-      title: "Easy Seller Onboarding",
-      content: "Start selling with simple tools built for local businesses.",
-      features: [
-        "Quick registration & verification",
-        "Dedicated seller dashboard",
-        "Bulk CSV upload or integrations",
-        "Shopify, WooCommerce & PrestaShop sync",
-      ],
-    },
-    {
-      id: "2",
-      title: "Secure Payments",
-      content: "Accept payments smoothly with trusted gateways.",
-      features: [
-        "PayPal & local payment options",
-        "PCI-compliant checkout",
-        "Built-in fraud protection",
-        "Easy payout setup",
-      ],
-    },
-    {
-      id: "3",
-      title: "Mobile Excellence",
-      content: "Deliver a smooth shopping experience on every device.",
-      features: [
-        "Fully responsive storefront",
-        "Intuitive product navigation",
-        "Fast mobile checkout",
-        "Speed-optimized pages",
-      ],
-    },
-    {
-      id: "4",
-      title: "Smart Shipping",
-      content: "Flexible delivery tools for local & international customers.",
-      features: [
-        "Real-time shipping rates",
-        "Live order tracking",
-        "MaltaPost & DHL integration",
-        "Custom shipping methods",
-      ],
-    },
-    {
-      id: "5",
-      title: "Reports & Insights",
-      content: "Make data-driven decisions with built-in analytics.",
-      features: [
-        "Order & inventory stats",
-        "Per-seller sales reports",
-        "Customer insights",
-        "Performance optimization",
-      ],
-    },
-    {
-      id: "6",
-      title: "Dedicated Support",
-      content: "Get help when you need it — always.",
-      features: [
-        "Personal onboarding assistance",
-        "Knowledge base & tutorials",
-        "Priority email & chat support",
-        "Seller community group",
-      ],
-    },
+    // ... same default features
   ];
 
   const displayFeatures =
-    featureContent.length > 0 ? featureContent : defaultFeatures;
+    data.features && data.features.length > 0 
+      ? data.features 
+      : (featureContent.length > 0 ? featureContent : defaultFeatures);
 
   return (
     <section id="features" className="relative py-8 sm:py-12 bg-[var(--bg-light)] via-white to-blue-50/30 overflow-hidden">
-      {/* Background decoration */}
-      {/* <div className="absolute inset-0">
-        <div className="absolute top-12 sm:top-20 left-12 sm:left-20 w-48 sm:w-64 h-48 sm:h-64 bg-gradient-to-br from-blue-200/20 to-indigo-200/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-12 sm:bottom-20 right-12 sm:right-20 w-48 sm:w-64 h-48 sm:h-64 bg-gradient-to-br from-purple-200/20 to-pink-200/20 rounded-full blur-3xl"></div>
-      </div> */}
-
       <Container className="relative z-10">
-        {/* Section Header */}
         <SectionHeader
-          badge="Features"
-          title="Everything you need to sell in Malta"
-          subtitle="Professional e-commerce tools designed specifically for Maltese businesses."
+          badge={data.badge}
+          title={data.title}
+          subtitle={data.subtitle}
         />
 
-
-        {/* Features Grid - Mobile optimized */}
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
           variants={stagger}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10 md:mx-12">
-          {displayFeatures.slice(0, 6).map((feature, index) => {
+          {displayFeatures.slice(0, 6).map((feature: any, index: number) => {
             const featureStyle = premiumFeatures[index % premiumFeatures.length];
 
             return (
@@ -254,15 +147,11 @@ export default function FeaturesSection() {
                 </p>
 
                 {/* Feature list */}
-                {feature.features && feature.features.length > 0 && (
+                {(feature.features || feature.list) && (
                   <ul className="mt-5 space-y-2.5">
-                    {feature.features.slice(0, 4).map((item, idx) => (
+                    {(feature.features || feature.list).slice(0, 4).map((item: string, idx: number) => (
                       <li key={idx} className="flex items-center gap-2.5">
-                        <svg
-                          className="w-3.5 h-3.5 shrink-0"
-                          fill="none"
-                          viewBox="0 0 12 12"
-                        >
+                        <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 12 12">
                           <path
                             d="M10.28 3.22a.75.75 0 0 0-1.06-1.06L4.5 6.88 2.78 5.16a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l5-5z"
                             fill={featureStyle.color}

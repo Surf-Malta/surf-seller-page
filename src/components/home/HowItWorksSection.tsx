@@ -10,15 +10,22 @@ interface HowItWorksSectionProps {
     steps: steps[]
 }
 
-export function HowItWorksSection({ steps }: HowItWorksSectionProps) {
+export function HowItWorksSection({ content, steps: legacySteps }: { content?: any, steps?: steps[] }) {
+    const data = content || {
+        badge: "How it Works",
+        title: "Up and running in four steps",
+        subtitle: "From registration to your first sale — it's faster than you think.",
+        steps: legacySteps || []
+    };
+
     return (
         <section id="how-it-works" className="py-8 sm:py-12 lg:py-15.5">
             <div className="max-w-6xl mx-auto px-4">
 
                 <SectionHeader
-                    badge="How it Works"
-                    title="Up and running in four steps"
-                    subtitle="From registration to your first sale — it's faster than you think."
+                    badge={data.badge}
+                    title={data.title}
+                    subtitle={data.subtitle}
                 />
 
                 <motion.div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2"
@@ -27,7 +34,7 @@ export function HowItWorksSection({ steps }: HowItWorksSectionProps) {
                     viewport={{ once: true, amount: 0.2 }}
                     variants={stagger}
                 >
-                    {steps.map((step, i) => (
+                    {data.steps.map((step: any, i: number) => (
                         <motion.div
                             key={step.num}
                             variants={fade}
@@ -46,7 +53,7 @@ export function HowItWorksSection({ steps }: HowItWorksSectionProps) {
                                 {step.desc}
                             </p>
 
-                            {i < steps.length - 1 && (
+                            {i < data.steps.length - 1 && (
                                 <div className="hidden lg:flex absolute top-12 -right-2 text-[var(--border-muted)]">
                                     <ArrowRight className="size-4" />
                                 </div>
@@ -57,4 +64,4 @@ export function HowItWorksSection({ steps }: HowItWorksSectionProps) {
             </div>
         </section >
     );
-}
+}

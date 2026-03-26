@@ -10,16 +10,23 @@ interface TestimonialsProps {
     testimonials: testimonials[]
 }
 
-const Testimonials = ({ testimonials }: TestimonialsProps) => {
+const Testimonials = ({ content, testimonials: legacyTestimonials }: { content?: any, testimonials: testimonials[] }) => {
+    const data = content || {
+        badge: "Testimonials",
+        title: "What our sellers are saying",
+        subtitle: "Hear from businesses that have thrived with Surf.",
+        testimonials: legacyTestimonials || []
+    };
+
     return (
         <section id="testimonials" className="py-8 sm:py-12 lg:py-14 bg-[var(--bg-light)] relative overflow-hidden">
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section Header */}
                 <SectionHeader
-                    badge="Testimonials"
-                    title="What our sellers are saying"
-                    subtitle="Hear from businesses that have thrived with Surf."
+                    badge={data.badge}
+                    title={data.title}
+                    subtitle={data.subtitle}
                 />
 
                 {/* Testimonials Grid */}
@@ -30,7 +37,7 @@ const Testimonials = ({ testimonials }: TestimonialsProps) => {
                     viewport={{ once: true, amount: 0.1 }}
                     variants={stagger}
                 >
-                    {testimonials.map((t, i) => (
+                    {data.testimonials.map((t: any, i: number) => (
                         <motion.div
                             key={t.name}
                             variants={fade}

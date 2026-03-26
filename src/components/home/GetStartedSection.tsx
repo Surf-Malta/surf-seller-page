@@ -6,7 +6,14 @@ import { fade, stagger } from "@/utils/animations";
 import Link from "next/link";
 import { motion } from "motion/react";
 
-function GetStarted() {
+function GetStarted({ content }: { content?: any }) {
+    const data = content || {
+        title: "Start your e-commerce journey",
+        subtitle: "Sellers across Malta are embracing the future of commerce with Surf — where going online is simple and rewarding.",
+        primaryCta: "Start Selling Free",
+        footerNote: "No credit card required · Set up in under 5 minutes"
+    };
+
     return (
         <section
             id="get-started"
@@ -30,7 +37,7 @@ function GetStarted() {
                         variants={fade}
                         className="text-[var(--heading-color)] text-[28px] md:text-[36px] leading-[1.15] tracking-tight font-extrabold"
                     >
-                        Start your e-commerce journey
+                        {data.title}
                     </motion.h2>
 
                     {/* Description */}
@@ -38,8 +45,7 @@ function GetStarted() {
                         variants={fade}
                         className="mt-3 text-[var(--text-muted)] text-[16px] leading-relaxed"
                     >
-                        Sellers across Malta are embracing the future of commerce with Surf
-                        — where going online is simple and rewarding.
+                        {data.subtitle}
                     </motion.p>
 
                     {/* CTA */}
@@ -52,7 +58,7 @@ function GetStarted() {
                             href="/register"
                             className="group inline-flex items-center justify-center gap-2.5 text-white text-[15px] px-8 py-3.5 rounded-xl transition-all shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:shadow-lg bg-[var(--primary)] hover:bg-[var(--primary-hover)] font-semibold"
                         >
-                            Start Selling Free
+                            {data.primaryCta}
                             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
                         </Link>
                     </motion.div>
@@ -62,7 +68,7 @@ function GetStarted() {
                       variants={fade}
                         className="mt-4 text-[var(--text-secondary)] text-[13px]"
                     >
-                        No credit card required · Set up in under 5 minutes
+                        {data.footerNote}
                     </motion.p>
                 </motion.div>
             </div>

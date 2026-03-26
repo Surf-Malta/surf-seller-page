@@ -6,7 +6,16 @@ import { ArrowRight, CheckCircle2, Package, Play, ShoppingCart, Sparkles, Trendi
 import { fade, stagger } from "@/utils/animations";
 import { motion } from "motion/react";
 
-export function HeroSection() {
+export function HeroSection({ content }: { content?: any }) {
+  const data = content || {
+    badge: "Malta's #1 Seller Platform",
+    title: "Sell online in Malta,\nwithout the hassle",
+    subtitle: "Join hundreds of local businesses already growing on Surf.\nSet up in minutes, reach thousands of customers, pay nothing upfront.",
+    primaryCta: "Start Selling Free",
+    secondaryCta: "How it works",
+    features: ["Free to start", "No setup fees", "Go live in minutes"]
+  };
+
   return (
     <section className="relative overflow-hidden bg-[linear-gradient(165deg,var(--hero-bg-1)_0%,var(--hero-bg-2)_35%,var(--hero-bg-3)_65%,var(--hero-bg-4)_100%)] text-white pt-24 pb-16">
       {/* Background Glow */}
@@ -27,18 +36,14 @@ export function HeroSection() {
           >
             <Sparkles className="size-3.5 text-amber-400" />
             <span className="text-white/70 text-xs tracking-wide" style={{ fontWeight: 600 }}>
-              Malta's #1 Seller Platform
+              {data.badge}
             </span>
           </motion.div>
 
           {/* Heading */}
           <motion.h1
-            variants={fade} className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-[-0.02em]">
-            Sell online in Malta,
-            <br />
-            <span className="text-[var(--secondary-light)]">
-              without the hassle
-            </span>
+            variants={fade} className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-[-0.02em] whitespace-pre-line">
+            {data.title}
           </motion.h1>
 
           {/* Subtext */}
@@ -46,8 +51,7 @@ export function HeroSection() {
             variants={fade} className="mt-6 text-lg text-[var(--text-secondary)] leading-relaxed max-w-[520px] mx-auto "
             style={{ fontWeight: 400 }}
           >
-            Join hundreds of local businesses already growing on Surf.
-            Set up in minutes, reach thousands of customers, pay nothing upfront.
+            {data.subtitle}
           </motion.p>
 
           {/* CTA */}
@@ -58,20 +62,20 @@ bg-[var(--primary)] hover:bg-[var(--primary-hover)]
 transition font-semibold text-white
 shadow-[0_0_0_1px_rgba(255,255,255,0.1),0_4px_20px_rgba(var(--primary-rgb),0.3)]
 hover:shadow-[0_0_0_1px_rgba(255,255,255,0.15),0_8px_30px_rgba(var(--primary-rgb),0.4)]">
-                Start Selling Free
+                {data.primaryCta}
                 <ArrowRight className="size-4 group-hover:translate-x-0.5 transition-transform" />
               </button>
             </Link>
 
             <button className="inline-flex items-center gap-2 text-white/80 hover:text-white text-[15px] px-6 py-4 rounded-xl border border-white/10 hover:border-white/20 bg-white/[0.04] hover:bg-white/[0.06] transition-all">
               <Play className="size-3.5" />
-              How it works
+              {data.secondaryCta}
             </button>
           </motion.div>
 
           {/* Features */}
           <motion.div variants={fade} className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 justify-center text-white/40 text-[13px]" style={{ fontWeight: 400 }}>
-            {["Free to start", "No setup fees", "Go live in minutes"].map((item) => (
+            {data.features.map((item: string) => (
               <div key={item} className="flex items-center gap-1.5">
                 <CheckCircle2 className="size-3.5 text-emerald-400" />
                 <span>{item}</span>
@@ -79,6 +83,7 @@ hover:shadow-[0_0_0_1px_rgba(255,255,255,0.15),0_8px_30px_rgba(var(--primary-rgb
             ))}
           </motion.div>
         </motion.div>
+        ...
 
         {/* Bottom Cards */}
         <motion.div
