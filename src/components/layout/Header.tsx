@@ -10,12 +10,15 @@ import { toggleMobileMenu } from "@/store/slices/navigationSlice";
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import SignupModal from "../registration/SignupModal";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [loadingStates, setLoadingStates] = useState<{
     [key: string]: boolean;
   }>({});
+  const [signupModalOpen, setSignupModalOpen] = useState(false);
+
   const { isMobileMenuOpen } = useSelector(
     (state: RootState) => state.navigation
   );
@@ -117,7 +120,9 @@ export function Header() {
             </button>
 
             <button
-              onClick={() => handleNavigation("/register", "register")}
+              // onClick={() => handleNavigation("/register", "register")}
+                    onClick={() => setSignupModalOpen(true)}
+
               className="text-white text-[13px] px-5 py-2 rounded-[10px] transition-colors"
               style={{
                 fontWeight: 600,
@@ -230,7 +235,8 @@ export function Header() {
                   </button>
 
                   <button
-                    onClick={() => handleNavigation("/register", "mobile-register")}
+                    // onClick={() => handleNavigation("/register", "mobile-register")}
+                    onClick={() => setSignupModalOpen(true)}
                     className="flex-1 text-white text-[14px] py-2.5 rounded-xl"
                     style={{ backgroundColor: "var(--primary)" }}
                   >
@@ -241,7 +247,9 @@ export function Header() {
             </motion.div>
           )}
         </AnimatePresence>
+
       </header >
+        {signupModalOpen && <SignupModal onClose={() => setSignupModalOpen(false)} />}
 
       {/* Keep existing MobileMenu if needed */}
       {/* <MobileMenu /> */}
