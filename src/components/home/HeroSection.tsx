@@ -5,8 +5,12 @@ import { Container } from "@/components/ui/Container";
 import { ArrowRight, CheckCircle2, Package, Play, ShoppingCart, Sparkles, TrendingUp } from "lucide-react";
 import { fade, stagger } from "@/utils/animations";
 import { motion } from "motion/react";
+import SignupModal from "../registration/SignupModal";
+import { useState } from "react";
 
 export function HeroSection() {
+  const [signupModalOpen, setSignupModalOpen] = useState(false);
+
   return (
     <section className="relative overflow-hidden bg-[linear-gradient(165deg,var(--hero-bg-1)_0%,var(--hero-bg-2)_35%,var(--hero-bg-3)_65%,var(--hero-bg-4)_100%)] text-white pt-24 pb-16">
       {/* Background Glow */}
@@ -52,16 +56,18 @@ export function HeroSection() {
 
           {/* CTA */}
           <motion.div variants={fade} className="mt-8 flex flex-row flex-wrap justify-center gap-3">
-            <Link href="/register">
-              <button className="text-[15px] group inline-flex items-center gap-2.5 px-8 py-4 rounded-xl 
+            {/* <Link href="/register"> */}
+            <button
+              onClick={() => setSignupModalOpen(true)}
+              className="text-[15px] group inline-flex items-center gap-2.5 px-8 py-4 rounded-xl 
 bg-[var(--primary)] hover:bg-[var(--primary-hover)]  
 transition font-semibold text-white
 shadow-[0_0_0_1px_rgba(255,255,255,0.1),0_4px_20px_rgba(var(--primary-rgb),0.3)]
 hover:shadow-[0_0_0_1px_rgba(255,255,255,0.15),0_8px_30px_rgba(var(--primary-rgb),0.4)]">
-                Start Selling Free
-                <ArrowRight className="size-4 group-hover:translate-x-0.5 transition-transform" />
-              </button>
-            </Link>
+              Start Selling Free
+              <ArrowRight className="size-4 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+            {/* </Link> */}
 
             <button className="inline-flex items-center gap-2 text-white/80 hover:text-white text-[15px] px-6 py-4 rounded-xl border border-white/10 hover:border-white/20 bg-white/[0.04] hover:bg-white/[0.06] transition-all">
               <Play className="size-3.5" />
@@ -193,6 +199,10 @@ hover:shadow-[0_0_0_1px_rgba(255,255,255,0.15),0_8px_30px_rgba(var(--primary-rgb
           </motion.div>
         </motion.div>
       </Container>
+      <div>
+
+        {signupModalOpen && <SignupModal onClose={() => setSignupModalOpen(false)} />}
+      </div>
     </section >
   );
 }
