@@ -26,7 +26,9 @@ export default function BusinessStep({
     setCategoryOpen,
     customCategory,
     setCustomCategory,
-    selectedCountry
+    selectedCountry,
+    onSubmit,
+    isLoading = false
 }: any) {
 
     const handleCategorySelect = (cat: string) => {
@@ -50,6 +52,8 @@ export default function BusinessStep({
         ]);
         setCustomCategory("");
     };
+
+    const isFormValid = form.businessName && selectedCategories.length > 0;
 
     return (
         <div className="space-y-4">
@@ -152,8 +156,9 @@ export default function BusinessStep({
                                 <button
                                     type="button"
                                     onClick={handleCustomCategory}
-                                    className="px-3 text-sm rounded-md text-white"
+                                    className="px-3 text-sm rounded-md text-white disabled:opacity-50"
                                     style={{ backgroundColor: "var(--primary)" }}
+                                    disabled={selectedCategories.length >= 5}
                                 >
                                     Add
                                 </button>
@@ -166,10 +171,12 @@ export default function BusinessStep({
 
             {/* Submit */}
             <button
-                className="w-full mt-4 py-3 rounded-lg text-white font-medium"
+                onClick={onSubmit}
+                disabled={!isFormValid || isLoading}
+                className={`w-full mt-4 py-3 rounded-lg text-white font-medium transition-opacity ${(!isFormValid || isLoading) ? 'opacity-50 cursor-not-allowed' : ''}`}
                 style={{ backgroundColor: "var(--primary)" }}
             >
-                Sign up
+                {isLoading ? "Signing up..." : "Sign up"}
             </button>
 
             {/* terms and privacy text */}

@@ -2,12 +2,18 @@
 
 import { useEffect, useState } from "react";
 
-const OTP_LENGTH = 6;
+const OTP_LENGTH = 5;
 
 export default function OtpSection({
   label, // "email" | "WhatsApp"
+  onComplete,
+  onResend,
+  isLoading = false,
 }: {
   label: string;
+  onComplete?: (otp: string) => void;
+  onResend?: () => void;
+  isLoading?: boolean;
 }) {
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [timer, setTimer] = useState(30);
@@ -29,6 +35,12 @@ export default function OtpSection({
     newOtp[index] = value;
     setOtp(newOtp);
 
+    // Call onComplete if all fields are filled
+    const otpString = newOtp.join("");
+    if (otpString.length === OTP_LENGTH && onComplete) {
+      onComplete(otpString);
+    }
+
     if (value && index < OTP_LENGTH - 1) {
       document.getElementById(`otp-${label}-${index + 1}`)?.focus();
     }
@@ -36,6 +48,9 @@ export default function OtpSection({
 
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
+      const newOtp = [...otp];
+      newOtp[index - 1] = "";
+      setOtp(newOtp);
       document.getElementById(`otp-${label}-${index - 1}`)?.focus();
     }
   };
@@ -45,7 +60,21 @@ export default function OtpSection({
     if (!/^\d+$/.test(paste)) return;
 
     const newOtp = paste.split("");
-    setOtp([...newOtp, ...Array(OTP_LENGTH - newOtp.length).fill("")]);
+    const updatedOtp = [...newOtp, ...Array(OTP_LENGTH - newOtp.length).fill("")];
+    setOtp(updatedOtp);
+
+    const otpString = updatedOtp.join("");
+    if (otpString.length === OTP_LENGTH && onComplete) {
+      onComplete(otpString);
+    }
+  };
+
+  const handleResend = () => {
+    if (timer > 0 || isLoading) return;
+    setTimer(30);
+    if (onResend) {
+      onResend();
+    }
   };
 
   return (
@@ -70,30 +99,28 @@ export default function OtpSection({
             value={digit}
             onChange={(e) => handleChange(e.target.value, i)}
             onKeyDown={(e) => handleKeyDown(e, i)}
-            className="w-10 h-12 text-center text-lg border rounded-lg outline-none focus:border-[var(--primary)]"
+            disabled={isLoading}
+            className="w-10 h-12 text-center text-lg border rounded-lg outline-none focus:border-[var(--primary)] disabled:bg-gray-50 disabled:cursor-not-allowed"
           />
         ))}
       </div>
 
       {/* Resend */}
-      <p className="text-xs mt-2 text-[var(--text-muted)]">
+      <div className="text-xs mt-2 text-[var(--text-muted)]">
         {timer > 0 ? (
           <>Resend OTP in {timer}s</>
         ) : (
           <div>
             Didn’t receive OTP?{" "}
             <span
-              onClick={() => {
-                setTimer(30);
-                console.log(`Resend OTP for ${label}`);
-              }}
-              className="text-[var(--primary)] cursor-pointer font-medium"
+              onClick={handleResend}
+              className={`text-[var(--primary)] font-medium ${isLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
             >
               Resend OTP
             </span>
           </div>
         )}
-      </p>
+      </div>
     </div>
   );
 }
